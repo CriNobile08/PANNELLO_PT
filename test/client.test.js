@@ -168,3 +168,12 @@ test('dailyRollUp segue nextPageToken', async () => {
   assert.deepEqual(r, [{ n: 1 }, { n: 2 }]);
   assert.equal(JSON.parse(chiamate[2].opzioni.body).range.start.date.day, 2);
 });
+
+test('ogni 4xx dell\'endpoint token = autorizzazione', async () => {
+  for (const [status, error] of [[400, 'invalid_client'], [400, 'unauthorized_client'], [401, undefined], [403, 'access_denied']]) {
+    const { fetch } = creaFinto(() => json(error ? { error } : {}, status));
+    const { attese, attendi } = conAttese();
+    await assert.rejects(() => creaClient({ env, fetch, attendi }).elenca('steps', 'f'), (e) => e instanceof ErroreSync && e.codice === 'autorizzazione');
+    assert.deepEqual(attese, []);
+  }
+});

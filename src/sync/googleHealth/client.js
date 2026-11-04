@@ -74,7 +74,7 @@ export function creaClient({ env, fetch, attendi = attesaPredefinita }) {
       token = dati.access_token;
       return token;
     }
-    if (dati.error === 'invalid_grant' || r.status === 401) {
+    if (r.status >= 400 && r.status < 500) {
       throw new ErroreSync('autorizzazione', 'Autorizzazione Google Health scaduta o revocata');
     }
     const errore = new Error(`Scambio del token rifiutato (stato ${r.status}${typeof dati.error === 'string' ? `: ${pulisci(dati.error)}` : ''})`);
