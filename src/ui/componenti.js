@@ -67,7 +67,8 @@ const CONTROLLI = ['input', 'select', 'textarea'];
 
 /**
  * Campo con etichetta. Avvolge i controlli in una <label> (così getByLabel(etichetta) li trova),
- * imposta aria-invalid sui controlli figli diretti e mostra `errore` sotto il campo.
+ * imposta aria-invalid e aria-describedby sui controlli figli diretti e mostra `errore` sotto il campo,
+ * fuori dalla <label> (il messaggio non entra nel nome accessibile del controllo).
  */
 export function Campo({ etichetta, errore, children }) {
   const idErrore = useIdStabile('errore');
@@ -79,11 +80,13 @@ export function Campo({ etichetta, errore, children }) {
       })
       : c);
   return html`
-    <label class=${errore ? 'campo campo-errore' : 'campo'}>
-      <span class="campo-etichetta">${etichetta}</span>
-      ${figli}
+    <div class=${errore ? 'campo campo-errore' : 'campo'}>
+      <label class="campo-etichettato">
+        <span class="campo-etichetta">${etichetta}</span>
+        ${figli}
+      </label>
       ${errore && html`<span class="campo-messaggio" id=${idErrore} role="alert">${errore}</span>`}
-    </label>`;
+    </div>`;
 }
 
 /**

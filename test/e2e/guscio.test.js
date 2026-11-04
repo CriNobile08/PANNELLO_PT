@@ -126,3 +126,48 @@ test('guardia modifiche: cambio di sezione o di vista chiede conferma', async ()
     assert.equal(await domanda.count(), 0);
   } finally { await chiudi(); }
 });
+
+test('db in ritardo oltre i 10 s: l\'errore resta fino a Riprova', async () => {
+  const { page, chiudi } = await apriPannello({ isOwner: true, ritardoDb: 15_000, installaOrologio: true });
+  try {
+    await page.getByText('Caricamento…').waitFor();
+    await page.clock.runFor(10_001);
+    await page.getByText('Impossibile caricare i dati').waitFor();
+    await page.clock.runFor(10_000); // il db arriva (a 15 s) e gli snapshot partono
+    await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => r())));
+    await page.getByText('Impossibile caricare i dati').waitFor();
+    assert.equal(await page.getByRole('button', { name: 'Cliente' }).count(), 0);
+    assert.equal(await page.getByRole('button', { name: 'Riprova' }).count(), 1);
+  } finally { await chiudi(); }
+});
+
+test('Campo: errore fuori dal nome accessibile, aria-invalid e aria-describedby', async () => {
+  const { costruisci } = await import('../../scripts/build.js');
+  const { mkdtempSync } = await import('node:fs');
+  const { tmpdir } = await import('node:os');
+  const { join } = await import('node:path');
+  const { pathToFileURL } = await import('node:url');
+  const uscita = join(mkdtempSync(join(tmpdir(), 'pannello-')), 'campo.html');
+  await costruisci({
+    uscita,
+    entrata: `
+      import { SEZIONI } from './ui/app.js';
+      import { Campo } from './ui/componenti.js';
+      import { html } from './ui/html.js';
+      import './main.js';
+      SEZIONI.oggi = () => html\`<section>
+        <\${Campo} etichetta="Nome della scheda" errore="Campo obbligatorio"><input value="" /></\${Campo}>
+        <\${Campo} etichetta="Nota"><input value="" /></\${Campo}>
+      </section>\`;`,
+  });
+  const { page, chiudi } = await apriPannello({ isOwner: true, pagina: pathToFileURL(uscita).href });
+  try {
+    const nome = page.getByLabel('Nome della scheda', { exact: true });
+    await nome.waitFor();
+    assert.equal(await nome.getAttribute('aria-invalid'), 'true');
+    const idErr = await nome.getAttribute('aria-describedby');
+    assert.equal(await page.locator(`#${idErr}`).textContent(), 'Campo obbligatorio');
+    const nota = page.getByLabel('Nota', { exact: true });
+    assert.equal(await nota.getAttribute('aria-invalid'), null);
+  } finally { await chiudi(); }
+});

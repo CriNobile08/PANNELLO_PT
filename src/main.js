@@ -84,6 +84,7 @@ async function avvia() {
 
   const fallisci = () => {
     if (!attuale() || stato.fase === 'pronto') return;
+    tentativo++; // il tentativo è chiuso: risposte tardive ignorate, l'errore resta fino a "Riprova"
     pulisci();
     stato = { fase: 'errore' };
     disegna();

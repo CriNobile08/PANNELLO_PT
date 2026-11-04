@@ -101,8 +101,8 @@ h1, h2, h3 { margin: 0; font-weight: 600; }
   background: var(--card);
 }
 .selettore-vista button {
-  min-height: 38px;
-  min-width: 44px;
+  min-height: var(--tocco);
+  min-width: var(--tocco);
   padding: 0 14px;
   border: 0;
   border-radius: 999px;
@@ -115,7 +115,7 @@ h1, h2, h3 { margin: 0; font-weight: 600; }
 
 .avviso-sola-lettura {
   position: sticky;
-  top: 64px;
+  top: 70px;
   z-index: 15;
   margin: 0 16px 8px;
   padding: 10px 14px;
@@ -177,7 +177,7 @@ h1, h2, h3 { margin: 0; font-weight: 600; }
 /* ---------- PC: menu laterale da 900 px ---------- */
 @media (min-width: 900px) {
   .intestazione { padding: 14px 28px; }
-  .avviso-sola-lettura { top: 72px; margin: 0 28px 12px; }
+  .avviso-sola-lettura { top: 78px; margin: 0 28px 12px; }
   .corpo { display: flex; align-items: flex-start; gap: 24px; padding: 0 28px; }
   .navigazione {
     position: sticky;
@@ -275,6 +275,7 @@ h1, h2, h3 { margin: 0; font-weight: 600; }
 .dialogo-azioni { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
 
 .campo { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.campo-etichettato { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
 .campo-etichetta { font-size: 13px; color: var(--testo-2); font-weight: 500; }
 .campo input, .campo select, .campo textarea {
   min-height: var(--tocco);
