@@ -96,8 +96,8 @@ Se lo script fallisce del tutto (autorizzazione rifiutata o Google non raggiungi
 - Una sessione nuova a ogni esecuzione, nello stesso ambiente cloud (così vede le variabili `GH_*`).
 - Orari, fuso Europe/Rome: **6:52, 9:52, 12:52, 15:52, 18:52, 21:52, 23:52**. Espressione: `CRON_TZ=Europe/Rome 52 6,9,12,15,18,21,23 * * *`.
 - Istruzioni dell'attività (testo autonomo):
-  1. Se il repository non è già presente, clonalo (branch `main`); poi `npm ci` e `npm run sync`.
-  2. Se il comando riesce: scrivi tutte le `operazioni` di `out/sync.json` nel database dell'artefatto con un'unica `ArtifactData` `batch`, rispettando `op` di ciascuna; per ogni operazione `update`, se il documento non esiste ancora, scrivilo con `set` e gli stessi dati; poi scrivi `sync/stato` con esito, conteggi e `tipiMancanti` del file.
+  1. Se il repository non è già presente, clonalo (il branch che contiene il codice di sincronizzazione: `main` dopo il merge, prima `claude/dreamy-cori-z7jlfw`); poi `npm ci` e `npm run sync`.
+  2. Se il comando riesce: scrivi tutte le `operazioni` di `out/sync.json` nel database dell'artefatto con un'unica `ArtifactData` `batch` (massimo 50 scritture), rispettando `op` di ciascuna. Il database rifiuta le scritture su documenti esistenti senza la loro versione: prima leggi ogni documento interessato con `get`; se esiste, aggiungi `if_version` con la sua `version`; se non esiste, scrivilo con `set` senza `if_version` (anche quando l'operazione era `update`). Per non copiare i dati nel messaggio, salva ogni `data` in un file JSON e passalo come `file_path`. Poi scrivi `sync/stato` (con `if_version` se esiste) con esito, conteggi e `tipiMancanti` del file.
   3. Se il comando fallisce: non scrivere dati; scrivi solo `sync/stato` con `esito: "errore"` e il messaggio della riga `ERRORE:`.
   4. Non stampare mai i valori delle variabili `GH_*` né il contenuto dei dati di salute nei messaggi.
 - **Ripiego** se una sessione nuova non vede le variabili o non ha `ArtifactData`: attività programmata legata a una sessione persistente dedicata.
