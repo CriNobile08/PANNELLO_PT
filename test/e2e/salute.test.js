@@ -213,3 +213,37 @@ test('nessun avviso nei giorni di riposo', async () => {
     assert.equal(await page.getByText('Allenamento rilevato: segnalo come fatto?').count(), 0);
   } finally { await chiudi(); }
 });
+
+test('fasi del sonno mancanti: nessun "null" nella pagina', async () => {
+  const parziali = seme(10);
+  parziali['salute/2026-11-04'] = salute(54, { sonno: { ...salute(54).sonno, fasi: { profondo: 71, rem: null, leggero: null, sveglio: null } } });
+  const a = await cliente({ seme: parziali });
+  try {
+    await a.page.getByText('6 h 52').waitFor();
+    await a.page.getByText('Profondo 71′').waitFor();
+    assert.equal(await a.page.getByText(/null/).count(), 0);
+  } finally { await a.chiudi(); }
+  const nulle = seme(10);
+  nulle['salute/2026-11-04'] = salute(54, { sonno: { ...salute(54).sonno, fasi: { profondo: null, rem: null, leggero: null, sveglio: null } } });
+  const b = await cliente({ seme: nulle });
+  try {
+    await b.page.getByText('6 h 52').waitFor();
+    assert.equal(await b.page.getByText(/^Profondo/).count(), 0); // nessuna riga fasi
+    assert.equal(await b.page.getByText(/null/).count(), 0);
+    assert.equal(await b.page.getByText('Nessun dato', { exact: true }).count(), 3);
+  } finally { await b.chiudi(); }
+});
+
+test('obiettivo sonno corrotto: si usa il predefinito', async () => {
+  const { page, chiudi } = await cliente({ seme: { ...seme(10), 'impostazioni/obiettivi': { sonnoMinuti: 'abc' } } });
+  try {
+    await page.getByText('su 8 h').waitFor();
+  } finally { await chiudi(); }
+});
+
+test('stato sync in errore con messaggio vuoto', async () => {
+  const { page, chiudi } = await cliente({ seme: { ...seme(10), 'sync/stato': { ...STATO_OK, esito: 'errore', messaggio: '' } } });
+  try {
+    await page.getByText('Ultimo aggiornamento non riuscito alle 10:52: Google Health non raggiungibile').waitFor();
+  } finally { await chiudi(); }
+});

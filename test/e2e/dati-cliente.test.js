@@ -144,3 +144,12 @@ test('sola lettura', async () => {
     assert.equal(await page.getByRole('button', { name: 'Salva' }).isDisabled(), true);
   } finally { await chiudi(); }
 });
+
+test('obiettivo corrotto: il trainer vede il predefinito', async () => {
+  const { page, chiudi } = await trainer({ seme: { ...SEME, 'impostazioni/obiettivi': { sonnoMinuti: 0 } } });
+  try {
+    await apriDati(page);
+    assert.equal(await page.getByLabel('Ore').inputValue(), '8');
+    assert.equal(await page.getByLabel('Minuti').inputValue(), '0');
+  } finally { await chiudi(); }
+});

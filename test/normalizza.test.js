@@ -113,7 +113,7 @@ test('sonno senza summary: minuti null, nessuna eccezione, perde contro uno con 
   assert.equal(solo['2026-11-04'].sonno.minutiAddormentato, null);
   assert.equal(solo['2026-11-04'].sonno.minutiSveglio, null);
   assert.equal(solo['2026-11-04'].sonno.minutiPerAddormentarsi, null);
-  assert.deepEqual(solo['2026-11-04'].sonno.fasi, { profondo: 0, rem: 0, leggero: 0, sveglio: 0 });
+  assert.equal(solo['2026-11-04'].sonno.fasi, null);
 });
 
 const finestra = { dal: '2026-11-01', al: '2026-11-30', adesso };
@@ -165,4 +165,39 @@ test('data di Roma dell\'inizio e finestra', () => {
   const r = sessioniDa([tarda, fuori], finestra);
   assert.equal(r.length, 1);
   assert.equal(r[0].doc.data, '2026-11-04');
+});
+
+test('sonno STAGES senza fasi note o con minuti non numerici: fasi null', () => {
+  for (const fasi of [undefined, {}, { DEEP: 'x' }]) {
+    const p = puntoSonno({ inizio: '2026-11-03T22:00:00Z', fine: '2026-11-04T06:00:00Z', minutiAddormentato: 400, fasi });
+    if (fasi?.DEEP) p.sleep.summary.stagesSummary[0].minutes = 'abc';
+    const g = giorniSalute({ ...vuoti, sonno: [p] }, { dal: '2026-11-04', al: '2026-11-04', adesso });
+    assert.equal(g['2026-11-04'].sonno.fasi, null);
+  }
+  const p = puntoSonno({ inizio: '2026-11-03T22:00:00Z', fine: '2026-11-04T06:00:00Z', minutiAddormentato: 400, fasi: { DEEP: 50 } });
+  const g = giorniSalute({ ...vuoti, sonno: [p] }, { dal: '2026-11-04', al: '2026-11-04', adesso });
+  assert.equal(g['2026-11-04'].sonno.fasi.profondo, 50);
+});
+
+test('punti malformati saltati senza eccezioni', () => {
+  const ok = puntoSonno({ inizio: '2026-11-03T22:00:00Z', fine: '2026-11-04T06:00:00Z', minutiAddormentato: 400, fasi: { DEEP: 50 } });
+  const w = { dal: '2026-11-04', al: '2026-11-04', adesso };
+  const g = giorniSalute({
+    sonno: [{}, { sleep: {} }, { sleep: { interval: {} } }, ok],
+    fcRiposo: [{}, { dailyRestingHeartRate: {} }],
+    hrv: [{}, { dailyHeartRateVariability: {} }],
+    passi: [{}, { civilStartTime: {} }, { civilStartTime: { date: null } }],
+  }, w);
+  assert.equal(g['2026-11-04'].sonno.minutiAddormentato, 400);
+  assert.equal(g['2026-11-04'].fcRiposo, null);
+  assert.equal(g['2026-11-04'].hrv, null);
+  assert.equal(g['2026-11-04'].passi, null);
+});
+
+test('sessioni malformate saltate', () => {
+  const buono = { name: 'users/me/dataTypes/exercise/dataPoints/9', exercise: { interval: { startTime: '2026-11-04T07:00:00Z', endTime: '2026-11-04T08:00:00Z' }, exerciseType: 'WEIGHTS' } };
+  const senzaNome = { exercise: buono.exercise };
+  const senzaInterval = { name: 'users/me/x/1', exercise: {} };
+  const r = sessioniDa([null, {}, senzaNome, senzaInterval, buono], finestra);
+  assert.deepEqual(r.map((x) => x.id), ['googleHealth_9']);
 });

@@ -53,7 +53,8 @@ function useDesktop() {
 
 function ObiettivoSonno() {
   const { dati, store, puoScrivere, segnalaRifiuto } = useContext(Contesto);
-  const minuti = dati.impostazioni?.obiettivi?.sonnoMinuti ?? OBIETTIVO_SONNO_PREDEFINITO;
+  const obSalvato = dati.impostazioni?.obiettivi?.sonnoMinuti;
+  const minuti = numero(obSalvato) && obSalvato > 0 ? obSalvato : OBIETTIVO_SONNO_PREDEFINITO;
   const [ore, setOre] = useState(String(Math.floor(minuti / 60)));
   const [min, setMin] = useState(String(minuti % 60));
   const [errore, setErrore] = useState(null);
@@ -97,7 +98,8 @@ export function SezioneDatiCliente() {
   const { dati, oggi } = useContext(Contesto);
   const [lunedi, setLunedi] = useState(() => lunediDi(oggi));
   const desktop = useDesktop();
-  const obiettivo = dati.impostazioni?.obiettivi?.sonnoMinuti ?? OBIETTIVO_SONNO_PREDEFINITO;
+  const obSalvato = dati.impostazioni?.obiettivi?.sonnoMinuti;
+  const obiettivo = numero(obSalvato) && obSalvato > 0 ? obSalvato : OBIETTIVO_SONNO_PREDEFINITO;
   const giorni = giorniDellaSettimana(lunedi);
   const unite = unisciSessioni(dati.sessioni ?? []);
   const colonne = giorni.map((g) => valoriGiorno(dati, g, obiettivo, unite));

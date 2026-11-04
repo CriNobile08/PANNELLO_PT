@@ -27,7 +27,7 @@ export async function eseguiSync({ client, adesso }) {
     try {
       dati[tipo] = await leggi();
     } catch (e) {
-      if (e instanceof ErroreSync) throw e;
+      if (e instanceof ErroreSync && (e.codice === 'autorizzazione' || e.codice === 'configurazione')) throw e;
       tipiMancanti.push(tipo);
     }
   }

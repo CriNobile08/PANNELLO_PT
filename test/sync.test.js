@@ -104,6 +104,18 @@ test('ErroreSync si propaga', async () => {
   await assert.rejects(esegui({ token: json({ error: 'invalid_grant' }, 400) }), (e) => e instanceof ErroreSync && e.codice === 'autorizzazione');
 });
 
+test('errore di rete su un solo tipo = parziale', async () => {
+  const { r } = await esegui({ steps: new TypeError('fetch failed') });
+  assert.equal(r.esito, 'parziale');
+  assert.deepEqual(r.tipiMancanti, ['steps']);
+});
+
+test('tutti i tipi con errore di rete = rete', async () => {
+  const g = {};
+  for (const t of ['sleep', 'daily-resting-heart-rate', 'daily-heart-rate-variability', 'exercise', 'steps']) g[t] = new TypeError('fetch failed');
+  await assert.rejects(esegui(g), (e) => e instanceof ErroreSync && e.codice === 'rete' && e.message === 'Google Health non raggiungibile');
+});
+
 test('tutti i tipi falliti con errori generici = rete', async () => {
   const g = {};
   for (const t of ['sleep', 'daily-resting-heart-rate', 'daily-heart-rate-variability', 'exercise', 'steps']) g[t] = json({}, 400);

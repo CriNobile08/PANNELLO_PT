@@ -97,7 +97,7 @@ Se lo script fallisce del tutto (autorizzazione rifiutata o Google non raggiungi
 - Orari, fuso Europe/Rome: **6:52, 9:52, 12:52, 15:52, 18:52, 21:52, 23:52**. Espressione: `CRON_TZ=Europe/Rome 52 6,9,12,15,18,21,23 * * *`.
 - Istruzioni dell'attività (testo autonomo):
   1. Se il repository non è già presente, clonalo (branch `main`); poi `npm ci` e `npm run sync`.
-  2. Se il comando riesce: scrivi tutte le `operazioni` di `out/sync.json` nel database dell'artefatto con un'unica `ArtifactData` `batch`, rispettando `op` di ciascuna; poi scrivi `sync/stato` con esito, conteggi e `tipiMancanti` del file.
+  2. Se il comando riesce: scrivi tutte le `operazioni` di `out/sync.json` nel database dell'artefatto con un'unica `ArtifactData` `batch`, rispettando `op` di ciascuna; per ogni operazione `update`, se il documento non esiste ancora, scrivilo con `set` e gli stessi dati; poi scrivi `sync/stato` con esito, conteggi e `tipiMancanti` del file.
   3. Se il comando fallisce: non scrivere dati; scrivi solo `sync/stato` con `esito: "errore"` e il messaggio della riga `ERRORE:`.
   4. Non stampare mai i valori delle variabili `GH_*` né il contenuto dei dati di salute nei messaggi.
 - **Ripiego** se una sessione nuova non vede le variabili o non ha `ArtifactData`: attività programmata legata a una sessione persistente dedicata.
@@ -130,7 +130,7 @@ Scritto dalla sincronizzazione.
 - Se in un giorno risultano più sonni principali, vale quello con più `minutiAddormentato`.
 - `fasi` è `null` per i sonni di tipo `CLASSIC` (senza fasi dettagliate).
 - I numeri che l'API restituisce come stringa (es. `beatsPerMinute`, `minutesAsleep`, `countSum`) vengono convertiti in numero.
-- **Sostituzione o aggiornamento:** con `esito: "ok"` lo script ha letto tutti i tipi per l'intera finestra, quindi ogni documento `salute/` è completo e l'operazione è `set`. Con `esito: "parziale"` i campi dei tipi falliti vengono **omessi** e l'operazione è `update`, così un errore temporaneo non sovrascrive con `null` un valore già salvato.
+- **Sostituzione o aggiornamento:** con `esito: "ok"` lo script ha letto tutti i tipi per l'intera finestra, quindi ogni documento `salute/` è completo e l'operazione è `set`. Con `esito: "parziale"` i campi dei tipi falliti vengono **omessi** e l'operazione è `update`, così un errore temporaneo non sovrascrive con `null` un valore già salvato. Per ogni operazione `update`, se il documento non esiste ancora, scriverlo con `set` e gli stessi dati.
 
 ### 5.2 `sessioni/{fonte}_{idFonte}`
 Una raccolta unica per tutte le fonti.

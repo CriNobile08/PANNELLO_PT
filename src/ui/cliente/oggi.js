@@ -29,7 +29,7 @@ function StatoSync({ stato }) {
   if (!stato) return null;
   const ora = oraRoma(stato.ultimaEsecuzione);
   const testo = stato.esito === 'errore'
-    ? `Ultimo aggiornamento non riuscito alle ${ora}: ${stato.messaggio ?? ''}`
+    ? `Ultimo aggiornamento non riuscito alle ${ora}: ${stato.messaggio || 'Google Health non raggiungibile'}`
     : stato.esito === 'parziale'
       ? `Aggiornato alle ${ora} · Alcuni dati non aggiornati`
       : `Aggiornato alle ${ora}`;
@@ -173,11 +173,14 @@ export function SezioneOggi({ data: iniziale }) {
   const haScheda = giorno.versione && giorno.schedaId && ctx.revisione;
   const doc = dati.salute?.[data];
   const sonno = doc?.sonno;
-  const obiettivo = dati.impostazioni?.obiettivi?.sonnoMinuti ?? OBIETTIVO_SONNO_PREDEFINITO;
+  const obSalvato = dati.impostazioni?.obiettivi?.sonnoMinuti;
+  const obiettivo = numero(obSalvato) && obSalvato > 0 ? obSalvato : OBIETTIVO_SONNO_PREDEFINITO;
   const percSonno = percentualeSonno(doc, obiettivo);
   const pisolino = minutiPisolini(doc);
   const rec = recupero(dati.salute, data);
   const fasi = sonno?.fasi;
+  const testoFasi = [['Profondo', fasi?.profondo], ['REM', fasi?.rem], ['Leggero', fasi?.leggero]]
+    .filter(([, v]) => numero(v)).map(([n, v]) => `${n} ${v}′`).join(' · ');
 
   return html`
     <section class="sezione oggi">
@@ -194,9 +197,9 @@ export function SezioneOggi({ data: iniziale }) {
           testo=${riposo ? 'Riposo' : haScheda ? `${stato.completati}/3` : 'Nessun dato'}
           sottotesto=${haScheda ? 'blocchi' : undefined} />
       </div>
-      ${(fasi || pisolino > 0) && html`
+      ${(testoFasi || pisolino > 0) && html`
         <p class="secondario riga-fasi">
-          ${fasi && `Profondo ${fasi.profondo}′ · REM ${fasi.rem}′ · Leggero ${fasi.leggero}′`}${fasi && pisolino > 0 && ' · '}${pisolino > 0 && `+ pisolino ${pisolino} min`}
+          ${testoFasi}${testoFasi && pisolino > 0 && ' · '}${pisolino > 0 && `+ pisolino ${pisolino} min`}
         </p>`}
       <${CardAllenamento} data=${data} ctx=${ctx} modifica=${modifica} messaggio=${messaggio} />
       <div class="dati-griglia">

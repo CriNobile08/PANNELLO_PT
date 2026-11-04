@@ -22,10 +22,12 @@ function numero(v) {
 function fasiDa(sleep) {
   if (sleep.type === 'CLASSIC') return null;
   const fasi = { profondo: 0, rem: 0, leggero: 0, sveglio: 0 };
+  let nota = false;
   for (const f of sleep.summary?.stagesSummary ?? []) {
-    if (FASI[f.type]) fasi[FASI[f.type]] = numero(f.minutes);
+    const minuti = numero(f?.minutes);
+    if (FASI[f?.type] && minuti !== null) { fasi[FASI[f.type]] = minuti; nota = true; }
   }
-  return fasi;
+  return nota ? fasi : null;
 }
 
 export function giorniSalute({ sonno, fcRiposo, hrv, passi }, { dal, al, adesso }) {
@@ -41,8 +43,9 @@ export function giorniSalute({ sonno, fcRiposo, hrv, passi }, { dal, al, adesso 
   }
 
   for (const p of sonno ?? []) {
-    const s = p.sleep;
-    const data = dataDaIso(s?.interval?.endTime);
+    const s = p?.sleep;
+    if (!s?.interval?.endTime || !s.interval.startTime) continue;
+    const data = dataDaIso(s.interval.endTime);
     if (!giorni[data]) continue;
     const sm = s.summary ?? {};
     const minutiAddormentato = numero(sm.minutesAsleep);
@@ -63,13 +66,15 @@ export function giorniSalute({ sonno, fcRiposo, hrv, passi }, { dal, al, adesso 
   }
 
   for (const p of fcRiposo ?? []) {
-    const r = p.dailyRestingHeartRate;
+    const r = p?.dailyRestingHeartRate;
+    if (!r?.date) continue;
     const data = dataCivile(r.date);
     if (giorni[data]) giorni[data].fcRiposo = numero(r.beatsPerMinute);
   }
 
   for (const p of hrv ?? []) {
-    const h = p.dailyHeartRateVariability;
+    const h = p?.dailyHeartRateVariability;
+    if (!h?.date) continue;
     const data = dataCivile(h.date);
     if (giorni[data]) {
       giorni[data].hrv = {
@@ -81,6 +86,7 @@ export function giorniSalute({ sonno, fcRiposo, hrv, passi }, { dal, al, adesso 
   }
 
   for (const p of passi ?? []) {
+    if (!p?.civilStartTime?.date) continue;
     const data = dataCivile(p.civilStartTime.date);
     if (giorni[data]) giorni[data].passi = numero(p.steps?.countSum);
   }
@@ -109,9 +115,9 @@ export function sessioniDa(punti, { dal, al, adesso }) {
   const aggiornatoIl = adesso.toISOString();
   const risultato = [];
   for (const p of punti ?? []) {
-    const e = p.exercise;
+    const e = p?.exercise;
     const inizio = e?.interval?.startTime;
-    if (!inizio) continue;
+    if (!inizio || !p.name) continue;
     const data = dataDaIso(inizio);
     if (data < dal || data > al) continue;
     const fine = e.interval.endTime ?? null;
