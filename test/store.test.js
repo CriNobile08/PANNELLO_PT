@@ -192,7 +192,7 @@ test('osserva: 80 schede (anche archiviate) → prima emissione con tutte le rev
   const d = visti.at(-1);
   assert.equal(Object.keys(d.revisioni).length, 80);
   for (let i = 0; i < 80; i++) assert.equal(d.revisioni[`s${i}`][0].id, `r${i}`);
-  assert.ok(fake.iscrizioniAttive() <= 5, `iscrizioni attive: ${fake.iscrizioniAttive()}`);
+  assert.ok(fake.iscrizioniAttive() <= 9, `iscrizioni attive: ${fake.iscrizioniAttive()}`);
   // una nuova revisione scritta da un'altra persona arriva (scheda archiviata inclusa)
   await db.collection('schede/s0/revisioni').doc('nuova').set({ ...CONTENUTO_VALIDO, validaDal: '2026-11-04', autore: 'u-altro', salvataIl: '2026-11-04T08:00:00.000Z' });
   await db.doc('schede/s0').update({ revisioneCorrente: 'nuova' });
@@ -244,4 +244,47 @@ test('osserva: con più schede, una lettura di revisioni fallita all\'avvio arri
   assert.deepEqual(ordine[0].d.revisioni.s0, []);
   assert.equal(ordine[0].d.revisioni.s5.length, 1);
   assert.ok(ordine.some((x) => x.tipo === 'errore' && x.e.code === 'unavailable'), 'l\'errore va comunque segnalato');
+});
+
+test('emette salute, sessioni, impostazioni, sync', async () => {
+  const { store } = await setup({ seme: {
+    ...seme,
+    'salute/2026-11-03': { sonnoMinuti: 450 },
+    'sessioni/s1': { inizio: '2026-11-03T07:00:00Z' },
+    'impostazioni/obiettivi': { sonnoMinuti: 480 },
+    'sync/stato': { ultimaRiuscita: '2026-11-04T06:00:00Z' },
+  } });
+  const d = await primiDati(store);
+  assert.deepEqual(d.salute, { '2026-11-03': { sonnoMinuti: 450 } });
+  assert.deepEqual(d.sessioni, [{ inizio: '2026-11-03T07:00:00Z', id: 's1' }]);
+  assert.deepEqual(d.impostazioni, { obiettivi: { sonnoMinuti: 480 } });
+  assert.deepEqual(d.sync, { stato: { ultimaRiuscita: '2026-11-04T06:00:00Z' } });
+});
+
+test('nove sottoscrizioni', async () => {
+  const { fake, store } = await setup();
+  const off = store.osserva(() => {}, assert.fail);
+  await new Promise((r) => setTimeout(r, 50));
+  assert.equal(fake.iscrizioniAttive(), 9);
+  off();
+});
+
+test('salvaObiettivi valido e non valido', async () => {
+  const { fake, store } = await setup();
+  await store.salvaObiettivi({ sonnoMinuti: 450 });
+  assert.partialDeepStrictEqual(fake.dump()['impostazioni/obiettivi'], { sonnoMinuti: 450, autore: 'u-cliente' });
+  assert.ok(fake.dump()['impostazioni/obiettivi'].aggiornatoIl);
+  for (const v of [179, 721, 450.5, '450', null, NaN]) {
+    await assert.rejects(store.salvaObiettivi({ sonnoMinuti: v }), { codice: 'non_valido' });
+  }
+  assert.equal(fake.dump()['impostazioni/obiettivi'].sonnoMinuti, 450);
+  await store.salvaObiettivi({ sonnoMinuti: 180 });
+  await store.salvaObiettivi({ sonnoMinuti: 720 });
+  assert.equal(fake.dump()['impostazioni/obiettivi'].sonnoMinuti, 720);
+});
+
+test('diario nuovo ha i campi nuovi', async () => {
+  const { fake, store } = await setup();
+  await store.aggiornaDiario('2026-11-04', { nota: 'x' });
+  assert.partialDeepStrictEqual(fake.dump()['diario/2026-11-04'], { sessioniCollegate: [], rilevamentoIgnorato: false, nota: 'x' });
 });

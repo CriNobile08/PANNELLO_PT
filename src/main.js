@@ -28,7 +28,7 @@ function disegna() {
   else {
     render(html`<${App}
       dati=${stato.dati} store=${stato.store} utenteId=${stato.utenteId} isOwner=${stato.isOwner}
-      puoScrivere=${stato.puoScrivere} segnalaRifiuto=${stato.segnalaRifiuto} nomi=${stato.nomi} />`, radice);
+      puoScrivere=${stato.puoScrivere} avviaAttivita=${stato.avviaAttivita} segnalaRifiuto=${stato.segnalaRifiuto} nomi=${stato.nomi} />`, radice);
   }
 }
 
@@ -94,9 +94,10 @@ async function avvia() {
   const claude = window.claude;
   if (!claude?.use) return fallisci();
 
-  const [db, user] = await Promise.all([
+  const [db, user, mcp] = await Promise.all([
     prova(() => claude.use('db'), null),
     prova(() => claude.use('user'), null),
+    prova(() => claude.use('mcp'), null),
   ]);
   if (!attuale()) return;
   if (!db) return fallisci();
@@ -118,7 +119,11 @@ async function avvia() {
   };
   const base = {
     store, utenteId: utenteId ?? null, isOwner: isOwner === true,
-    puoScrivere: puo !== false, segnalaRifiuto, nomi: creaNomi(user, mio),
+    puoScrivere: puo !== false, segnalaRifiuto,
+    // Avvia l'attività di sincronizzazione; un rifiuto di callTool si propaga a chi chiama.
+    avviaAttivita: isOwner === true && mcp
+      ? (triggerId) => mcp.callTool('Claude Code Remote', 'fire_trigger', { trigger_id: triggerId }, { cache: false })
+      : null, nomi: creaNomi(user, mio),
   };
 
   chiudiIscrizione = store.osserva(

@@ -9,7 +9,7 @@
   };
 
   globalThis.creaFakeClaude = function creaFakeClaude(opzioni) {
-    const { isOwner = true, puoScrivere = true, userId = 'u-cliente', profili = {}, seme = {}, senzaDb = false, ritardoDb = 0 } = opzioni ?? {};
+    const { isOwner = true, puoScrivere = true, userId = 'u-cliente', profili = {}, seme = {}, senzaDb = false, ritardoDb = 0, mcp: conMcp = false } = opzioni ?? {};
     const docs = new Map(Object.entries(seme).map(([p, d]) => [p, clona(d)]));
     const ascoltatori = new Set();
     let contatore = 0;
@@ -108,12 +108,18 @@
       profiles: (ids) => Promise.resolve(Object.fromEntries((ids ?? []).map((i) => [i, { id: i, name: profili[i] ?? '' }]))),
     };
 
+    const chiamate = [];
+    const mcp = conMcp ? {
+      callTool: (server, tool, input) => { chiamate.push({ server, tool, input: clona(input) }); return Promise.resolve({}); },
+    } : null;
+
     return {
       use: (nome) => {
-        const valore = nome === 'db' ? (senzaDb ? null : db) : nome === 'user' ? user : null;
+        const valore = nome === 'db' ? (senzaDb ? null : db) : nome === 'user' ? user : nome === 'mcp' ? mcp : null;
         if (nome === 'db' && ritardoDb > 0) return new Promise((ok) => setTimeout(() => ok(valore), ritardoDb));
         return Promise.resolve(valore);
       },
+      chiamateMcp: () => clona(chiamate),
       iscrizioniAttive: () => ascoltatori.size,
       dump: () => Object.fromEntries([...docs].map(([p, d]) => [p, clona(d)])),
     };

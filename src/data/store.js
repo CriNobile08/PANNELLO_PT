@@ -3,8 +3,8 @@ import { prossimoNumero } from '../logic/versioni.js';
 import { risolviGiorno, eccezioniSpostamento, usiScheda } from '../logic/risoluzione.js';
 import { validaScheda, validaPiano } from '../logic/validazione.js';
 
-export const DIARIO_VUOTO = { riscaldamentoFatti: [], stretchingFatti: [], principaleFatto: false, sensazione: null, nota: '' };
-const COLLEZIONI = ['schede', 'settimane', 'eccezioni', 'alimentazione', 'diario'];
+export const DIARIO_VUOTO = { riscaldamentoFatti: [], stretchingFatti: [], principaleFatto: false, sensazione: null, nota: '', sessioniCollegate: [], rilevamentoIgnorato: false };
+const COLLEZIONI = ['schede', 'settimane', 'eccezioni', 'alimentazione', 'diario', 'salute', 'sessioni', 'impostazioni', 'sync'];
 const CHIAVI_SISTEMA = ['id', 'validaDal', 'autore', 'salvataIl'];
 
 const conId = (d) => ({ ...d.data(), id: d.id });
@@ -48,7 +48,7 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
   }
 
   /**
-   * Sottoscrizioni: esattamente 5, una per collezione di primo livello, qualunque sia il numero di schede
+   * Sottoscrizioni: esattamente 9, una per collezione di primo livello, qualunque sia il numero di schede
    * (il db ammette al massimo 64 sottoscrizioni attive per vista).
    * Le revisioni (`schede/{id}/revisioni/{revId}`, §5.2) NON hanno un listener: si leggono con `get()`
    * una tantum. Ogni salvataggio aggiunge la revisione e POI aggiorna `revisioneCorrente` sul documento
@@ -62,7 +62,7 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
   function osserva(onDati, onErrore) {
     const LETTURE_PARALLELE = 4;
     const caricate = new Set();
-    const parziale = { schede: {}, settimane: [], eccezioni: {}, alimentazione: [], diario: {} };
+    const parziale = { schede: {}, settimane: [], eccezioni: {}, alimentazione: [], diario: {}, salute: {}, sessioni: [], impostazioni: {}, sync: {} };
     const revisioni = {};
     const statoRev = new Map(); // schedaId -> { letta: revisioneCorrente dell'ultima lettura riuscita | undefined, richiesta: chiave in lettura | undefined }
     const coda = [];
@@ -82,6 +82,10 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
         eccezioni: parziale.eccezioni,
         alimentazione: parziale.alimentazione,
         diario: parziale.diario,
+        salute: parziale.salute,
+        sessioni: parziale.sessioni,
+        impostazioni: parziale.impostazioni,
+        sync: parziale.sync,
       };
       onDati(ultimi);
       emesso = true;
@@ -144,6 +148,10 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
       eccezioni: (d) => { parziale.eccezioni = perData(d); },
       alimentazione: (d) => { parziale.alimentazione = elenco(d); },
       diario: (d) => { parziale.diario = perData(d); },
+      salute: (d) => { parziale.salute = perData(d); },
+      sessioni: (d) => { parziale.sessioni = elenco(d); },
+      impostazioni: (d) => { parziale.impostazioni = perData(d); },
+      sync: (d) => { parziale.sync = perData(d); },
     };
     const offs = COLLEZIONI.map((nome) =>
       db.collection(nome).onSnapshot((s) => {
@@ -259,5 +267,12 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
     });
   }
 
-  return { osserva, salvaScheda, archiviaScheda, salvaSettimana, impostaEccezione, spostaGiorno, annullaEccezione, salvaPiano, aggiornaDiario };
+  async function salvaObiettivi({ sonnoMinuti }) {
+    const utente = await autore();
+    if (!Number.isInteger(sonnoMinuti) || sonnoMinuti < 180 || sonnoMinuti > 720) throw { codice: 'non_valido' };
+    await serializza('impostazioni/obiettivi', () =>
+      db.doc('impostazioni/obiettivi').set({ sonnoMinuti, aggiornatoIl: ora(), autore: utente }));
+  }
+
+  return { osserva, salvaScheda, archiviaScheda, salvaSettimana, impostaEccezione, spostaGiorno, annullaEccezione, salvaPiano, aggiornaDiario, salvaObiettivi };
 }

@@ -40,3 +40,11 @@ test('al massimo 64 sottoscrizioni attive: la 65ª riceve resource_exhausted', a
   assert.equal(s.size, 0);
   offs.forEach((o) => o());
 });
+
+test('mcp registra le chiamate; default null', async () => {
+  assert.equal(await globalThis.creaFakeClaude({}).use('mcp'), null);
+  const fake = globalThis.creaFakeClaude({ mcp: true });
+  const mcp = await fake.use('mcp');
+  assert.deepEqual(await mcp.callTool('S', 't', { a: 1 }, { cache: false }), {});
+  assert.deepEqual(fake.chiamateMcp(), [{ server: 'S', tool: 't', input: { a: 1 } }]);
+});

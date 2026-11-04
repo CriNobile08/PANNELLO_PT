@@ -3,8 +3,12 @@ import { createContext } from 'preact';
 /**
  * Valore fornito da App a tutte le schermate:
  * {
- *   dati: { schede, revisioni, settimane, eccezioni, alimentazione, diario }  // ultimo snapshot dello store
- *   store,                      // creaStore(...): salvaScheda, salvaSettimana, aggiornaDiario, …
+ *   dati: { schede, revisioni, settimane, eccezioni, alimentazione, diario,
+ *           salute: {[data]: doc}, sessioni: [{...doc, id}], impostazioni: {[id]: doc}, sync: {[id]: doc} }  // ultimo snapshot dello store
+ *   aggiornaOra: (() => Promise<void>) | null,  // non null solo se isOwner, il capability mcp c'è e
+ *                               // dati.impostazioni.sync.idAttivita è una stringa non vuota; avvia l'attività
+ *                               // (fire_trigger). Un rifiuto di callTool (McpError con `code`) si propaga.
+ *   store,                      // creaStore(...): salvaScheda, salvaSettimana, aggiornaDiario, salvaObiettivi, …
  *   oggi: 'YYYY-MM-DD',         // oggiRoma(), ricalcolato a ogni render
  *   utenteId: string|null,      // await user.id()
  *   vista: 'cliente'|'trainer', setVista(vista),   // passa dalla guardia modifiche

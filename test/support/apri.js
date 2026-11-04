@@ -22,11 +22,11 @@ export async function chiudiBrowser() {
 }
 
 /**
- * Opzioni del finto claude: isOwner, puoScrivere, userId, profili, seme, senzaDb, ritardoDb (ms).
+ * Opzioni del finto claude: isOwner, puoScrivere, userId, profili, seme, senzaDb, ritardoDb (ms), mcp.
  * `pagina`: URL file:// alternativo (default dist/pannello.html).
  */
 export async function apriPannello({
-  isOwner, puoScrivere, userId, profili, seme, senzaDb, ritardoDb, installaOrologio = false,
+  isOwner, puoScrivere, userId, profili, seme, senzaDb, ritardoDb, mcp, installaOrologio = false,
   adesso = '2026-11-04T09:00:00+01:00', larghezza = 390, pagina = PAGINA,
 } = {}) {
   const b = await prendiBrowser();
@@ -37,7 +37,7 @@ export async function apriPannello({
   else await page.clock.setFixedTime(new Date(adesso));
   await page.route(/^https:\/\/fonts\.(googleapis|gstatic)\.com\//, (r) => r.abort());
   const config = Object.fromEntries(
-    Object.entries({ isOwner, puoScrivere, userId, profili, seme, senzaDb, ritardoDb }).filter(([, v]) => v !== undefined),
+    Object.entries({ isOwner, puoScrivere, userId, profili, seme, senzaDb, ritardoDb, mcp }).filter(([, v]) => v !== undefined),
   );
   await page.addInitScript({ path: FAKE });
   await page.addInitScript((cfg) => { window.claude = globalThis.creaFakeClaude(cfg); }, config);

@@ -86,9 +86,9 @@ function Navigazione({ vista, sezione, onVai }) {
 
 /**
  * Guscio dell'app. Le props arrivano da main.js dopo il caricamento:
- * { dati, store, utenteId, isOwner, puoScrivere, segnalaRifiuto, nomi }.
+ * { dati, store, utenteId, isOwner, puoScrivere, avviaAttivita, segnalaRifiuto, nomi }.
  */
-export function App({ dati, store, utenteId = null, isOwner = false, puoScrivere = true, segnalaRifiuto, nomi }) {
+export function App({ dati, store, utenteId = null, isOwner = false, puoScrivere = true, avviaAttivita = null, segnalaRifiuto, nomi }) {
   const [vista, setVistaInterna] = useState(() => vistaIniziale({ isOwner, storage: memoria() }));
   const [posizione, setPosizione] = useState(() => ({ sezione: SEZIONE_INIZIALE[vista], parametri: {} }));
   const [inSospeso, setInSospeso] = useState(null); // azione bloccata dalla guardia
@@ -133,8 +133,13 @@ export function App({ dati, store, utenteId = null, isOwner = false, puoScrivere
 
   const setSporco = (v) => { sporco.current = !!v; };
 
+  const idAttivita = dati.impostazioni?.sync?.idAttivita;
+  const aggiornaOra = avviaAttivita && typeof idAttivita === 'string' && idAttivita !== ''
+    ? () => avviaAttivita(idAttivita)
+    : null;
+
   const valore = {
-    dati, store, oggi, utenteId, vista, setVista, puoScrivere, segnalaRifiuto, nomi,
+    aggiornaOra, dati, store, oggi, utenteId, vista, setVista, puoScrivere, segnalaRifiuto, nomi,
     sezione: posizione.sezione, parametri: posizione.parametri, vai, setSporco,
   };
 
