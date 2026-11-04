@@ -3,7 +3,8 @@ import { Contesto } from '../contesto.js';
 import { Anello, Dialogo, Campo, SelettoreData, Vuoto } from '../componenti.js';
 import { versioneValida } from '../../logic/versioni.js';
 import { formatoData } from '../../logic/date.js';
-import { TIPI, testoNumero, contestoGiorno, useDiario, impostaBlocco } from './giornata.js';
+import { Pasti } from './pasti.js';
+import { TIPI, contestoGiorno, useDiario, impostaBlocco } from './giornata.js';
 
 const DATI_VUOTI = ['FC a riposo', 'HRV', 'Passi', 'Fasi del sonno'];
 
@@ -87,33 +88,12 @@ function CardAllenamento({ data, ctx, modifica, messaggio }) {
 
 function CardAlimentazione({ data }) {
   const { dati } = useContext(Contesto);
-  const [scelte, setScelte] = useState({});
   const piano = versioneValida(dati.alimentazione, data);
   if (!piano) return html`<${Vuoto} testo="Nessun piano alimentare" />`;
   return html`
     <section class="card" aria-label="Alimentazione di oggi">
       <h2 class="titolo-blocco">Alimentazione di oggi</h2>
-      ${(piano.pasti ?? []).map((pasto, i) => {
-    const opzioni = pasto.opzioni ?? [];
-    const k = `${data}:${i}`;
-    const scelta = Math.min(scelte[k] ?? 0, Math.max(opzioni.length - 1, 0));
-    const opzione = opzioni[scelta];
-    return html`
-          <div class="pasto-oggi" key=${i}>
-            <h3 class="sottotitolo">${pasto.nome}</h3>
-            ${opzioni.length > 1 && html`
-              <div class="schede-opzione">
-                ${opzioni.map((o, j) => html`
-                  <button type="button" key=${j} class="pulsante scheda-opzione" aria-pressed=${j === scelta ? 'true' : 'false'}
-                    onClick=${() => setScelte({ ...scelte, [k]: j })}>${o.nome}</button>`)}
-              </div>`}
-            ${opzione && html`
-              <ul class="alimenti-oggi">
-                ${(opzione.alimenti ?? []).map((a, j) => html`<li key=${j}>${a.nome} <span class="secondario">· ${testoNumero(a.grammi)} g</span></li>`)}
-              </ul>
-              ${opzione.nota && html`<p class="secondario">${opzione.nota}</p>`}`}
-          </div>`;
-  })}
+      <${Pasti} piano=${piano} chiave=${data} />
     </section>`;
 }
 

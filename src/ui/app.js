@@ -6,6 +6,8 @@ import { SezioneSchede } from './trainer/schede.js';
 import { SezioneSettimana } from './trainer/settimana.js';
 import { SezionePiano } from './trainer/alimentazione.js';
 import { SezioneOggi } from './cliente/oggi.js';
+import { SezioneAllenamentoCliente } from './cliente/allenamento.js';
+import { SezioneAlimentazioneCliente } from './cliente/alimentazione.js';
 import { SezioneGiornata } from './cliente/giornata.js';
 import { vistaIniziale, salvaVista } from '../logic/vista.js';
 
@@ -18,25 +20,16 @@ function memoria() {
   }
 }
 
-const segnaposto = (titolo) => {
-  const Segnaposto = () => html`
-    <section class="sezione">
-      <h1 class="titolo-sezione">${titolo}</h1>
-      <div class="card segnaposto">${titolo}</div>
-    </section>`;
-  return Segnaposto;
-};
-
 /**
  * Sezioni registrate: chiave → componente. Il componente riceve i `parametri` di `vai()` come props
- * (es. `giornata` riceve `{ data }`). I Task 8–12 sostituiscono i segnaposto.
+ * (es. `giornata` riceve `{ data }`).
  */
 export const SEZIONI = {
   // vista cliente
   oggi: SezioneOggi,
   giornata: SezioneGiornata,
-  allenamento: segnaposto('Allenamento'),
-  alimentazione: segnaposto('Alimentazione'),
+  allenamento: SezioneAllenamentoCliente,
+  alimentazione: SezioneAlimentazioneCliente,
   // vista trainer
   settimana: SezioneSettimana,
   schede: SezioneSchede,
@@ -145,7 +138,7 @@ export function App({ dati, store, utenteId = null, isOwner = false, puoScrivere
     sezione: posizione.sezione, parametri: posizione.parametri, vai, setSporco,
   };
 
-  const Sezione = SEZIONI[posizione.sezione] ?? segnaposto(posizione.sezione);
+  const Sezione = SEZIONI[posizione.sezione] ?? SezioneOggi;
 
   return html`
     <${Contesto.Provider} value=${valore}>
