@@ -4,7 +4,7 @@ import { risolviGiorno, eccezioniSpostamento, usiScheda } from '../logic/risoluz
 import { validaScheda, validaPiano } from '../logic/validazione.js';
 
 export const DIARIO_VUOTO = { riscaldamentoFatti: [], stretchingFatti: [], principaleFatto: false, sensazione: null, nota: '', sessioniCollegate: [], rilevamentoIgnorato: false };
-const COLLEZIONI = ['schede', 'settimane', 'eccezioni', 'alimentazione', 'diario', 'salute', 'sessioni', 'impostazioni', 'sync', 'tracciati'];
+const COLLEZIONI = ['schede', 'settimane', 'eccezioni', 'alimentazione', 'diario', 'salute', 'sessioni', 'impostazioni', 'sync', 'tracciati', 'hevy'];
 const CHIAVI_SISTEMA = ['id', 'validaDal', 'autore', 'salvataIl'];
 
 const conId = (d) => ({ ...d.data(), id: d.id });
@@ -48,7 +48,7 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
   }
 
   /**
-   * Sottoscrizioni: esattamente 10, una per collezione di primo livello, qualunque sia il numero di schede
+   * Sottoscrizioni: esattamente 11, una per collezione di primo livello, qualunque sia il numero di schede
    * (il db ammette al massimo 64 sottoscrizioni attive per vista).
    * Le revisioni (`schede/{id}/revisioni/{revId}`, §5.2) NON hanno un listener: si leggono con `get()`
    * una tantum. Ogni salvataggio aggiunge la revisione e POI aggiorna `revisioneCorrente` sul documento
@@ -62,7 +62,7 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
   function osserva(onDati, onErrore) {
     const LETTURE_PARALLELE = 4;
     const caricate = new Set();
-    const parziale = { schede: {}, settimane: [], eccezioni: {}, alimentazione: [], diario: {}, salute: {}, sessioni: [], impostazioni: {}, sync: {}, tracciati: {} };
+    const parziale = { schede: {}, settimane: [], eccezioni: {}, alimentazione: [], diario: {}, salute: {}, sessioni: [], impostazioni: {}, sync: {}, tracciati: {}, hevy: {} };
     const revisioni = {};
     const statoRev = new Map(); // schedaId -> { letta: revisioneCorrente dell'ultima lettura riuscita | undefined, richiesta: chiave in lettura | undefined }
     const coda = [];
@@ -87,6 +87,7 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
         impostazioni: parziale.impostazioni,
         sync: parziale.sync,
         tracciati: parziale.tracciati,
+        hevy: parziale.hevy, // { catalogo } se la sincronizzazione Hevy l'ha già scritto
       };
       onDati(ultimi);
       emesso = true;
@@ -154,6 +155,7 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
       impostazioni: (d) => { parziale.impostazioni = perData(d); },
       sync: (d) => { parziale.sync = perData(d); },
       tracciati: (d) => { parziale.tracciati = perData(d); },
+      hevy: (d) => { parziale.hevy = perData(d); },
     };
     const offs = COLLEZIONI.map((nome) =>
       db.collection(nome).onSnapshot((s) => {

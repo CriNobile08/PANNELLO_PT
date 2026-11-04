@@ -1,0 +1,3726 @@
+[
+  {
+    "id": "90_90_Hamstring",
+    "name": "Femorali 90/90",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "push",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [
+      "polpacci"
+    ],
+    "instructions": [
+      "Sdraiati sulla schiena con una gamba distesa.",
+      "Con l'altra gamba, fletti anca e ginocchio a 90 gradi. Se necessario puoi sostenere la gamba con le mani. Questa è la posizione di partenza.",
+      "Distendi la gamba verso l'alto, fermandoti brevemente in cima. Riporta la gamba nella posizione di partenza.",
+      "Ripeti per 10-20 ripetizioni, poi cambia gamba."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/90_90_Hamstring/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/90_90_Hamstring/1.jpg"
+    ],
+    "name_en": "90/90 Hamstring"
+  },
+  {
+    "id": "Adductor",
+    "name": "Adduttori (foam roller)",
+    "app_sub_category": "foam_rolling",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "foam roller",
+    "primaryMuscles": [
+      "adduttori"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati a pancia in giù con una gamba sul foam roller.",
+      "Ruota la gamba in modo che il rullo sia a contatto con l'interno coscia. Sposta sul rullo quanto più peso riesci a tollerare.",
+      "Cercando di rilassare i muscoli dell'interno coscia, rulla tra anca e ginocchio, mantenendo la pressione sui punti di tensione per 10-30 secondi. Ripeti con l'altra gamba."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Adductor/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Adductor/1.jpg"
+    ],
+    "name_en": "Adductor"
+  },
+  {
+    "id": "Adductor_Groin",
+    "name": "Allungamento adduttori/inguine",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "adduttori"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati sulla schiena con i piedi sollevati verso il soffitto.",
+      "Fatti tenere piedi o caviglie dal partner. Divarica le gambe il più possibile. Questa è la posizione di partenza.",
+      "Cerca di chiudere le gambe per almeno 10 secondi, mentre il partner te lo impedisce.",
+      "Ora rilassa i muscoli delle gambe mentre il partner ti allarga i piedi, allungando fin dove è comodo per te. Comunica al partner quando l'allungamento è sufficiente, per evitare di forzare troppo o farti male."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Adductor_Groin/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Adductor_Groin/1.jpg"
+    ],
+    "name_en": "Adductor/Groin"
+  },
+  {
+    "id": "All_Fours_Quad_Stretch",
+    "name": "Allungamento quadricipite in quadrupedia",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [
+      "quadricipiti"
+    ],
+    "instructions": [
+      "Parti in quadrupedia su mani e ginocchia, poi solleva una gamba da terra e afferra il piede con la mano.",
+      "Tieni il piede o la caviglia con la mano, mantenendo il ginocchio completamente flesso, per allungare quadricipite e flessori dell'anca.",
+      "Concentrati sull'estendere le anche, spingendole verso il pavimento. Mantieni per 10-20 secondi, poi cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/All_Fours_Quad_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/All_Fours_Quad_Stretch/1.jpg"
+    ],
+    "name_en": "All Fours Quad Stretch"
+  },
+  {
+    "id": "Alternate_Leg_Diagonal_Bound",
+    "name": "Balzi diagonali a gambe alternate",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "plyometrics",
+    "level": "principiante",
+    "force": "push",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [
+      "abduttori",
+      "adduttori",
+      "polpacci",
+      "glutei",
+      "femorali"
+    ],
+    "instructions": [
+      "Assumi una posizione comoda con un piede leggermente avanti rispetto all'altro.",
+      "Spingi con la gamba avanti, portando il ginocchio opposto in avanti e il più in alto possibile prima di atterrare. Cerca di coprire più distanza possibile lateralmente a ogni balzo.",
+      "Può aiutare usare una linea a terra come riferimento per la distanza laterale.",
+      "Ripeti la sequenza con l'altra gamba."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Alternate_Leg_Diagonal_Bound/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Alternate_Leg_Diagonal_Bound/1.jpg"
+    ],
+    "name_en": "Alternate Leg Diagonal Bound"
+  },
+  {
+    "id": "Ankle_Circles",
+    "name": "Circonduzioni della caviglia",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "pull",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "polpacci"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Reggiti a un oggetto stabile, ad esempio un rack.",
+      "Solleva la gamba destra (circa 5 cm da terra) ed esegui un movimento circolare con l'alluce, come se disegnassi un grande cerchio. Un cerchio equivale a 1 ripetizione. Respira normalmente durante il movimento.",
+      "Terminato con il piede destro, ripeti con la gamba sinistra."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Ankle_Circles/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Ankle_Circles/1.jpg"
+    ],
+    "name_en": "Ankle Circles"
+  },
+  {
+    "id": "Ankle_On_The_Knee",
+    "name": "Caviglia sul ginocchio",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "glutei"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Da sdraiato, piega le ginocchia tenendo i piedi a terra.",
+      "Appoggia la caviglia di un piede sul ginocchio opposto.",
+      "Afferra la coscia o il ginocchio della gamba sotto e porta entrambe le gambe verso il petto. Rilassa collo e spalle. Mantieni per 10-20 secondi, poi cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Ankle_On_The_Knee/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Ankle_On_The_Knee/1.jpg"
+    ],
+    "name_en": "Ankle On The Knee"
+  },
+  {
+    "id": "Anterior_Tibialis-SMR",
+    "name": "Tibiale anteriore (automassaggio)",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "polpacci"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Siediti a terra con le gambe piegate e i piedi appoggiati.",
+      "Con un roller da massaggio o un mattarello, esercita pressione sui muscoli della parte esterna dello stinco. Lavora da appena sotto il ginocchio fino a sopra la caviglia, fermandoti sui punti di tensione per 10-30 secondi. Ripeti sull'altra gamba."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Anterior_Tibialis-SMR/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Anterior_Tibialis-SMR/1.jpg"
+    ],
+    "name_en": "Anterior Tibialis-SMR"
+  },
+  {
+    "id": "Arm_Circles",
+    "name": "Circonduzioni delle braccia",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "push",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "spalle"
+    ],
+    "secondaryMuscles": [
+      "trapezi"
+    ],
+    "instructions": [
+      "In piedi, distendi le braccia lateralmente. Le braccia devono essere parallele al pavimento e perpendicolari (90 gradi) al busto. Questa è la posizione di partenza.",
+      "Inizia lentamente a disegnare cerchi di circa 30 cm di diametro con ciascun braccio. Respira normalmente durante il movimento.",
+      "Continua il movimento circolare per circa dieci secondi, poi inverti il senso di rotazione."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Arm_Circles/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Arm_Circles/1.jpg"
+    ],
+    "name_en": "Arm Circles"
+  },
+  {
+    "id": "Behind_Head_Chest_Stretch",
+    "name": "Allungamento pettorali mani dietro la testa",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "esperto",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "pettorali"
+    ],
+    "secondaryMuscles": [
+      "spalle"
+    ],
+    "instructions": [
+      "Siediti con il busto eretto sul pavimento, con il partner dietro di te.",
+      "Metti le mani dietro la testa e porta i gomiti indietro il più possibile. Il partner ti tiene i gomiti. Questa è la posizione di partenza.",
+      "Con le mani sempre dietro la testa, cerca delicatamente di portare i gomiti in avanti per almeno 10 secondi. Il partner impedisce ai gomiti di muoversi.",
+      "Ora rilassa i muscoli e lascia che il partner tiri delicatamente indietro i gomiti fin dove è comodo per te. Comunica al partner quando l'allungamento è sufficiente, per evitare di forzare troppo o farti male."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Behind_Head_Chest_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Behind_Head_Chest_Stretch/1.jpg"
+    ],
+    "name_en": "Behind Head Chest Stretch"
+  },
+  {
+    "id": "Bench_Jump",
+    "name": "Salto sulla panca",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "plyometrics",
+    "level": "intermedio",
+    "force": "push",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [
+      "polpacci",
+      "glutei",
+      "femorali"
+    ],
+    "instructions": [
+      "Posiziona un box o una panca a 30-60 cm davanti a te. In piedi, piedi alla larghezza delle spalle. Questa è la posizione di partenza.",
+      "Esegui un breve accosciamento per preparare il salto, portando le braccia indietro.",
+      "Rimbalza da questa posizione estendendo anche, ginocchia e caviglie per saltare il più in alto possibile. Slancia le braccia in avanti e verso l'alto.",
+      "Salta oltre la panca, atterrando con le ginocchia piegate e assorbendo l'impatto con le gambe.",
+      "Girati verso la direzione opposta e salta di nuovo oltre la panca."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bench_Jump/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bench_Jump/1.jpg"
+    ],
+    "name_en": "Bench Jump"
+  },
+  {
+    "id": "Brachialis-SMR",
+    "name": "Brachiale (foam roller)",
+    "app_sub_category": "foam_rolling",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "foam roller",
+    "primaryMuscles": [
+      "bicipiti"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati su un fianco con la parte alta del braccio appoggiata sul foam roller. Il braccio deve essere più o meno allineato al corpo, con la parte esterna del bicipite premuta sul rullo.",
+      "Solleva le anche da terra, sostenendo il peso su braccio e piedi. Mantieni per 10-30 secondi, poi cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Brachialis-SMR/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Brachialis-SMR/1.jpg"
+    ],
+    "name_en": "Brachialis-SMR"
+  },
+  {
+    "id": "Calf_Stretch_Elbows_Against_Wall",
+    "name": "Allungamento polpacci con gomiti al muro",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "polpacci"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "In piedi, di fronte a un muro, a circa mezzo metro di distanza.",
+      "Appoggiati al muro, scaricando il peso sugli avambracci.",
+      "Cerca di tenere i talloni a terra. Mantieni per 10-20 secondi. Puoi allontanarti o avvicinarti al muro per rendere l'esercizio rispettivamente più o meno difficile."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Calf_Stretch_Elbows_Against_Wall/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Calf_Stretch_Elbows_Against_Wall/1.jpg"
+    ],
+    "name_en": "Calf Stretch Elbows Against Wall"
+  },
+  {
+    "id": "Calf_Stretch_Hands_Against_Wall",
+    "name": "Allungamento polpaccio con mani al muro",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "polpacci"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "In piedi, di fronte a un muro, a circa un metro di distanza. Sfalsa i piedi, portandone uno avanti.",
+      "Inclinati in avanti e appoggia le mani al muro, mantenendo tallone, anca e testa in linea retta.",
+      "Cerca di tenere il tallone a terra. Mantieni per 10-20 secondi, poi cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Calf_Stretch_Hands_Against_Wall/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Calf_Stretch_Hands_Against_Wall/1.jpg"
+    ],
+    "name_en": "Calf Stretch Hands Against Wall"
+  },
+  {
+    "id": "Calves-SMR",
+    "name": "Polpacci (foam roller)",
+    "app_sub_category": "foam_rolling",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "foam roller",
+    "primaryMuscles": [
+      "polpacci"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Siediti a terra. Posiziona un foam roller sotto la parte bassa della gamba. L'altra gamba può essere incrociata sopra o appoggiata a terra per sostenere parte del peso. Questa è la posizione di partenza.",
+      "Appoggia le mani di lato o appena dietro di te e spingi per sollevare le anche da terra, scaricando gran parte del peso sul polpaccio. Rulla da sotto il ginocchio fino a sopra la caviglia, fermandoti sui punti di tensione per 10-30 secondi. Ripeti con l'altra gamba."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Calves-SMR/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Calves-SMR/1.jpg"
+    ],
+    "name_en": "Calves-SMR"
+  },
+  {
+    "id": "Carioca_Quick_Step",
+    "name": "Passo incrociato rapido (carioca)",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "plyometrics",
+    "level": "principiante",
+    "force": "unspecified",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "adduttori"
+    ],
+    "secondaryMuscles": [
+      "addominali",
+      "abduttori",
+      "polpacci",
+      "glutei",
+      "femorali",
+      "quadricipiti"
+    ],
+    "instructions": [
+      "Parti con i piedi a pochi centimetri di distanza e il braccio sinistro sollevato, in posizione atletica e rilassata.",
+      "Con il piede destro, esegui un passo rapido incrociando dietro e porta il ginocchio in alto.",
+      "Slancia le braccia verso l'alto mentre sollevi il ginocchio destro, assicurandoti che il ginocchio salga e scenda in verticale. Evita di ruotare i piedi e continua a guardare avanti mentre ti sposti lateralmente."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Carioca_Quick_Step/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Carioca_Quick_Step/1.jpg"
+    ],
+    "name_en": "Carioca Quick Step"
+  },
+  {
+    "id": "Cat_Stretch",
+    "name": "Allungamento del gatto",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "zona lombare"
+    ],
+    "secondaryMuscles": [
+      "parte centrale della schiena",
+      "trapezi"
+    ],
+    "instructions": [
+      "Posizionati a terra in quadrupedia, su mani e ginocchia.",
+      "Contrai l'addome e incurva la colonna, la zona lombare, le spalle e il collo, lasciando cadere la testa.",
+      "Mantieni per 15 secondi."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cat_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Cat_Stretch/1.jpg"
+    ],
+    "name_en": "Cat Stretch"
+  },
+  {
+    "id": "Chair_Leg_Extended_Stretch",
+    "name": "Allungamento gamba distesa da seduto",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [
+      "adduttori"
+    ],
+    "instructions": [
+      "Siediti con il busto eretto su una sedia e afferra i lati della seduta.",
+      "Solleva una gamba estendendo il ginocchio e flettendo la caviglia.",
+      "Porta lentamente la gamba verso l'esterno il più possibile, poi riportala al centro e abbassala.",
+      "Ripeti con l'altra gamba."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chair_Leg_Extended_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chair_Leg_Extended_Stretch/1.jpg"
+    ],
+    "name_en": "Chair Leg Extended Stretch"
+  },
+  {
+    "id": "Chair_Lower_Back_Stretch",
+    "name": "Allungamento zona lombare da seduto",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "dorsali"
+    ],
+    "secondaryMuscles": [
+      "zona lombare"
+    ],
+    "instructions": [
+      "Siediti con il busto eretto su una sedia.",
+      "Piegati di lato con il braccio sopra la testa. Puoi tenerti alla sedia con la mano libera.",
+      "Mantieni per 10 secondi e ripeti dall'altro lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chair_Lower_Back_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chair_Lower_Back_Stretch/1.jpg"
+    ],
+    "name_en": "Chair Lower Back Stretch"
+  },
+  {
+    "id": "Chair_Upper_Body_Stretch",
+    "name": "Allungamento parte alta del corpo con sedia",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "spalle"
+    ],
+    "secondaryMuscles": [
+      "bicipiti",
+      "pettorali"
+    ],
+    "instructions": [
+      "Siediti sul bordo di una sedia, afferrandone lo schienale.",
+      "Distendi le braccia mantenendo la schiena dritta e porta il busto in avanti fino a sentire l'allungamento. Mantieni per 20-30 secondi."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chair_Upper_Body_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chair_Upper_Body_Stretch/1.jpg"
+    ],
+    "name_en": "Chair Upper Body Stretch"
+  },
+  {
+    "id": "Chest_And_Front_Of_Shoulder_Stretch",
+    "name": "Allungamento petto e spalla anteriore",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "pettorali"
+    ],
+    "secondaryMuscles": [
+      "spalle"
+    ],
+    "instructions": [
+      "In piedi con le gambe unite, tieni un bastone (bodybar o manico di scopa).",
+      "Impugna il bastone con una presa leggermente più larga delle spalle, tenendolo davanti a te con i palmi rivolti verso il basso.",
+      "Solleva con cautela il bastone sopra e dietro la testa."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chest_And_Front_Of_Shoulder_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chest_And_Front_Of_Shoulder_Stretch/1.jpg"
+    ],
+    "name_en": "Chest And Front Of Shoulder Stretch"
+  },
+  {
+    "id": "Chest_Stretch_on_Stability_Ball",
+    "name": "Allungamento pettorali sulla fitball",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "fitball",
+    "primaryMuscles": [
+      "pettorali"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Mettiti in quadrupedia accanto a una fitball.",
+      "Appoggia il gomito sopra la palla, con il braccio aperto lateralmente. Questa è la posizione di partenza.",
+      "Abbassa il busto verso il pavimento mantenendo il gomito sulla palla. Mantieni l'allungamento per 20-30 secondi e ripeti con l'altro braccio."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chest_Stretch_on_Stability_Ball/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chest_Stretch_on_Stability_Ball/1.jpg"
+    ],
+    "name_en": "Chest Stretch on Stability Ball"
+  },
+  {
+    "id": "Childs_Pose",
+    "name": "Posizione del bambino",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "zona lombare"
+    ],
+    "secondaryMuscles": [
+      "glutei",
+      "parte centrale della schiena"
+    ],
+    "instructions": [
+      "Mettiti in quadrupedia e fai avanzare le mani davanti a te.",
+      "Abbassa i glutei fino a sederti sui talloni. Lascia scivolare le braccia sul pavimento mentre ti siedi indietro, per allungare tutta la colonna.",
+      "Una volta seduto sui talloni, porta le mani accanto ai piedi e rilassati. \"Respira\" con la schiena. Appoggia la fronte a terra. Evita questa posizione se hai problemi alle ginocchia."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Childs_Pose/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Childs_Pose/1.jpg"
+    ],
+    "name_en": "Child's Pose"
+  },
+  {
+    "id": "Chin_To_Chest_Stretch",
+    "name": "Allungamento mento al petto",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "collo"
+    ],
+    "secondaryMuscles": [
+      "trapezi"
+    ],
+    "instructions": [
+      "Siediti a terra.",
+      "Metti entrambe le mani dietro la testa con le dita intrecciate, i pollici verso il basso e i gomiti rivolti in avanti. Porta lentamente la testa verso il petto. Mantieni per 20-30 secondi."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chin_To_Chest_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Chin_To_Chest_Stretch/1.jpg"
+    ],
+    "name_en": "Chin To Chest Stretch"
+  },
+  {
+    "id": "Crossover_Reverse_Lunge",
+    "name": "Affondo indietro con rotazione",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "pull",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "zona lombare"
+    ],
+    "secondaryMuscles": [
+      "addominali",
+      "abduttori",
+      "glutei",
+      "femorali",
+      "quadricipiti"
+    ],
+    "instructions": [
+      "In piedi, piedi alla larghezza delle spalle. Questa è la posizione di partenza.",
+      "Esegui un affondo indietro portando un piede dietro e flettendo anche e ginocchio anteriore. Mentre scendi, ruota il busto verso la gamba avanti.",
+      "Dopo una breve pausa torna alla posizione di partenza e ripeti dall'altro lato, alternando."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Crossover_Reverse_Lunge/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Crossover_Reverse_Lunge/1.jpg"
+    ],
+    "name_en": "Crossover Reverse Lunge"
+  },
+  {
+    "id": "Dancers_Stretch",
+    "name": "Allungamento del ballerino",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "zona lombare"
+    ],
+    "secondaryMuscles": [
+      "abduttori",
+      "glutei"
+    ],
+    "instructions": [
+      "Siediti a terra.",
+      "Incrocia la gamba destra sopra la sinistra, mantenendo il ginocchio piegato. La gamba sinistra è distesa a terra.",
+      "Appoggia il braccio sinistro sulla gamba destra e la mano destra a terra.",
+      "Ruota il busto verso destra e mantieni per 10-20 secondi. Cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dancers_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dancers_Stretch/1.jpg"
+    ],
+    "name_en": "Dancer's Stretch"
+  },
+  {
+    "id": "Double_Leg_Butt_Kick",
+    "name": "Calciata ai glutei a gambe unite",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "plyometrics",
+    "level": "principiante",
+    "force": "push",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [
+      "abduttori",
+      "adduttori",
+      "polpacci",
+      "glutei",
+      "femorali"
+    ],
+    "instructions": [
+      "In piedi con le ginocchia leggermente piegate.",
+      "Accosciati rapidamente di poco, flettendo anche e ginocchia, e distenditi subito per saltare il più in alto possibile.",
+      "Mentre sali, porta i talloni verso i glutei flettendo le ginocchia, cercando di toccarli.",
+      "Concludi atterrando con le ginocchia solo parzialmente piegate, usando le gambe per assorbire l'impatto."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Double_Leg_Butt_Kick/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Double_Leg_Butt_Kick/1.jpg"
+    ],
+    "name_en": "Double Leg Butt Kick"
+  },
+  {
+    "id": "Dynamic_Back_Stretch",
+    "name": "Allungamento dinamico della schiena",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "pull",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "dorsali"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "In piedi, piedi alla larghezza delle spalle. Questa è la posizione di partenza.",
+      "Mantenendo le braccia tese, slanciale in avanti e verso l'alto per 5-10 volte, aumentando ogni volta l'ampiezza del movimento fino a portarle sopra la testa."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dynamic_Back_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dynamic_Back_Stretch/1.jpg"
+    ],
+    "name_en": "Dynamic Back Stretch"
+  },
+  {
+    "id": "Dynamic_Chest_Stretch",
+    "name": "Allungamento dinamico del petto",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "pull",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "pettorali"
+    ],
+    "secondaryMuscles": [
+      "parte centrale della schiena"
+    ],
+    "instructions": [
+      "In piedi con le mani unite e le braccia distese davanti a te. Questa è la posizione di partenza.",
+      "Mantenendo le braccia tese, portale rapidamente indietro il più possibile e poi di nuovo avanti, come un battito di mani esagerato. Ripeti 5-10 volte, aumentando la velocità."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dynamic_Chest_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dynamic_Chest_Stretch/1.jpg"
+    ],
+    "name_en": "Dynamic Chest Stretch"
+  },
+  {
+    "id": "Elbow_Circles",
+    "name": "Circonduzioni dei gomiti",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "pull",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "spalle"
+    ],
+    "secondaryMuscles": [
+      "trapezi"
+    ],
+    "instructions": [
+      "Seduto o in piedi, con i piedi leggermente divaricati.",
+      "Appoggia le mani sulle spalle, con i gomiti all'altezza delle spalle e rivolti verso l'esterno.",
+      "Disegna lentamente un cerchio con i gomiti. Espira quando inizi il cerchio e inspira quando lo completi."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Elbow_Circles/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Elbow_Circles/1.jpg"
+    ],
+    "name_en": "Elbow Circles"
+  },
+  {
+    "id": "Elbows_Back",
+    "name": "Gomiti indietro",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "pettorali"
+    ],
+    "secondaryMuscles": [
+      "spalle"
+    ],
+    "instructions": [
+      "In piedi, con il busto eretto.",
+      "Appoggia entrambe le mani sulla zona lombare, dita rivolte verso il basso e gomiti verso l'esterno.",
+      "Porta delicatamente i gomiti indietro, cercando di farli toccare."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Elbows_Back/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Elbows_Back/1.jpg"
+    ],
+    "name_en": "Elbows Back"
+  },
+  {
+    "id": "Fast_Skipping",
+    "name": "Skip veloce",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "plyometrics",
+    "level": "principiante",
+    "force": "push",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [
+      "abduttori",
+      "adduttori",
+      "polpacci",
+      "glutei",
+      "femorali"
+    ],
+    "instructions": [
+      "Parti in posizione rilassata con una gamba leggermente avanti. Questa è la posizione di partenza.",
+      "Esegui lo skip con uno schema passo-saltello: destro-destro, poi sinistro-sinistro, alternando avanti e indietro.",
+      "Esegui skip veloci mantenendo un contatto ravvicinato con il suolo e riducendo il tempo in volo, muovendoti il più rapidamente possibile."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Fast_Skipping/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Fast_Skipping/1.jpg"
+    ],
+    "name_en": "Fast Skipping"
+  },
+  {
+    "id": "Foot-SMR",
+    "name": "Piede (automassaggio)",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "polpacci"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Questo esercizio allunga la fascia dei muscoli del piede. Parti da seduto, senza scarpe. Con un roller per piedi o un oggetto simile, come un piccolo tubo in PVC, appoggia l'arco plantare sul rullo. Questa è la posizione di partenza.",
+      "Premi con decisione, rullando lungo l'arco del piede. Mantieni per 10-30 secondi, poi cambia piede."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Foot-SMR/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Foot-SMR/1.jpg"
+    ],
+    "name_en": "Foot-SMR"
+  },
+  {
+    "id": "Frog_Hops",
+    "name": "Salti della rana",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "push",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [
+      "polpacci",
+      "glutei",
+      "femorali"
+    ],
+    "instructions": [
+      "In piedi con le mani dietro la testa, accosciati mantenendo il busto eretto e la testa alta. Questa è la posizione di partenza.",
+      "Salta in avanti di circa un metro, evitando di saltare inutilmente in alto. Quando i piedi toccano terra, assorbi l'impatto con le gambe e salta di nuovo. Ripeti 5-10 volte."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Frog_Hops/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Frog_Hops/1.jpg"
+    ],
+    "name_en": "Frog Hops"
+  },
+  {
+    "id": "Front_Leg_Raises",
+    "name": "Slanci frontali della gamba",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "pull",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "In piedi accanto a una sedia o a un altro sostegno, tenendoti con una mano.",
+      "Slancia la gamba in avanti mantenendola tesa. Prosegui con uno slancio verso il basso, portando la gamba indietro quanto la tua flessibilità consente. Ripeti 5-10 volte, poi cambia gamba."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Leg_Raises/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Leg_Raises/1.jpg"
+    ],
+    "name_en": "Front Leg Raises"
+  },
+  {
+    "id": "Groin_and_Back_Stretch",
+    "name": "Allungamento inguine e schiena",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "adduttori"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Siediti a terra con le ginocchia piegate e le piante dei piedi unite.",
+      "Intreccia le dita dietro la testa. Questa è la posizione di partenza.",
+      "Fletti il busto in avanti, portando i gomiti all'interno delle cosce. Dopo una breve pausa torna alla posizione di partenza con la testa alta e la schiena dritta. Ripeti per 10-20 ripetizioni."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Groin_and_Back_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Groin_and_Back_Stretch/1.jpg"
+    ],
+    "name_en": "Groin and Back Stretch"
+  },
+  {
+    "id": "Groiners",
+    "name": "Groiners",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "pull",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "adduttori"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Parti in posizione di piegamento (plank a braccia tese). Questa è la posizione di partenza.",
+      "Con entrambe le gambe, salta in avanti atterrando con i piedi accanto alle mani. Mantieni la testa alta.",
+      "Torna alla posizione di partenza e ripeti subito il movimento, per 10-20 ripetizioni."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Groiners/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Groiners/1.jpg"
+    ],
+    "name_en": "Groiners"
+  },
+  {
+    "id": "Hamstring-SMR",
+    "name": "Femorali (foam roller)",
+    "app_sub_category": "foam_rolling",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "foam roller",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Da seduto, distendi le gambe sopra un foam roller in modo che si trovi sotto la parte posteriore delle cosce. Appoggia le mani di lato o dietro di te per sostenere il peso. Questa è la posizione di partenza.",
+      "Aiutandoti con le mani, solleva le anche da terra e sposta il peso sul rullo su una sola gamba. Rilassa i femorali della gamba che stai allungando.",
+      "Rulla da sotto l'anca fino a sopra il retro del ginocchio, fermandoti sui punti di tensione per 10-30 secondi. Ripeti con l'altra gamba."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hamstring-SMR/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hamstring-SMR/1.jpg"
+    ],
+    "name_en": "Hamstring-SMR"
+  },
+  {
+    "id": "Hamstring_Stretch",
+    "name": "Allungamento femorali",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati sulla schiena con una gamba sollevata e l'anca a novanta gradi. Tieni l'altra gamba distesa a terra.",
+      "Passa una cintura, un elastico o una corda attorno all'avampiede. Questa è la posizione di partenza.",
+      "Tira la cintura per creare tensione su polpacci e femorali. Mantieni l'allungamento per 10-30 secondi e ripeti con l'altra gamba."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hamstring_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hamstring_Stretch/1.jpg"
+    ],
+    "name_en": "Hamstring Stretch"
+  },
+  {
+    "id": "Hip_Circles_prone",
+    "name": "Circonduzioni dell'anca in quadrupedia",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "pull",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "abduttori"
+    ],
+    "secondaryMuscles": [
+      "adduttori"
+    ],
+    "instructions": [
+      "Posizionati a terra in quadrupedia. Mantenendo una buona postura, solleva da terra un ginocchio piegato. Questa è la posizione di partenza.",
+      "Mantenendo il ginocchio piegato, ruota il femore disegnando un arco, cercando di fare un grande cerchio con il ginocchio.",
+      "Esegui lentamente per alcune ripetizioni, poi ripeti dall'altro lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hip_Circles_prone/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hip_Circles_prone/1.jpg"
+    ],
+    "name_en": "Hip Circles (prone)"
+  },
+  {
+    "id": "Hug_A_Ball",
+    "name": "Abbraccio alla fitball",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "fitball",
+    "primaryMuscles": [
+      "zona lombare"
+    ],
+    "secondaryMuscles": [
+      "polpacci",
+      "glutei"
+    ],
+    "instructions": [
+      "Siediti a terra.",
+      "Metti una fitball tra le gambe divaricate e abbassa le anche verso il pavimento.",
+      "Abbraccia la palla con le braccia per sostenere il corpo. Sistema le gambe in modo che i piedi siano ben appoggiati a terra e le ginocchia allineate sopra le caviglie. Tieni bene la palla perché non rotoli via facendoti cadere sui glutei."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hug_A_Ball/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hug_A_Ball/1.jpg"
+    ],
+    "name_en": "Hug A Ball"
+  },
+  {
+    "id": "Hug_Knees_To_Chest",
+    "name": "Ginocchia al petto",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "zona lombare"
+    ],
+    "secondaryMuscles": [
+      "glutei"
+    ],
+    "instructions": [
+      "Sdraiati sulla schiena e porta entrambe le ginocchia al petto.",
+      "Tieni le braccia sotto le ginocchia, non sopra (metteresti troppa pressione sulle articolazioni del ginocchio).",
+      "Porta lentamente le ginocchia verso le spalle. Questo allunga anche i glutei."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hug_Knees_To_Chest/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Hug_Knees_To_Chest/1.jpg"
+    ],
+    "name_en": "Hug Knees To Chest"
+  },
+  {
+    "id": "IT_Band_and_Glute_Stretch",
+    "name": "Allungamento bandelletta ileotibiale e glutei",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "abduttori"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Da sdraiato, passa una cintura, una corda o un elastico attorno a un piede e porta quella gamba dall'altro lato del corpo, mantenendola distesa. Questa è la posizione di partenza.",
+      "Tenendo il piede sollevato da terra, tira la cintura usando la tensione per portare le dita del piede verso di te. Mantieni per 10-20 secondi e ripeti dall'altro lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/IT_Band_and_Glute_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/IT_Band_and_Glute_Stretch/1.jpg"
+    ],
+    "name_en": "IT Band and Glute Stretch"
+  },
+  {
+    "id": "Iliotibial_Tract-SMR",
+    "name": "Bandelletta ileotibiale (foam roller)",
+    "app_sub_category": "foam_rolling",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "foam roller",
+    "primaryMuscles": [
+      "abduttori"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati su un fianco, con la gamba sotto appoggiata sul foam roller tra anca e ginocchio. L'altra gamba può essere incrociata davanti a te.",
+      "Scarica sulla gamba sotto quanto più peso riesci a tollerare; non serve che resti a contatto con il pavimento. Rilassa i muscoli della gamba che stai allungando.",
+      "Rulla la gamba dall'anca al ginocchio, fermandoti per 10-30 secondi sui punti di tensione. Ripeti con la gamba opposta."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Iliotibial_Tract-SMR/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Iliotibial_Tract-SMR/1.jpg"
+    ],
+    "name_en": "Iliotibial Tract-SMR"
+  },
+  {
+    "id": "Inchworm",
+    "name": "Inchworm (bruco)",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "unspecified",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "In piedi con i piedi vicini. Mantenendo le gambe tese, piegati e appoggia le mani a terra davanti a te. Questa è la posizione di partenza.",
+      "Fai avanzare lentamente le mani, alternando sinistra e destra. Fletti solo le anche, mantenendo le gambe tese.",
+      "Continua finché il corpo non è parallelo al pavimento, in posizione di piegamento.",
+      "Ora tieni ferme le mani e avanza lentamente con i piedi, a piccoli passi di pochi centimetri.",
+      "Continua a camminare finché i piedi non sono vicini alle mani, mantenendo le gambe tese."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Inchworm/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Inchworm/1.jpg"
+    ],
+    "name_en": "Inchworm"
+  },
+  {
+    "id": "Intermediate_Groin_Stretch",
+    "name": "Allungamento inguine intermedio",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati sulla schiena con le gambe distese. Passa una cintura, una corda o un elastico attorno a un piede e porta quella gamba di lato il più possibile. Questa è la posizione di partenza.",
+      "Tira delicatamente la cintura per creare tensione su adduttori e femorali. Mantieni per 10-20 secondi e ripeti dall'altro lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Intermediate_Groin_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Intermediate_Groin_Stretch/1.jpg"
+    ],
+    "name_en": "Intermediate Groin Stretch"
+  },
+  {
+    "id": "Intermediate_Hip_Flexor_and_Quad_Stretch",
+    "name": "Allungamento intermedio flessori dell'anca e quadricipite",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "compound",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati a pancia in giù con una corda, una cintura o un elastico attorno a un piede.",
+      "Fletti il ginocchio ed estendi l'anca della gamba da allungare, tirando la cintura con entrambe le mani. Ginocchio e anca devono sollevarsi da terra, creando tensione su flessori dell'anca e quadricipite. Mantieni per 10-20 secondi e ripeti con l'altra gamba."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Intermediate_Hip_Flexor_and_Quad_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Intermediate_Hip_Flexor_and_Quad_Stretch/1.jpg"
+    ],
+    "name_en": "Intermediate Hip Flexor and Quad Stretch"
+  },
+  {
+    "id": "Iron_Crosses_stretch",
+    "name": "Iron cross (allungamento)",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "pull",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati a pancia in giù con le braccia aperte lateralmente e i palmi premuti a terra. Questa è la posizione di partenza.",
+      "Fletti un ginocchio e porta la gamba dietro il corpo verso il lato opposto, cercando di toccare il pavimento vicino alla mano opposta.",
+      "Riporta subito la gamba alla posizione di partenza e ripeti rapidamente con l'altra gamba. Continua alternando per 10-20 ripetizioni."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Iron_Crosses_stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Iron_Crosses_stretch/1.jpg"
+    ],
+    "name_en": "Iron Crosses (stretch)"
+  },
+  {
+    "id": "Isometric_Chest_Squeezes",
+    "name": "Contrazione isometrica dei pettorali",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "plyometrics",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "pettorali"
+    ],
+    "secondaryMuscles": [
+      "spalle",
+      "tricipiti"
+    ],
+    "instructions": [
+      "Seduto o in piedi, piega le braccia a 90 gradi e unisci i palmi davanti al petto. Le mani devono essere aperte, palmi uniti e dita rivolte in avanti (perpendicolari al busto).",
+      "Spingi le mani una contro l'altra contraendo i pettorali. Parti con poca tensione e aumentala gradualmente. Continua a respirare normalmente durante la contrazione.",
+      "Mantieni per il numero di secondi indicato.",
+      "Ora rilascia lentamente la tensione.",
+      "Recupera per il tempo indicato e ripeti."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Isometric_Chest_Squeezes/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Isometric_Chest_Squeezes/1.jpg"
+    ],
+    "name_en": "Isometric Chest Squeezes"
+  },
+  {
+    "id": "Knee_Across_The_Body",
+    "name": "Ginocchio incrociato sul corpo",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "glutei"
+    ],
+    "secondaryMuscles": [
+      "abduttori",
+      "zona lombare"
+    ],
+    "instructions": [
+      "Sdraiati a terra con la gamba destra distesa. Piega la gamba sinistra e portala dall'altro lato del corpo, tenendo il ginocchio verso il pavimento con la mano destra. (Se sei rigido non è necessario che il ginocchio tocchi terra.)",
+      "Appoggia comodamente il braccio sinistro accanto a te e gira la testa a sinistra. Immagina di avere un peso legato al coccige: lascia che il coccige scenda verso il pavimento mentre il petto si allunga nella direzione opposta, per allungare la zona lombare. Cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Knee_Across_The_Body/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Knee_Across_The_Body/1.jpg"
+    ],
+    "name_en": "Knee Across The Body"
+  },
+  {
+    "id": "Knee_Circles",
+    "name": "Circonduzioni delle ginocchia",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "pull",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "polpacci"
+    ],
+    "secondaryMuscles": [
+      "femorali",
+      "quadricipiti"
+    ],
+    "instructions": [
+      "In piedi con le gambe unite e le mani sui fianchi.",
+      "Muovi le ginocchia con un movimento circolare, respirando normalmente.",
+      "Ripeti per il numero di ripetizioni indicato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Knee_Circles/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Knee_Circles/1.jpg"
+    ],
+    "name_en": "Knee Circles"
+  },
+  {
+    "id": "Knee_Tuck_Jump",
+    "name": "Salto raccolto (ginocchia al petto)",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "plyometrics",
+    "level": "principiante",
+    "force": "push",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [
+      "abduttori",
+      "adduttori",
+      "polpacci",
+      "glutei",
+      "quadricipiti"
+    ],
+    "instructions": [
+      "Parti in piedi in posizione comoda con le ginocchia leggermente piegate. Tieni le mani davanti a te all'altezza del petto, palmi verso il basso e punte delle dita a contatto. Questa è la posizione di partenza.",
+      "Scendi rapidamente in un quarto di squat e scatta subito verso l'alto. Porta le ginocchia al petto, cercando di toccare i palmi delle mani.",
+      "Salta il più in alto possibile sollevando le ginocchia, poi atterra bene distendendo di nuovo le gambe e assorbendo l'impatto lasciando che le ginocchia si pieghino."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Knee_Tuck_Jump/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Knee_Tuck_Jump/1.jpg"
+    ],
+    "name_en": "Knee Tuck Jump"
+  },
+  {
+    "id": "Kneeling_Arm_Drill",
+    "name": "Esercizio braccia in ginocchio",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "plyometrics",
+    "level": "principiante",
+    "force": "pull",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "spalle"
+    ],
+    "secondaryMuscles": [
+      "addominali"
+    ],
+    "instructions": [
+      "Questo esercizio migliora l'efficienza delle braccia nella corsa. Parti in ginocchio, piede sinistro avanti, ginocchio destro a terra. Spingi con il tallone anteriore per mantenere attivi glutei e femorali.",
+      "Inizia con oscillazioni ampie delle braccia, come un pendolo. Chiudi l'angolo del braccio, muovendo le braccia come nella corsa leggera, poi passa alla corsa e infine allo sprint.",
+      "Appena le mani superano l'anca, accelerale in avanti come nello sprint, per muoverle il più rapidamente possibile.",
+      "Cambia ginocchio e ripeti."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kneeling_Arm_Drill/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kneeling_Arm_Drill/1.jpg"
+    ],
+    "name_en": "Kneeling Arm Drill"
+  },
+  {
+    "id": "Kneeling_Forearm_Stretch",
+    "name": "Allungamento avambracci in ginocchio",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "avambracci"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Inginocchiati su un tappetino con i palmi appoggiati e le dita rivolte verso le ginocchia.",
+      "Inclinati lentamente all'indietro mantenendo i palmi a terra, finché non senti l'allungamento su polsi e avambracci. Mantieni per 20-30 secondi."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kneeling_Forearm_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kneeling_Forearm_Stretch/1.jpg"
+    ],
+    "name_en": "Kneeling Forearm Stretch"
+  },
+  {
+    "id": "Kneeling_Hip_Flexor",
+    "name": "Flessori dell'anca in ginocchio",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [
+      "quadricipiti"
+    ],
+    "instructions": [
+      "Inginocchiati su un tappetino, porta avanti il ginocchio destro con la pianta del piede a terra e distendi la gamba sinistra dietro di te con il dorso del piede a terra.",
+      "Sposta il peso in avanti finché non senti l'allungamento all'anca. Mantieni per 15 secondi, poi ripeti dall'altro lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kneeling_Hip_Flexor/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Kneeling_Hip_Flexor/1.jpg"
+    ],
+    "name_en": "Kneeling Hip Flexor"
+  },
+  {
+    "id": "Lateral_Bound",
+    "name": "Balzo laterale",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "plyometrics",
+    "level": "principiante",
+    "force": "push",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "adduttori"
+    ],
+    "secondaryMuscles": [
+      "abduttori",
+      "polpacci",
+      "glutei",
+      "femorali",
+      "quadricipiti"
+    ],
+    "instructions": [
+      "Assumi una posizione di mezzo squat, rivolto a 90 gradi rispetto alla direzione di spostamento. Questa è la posizione di partenza.",
+      "Lascia che la gamba guida esegua un contromovimento verso l'interno mentre sposti il peso sulla gamba esterna.",
+      "Spingi subito e distenditi, cercando di balzare lateralmente il più lontano possibile.",
+      "All'atterraggio, spingi subito nella direzione opposta, tornando alla posizione di partenza.",
+      "Continua avanti e indietro per diverse ripetizioni."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lateral_Bound/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lateral_Bound/1.jpg"
+    ],
+    "name_en": "Lateral Bound"
+  },
+  {
+    "id": "Latissimus_Dorsi-SMR",
+    "name": "Gran dorsale (foam roller)",
+    "app_sub_category": "foam_rolling",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "foam roller",
+    "primaryMuscles": [
+      "dorsali"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiato a terra, posiziona un foam roller sotto la schiena su un lato, appena dietro l'ascella. Questa è la posizione di partenza.",
+      "Tieni il braccio del lato da allungare dietro e di lato mentre sposti il peso sul dorsale, mantenendo la parte alta del corpo sollevata da terra. Mantieni per 10-30 secondi e cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Latissimus_Dorsi-SMR/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Latissimus_Dorsi-SMR/1.jpg"
+    ],
+    "name_en": "Latissimus Dorsi-SMR"
+  },
+  {
+    "id": "Leg-Up_Hamstring_Stretch",
+    "name": "Allungamento femorali a gamba sollevata",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "push",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati sulla schiena, piega un ginocchio e appoggia il piede a terra per stabilizzare la colonna.",
+      "Solleva l'altra gamba. Se sei rigido non riuscirai a distenderla del tutto: va bene. Estendi il ginocchio in modo che la pianta del piede sollevato sia rivolta verso il soffitto (o il più vicino possibile).",
+      "Distendi lentamente la gamba il più possibile, poi tirala verso il naso. Cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg-Up_Hamstring_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Leg-Up_Hamstring_Stretch/1.jpg"
+    ],
+    "name_en": "Leg-Up Hamstring Stretch"
+  },
+  {
+    "id": "Linear_3-Part_Start_Technique",
+    "name": "Tecnica di partenza lineare in 3 fasi",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "plyometrics",
+    "level": "principiante",
+    "force": "push",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [
+      "polpacci",
+      "quadricipiti"
+    ],
+    "instructions": [
+      "Questo esercizio ti aiuta ad accelerare il più rapidamente possibile in uno sprint da fermo. È utile partire da una linea. Inizia con entrambi i piedi sulla linea. Posiziona il piede sinistro con la punta accanto alla caviglia destra. Porta il piede destro 10-15 cm dietro il sinistro.",
+      "Appoggia la mano destra sulla linea e avvicina il naso al ginocchio sinistro.",
+      "Accosciati inclinandoti in avanti, con la testa più bassa delle anche e il peso caricato sulla gamba sinistra. Questa è la posizione di partenza.",
+      "Solleva la mano sinistra parallela al suolo, rivolta indietro, e scatta quando sei pronto."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Linear_3-Part_Start_Technique/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Linear_3-Part_Start_Technique/1.jpg"
+    ],
+    "name_en": "Linear 3-Part Start Technique"
+  },
+  {
+    "id": "Linear_Acceleration_Wall_Drill",
+    "name": "Esercizio di accelerazione al muro",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "plyometrics",
+    "level": "principiante",
+    "force": "unspecified",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [
+      "polpacci",
+      "glutei",
+      "quadricipiti"
+    ],
+    "instructions": [
+      "Appoggiati a un muro con un'inclinazione di circa 45 gradi. Piedi uniti, glutei contratti.",
+      "Solleva rapidamente il ginocchio destro, fai una pausa, poi spingilo dritto verso il suolo.",
+      "Cambia gamba, sollevando il ginocchio opposto e poi colpendo il suolo verso il basso.",
+      "Ripeti ancora una volta con la gamba destra e, appena il piede destro tocca terra, alterna rapidamente destra e sinistra il più velocemente possibile."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Linear_Acceleration_Wall_Drill/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Linear_Acceleration_Wall_Drill/1.jpg"
+    ],
+    "name_en": "Linear Acceleration Wall Drill"
+  },
+  {
+    "id": "Looking_At_Ceiling",
+    "name": "Sguardo al soffitto",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Inginocchiati a terra, afferrando i talloni con entrambe le mani.",
+      "Porta i glutei in alto e in avanti mentre porti la testa indietro guardando il soffitto, inarcando la schiena."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Looking_At_Ceiling/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Looking_At_Ceiling/1.jpg"
+    ],
+    "name_en": "Looking At Ceiling"
+  },
+  {
+    "id": "Lower_Back-SMR",
+    "name": "Zona lombare (foam roller)",
+    "app_sub_category": "foam_rolling",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "foam roller",
+    "primaryMuscles": [
+      "zona lombare"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Da seduto, posiziona un foam roller sotto la zona lombare. Incrocia le braccia davanti a te e porta le spalle in avanti. Questa è la posizione di partenza.",
+      "Solleva le anche da terra e inclinati indietro, scaricando il peso sulla zona lombare. Ora sposta leggermente il peso su un lato, togliendolo dalla colonna e portandolo sui muscoli a lato. Rulla sulla zona lombare, fermandoti sui punti di tensione per 10-30 secondi. Ripeti dall'altro lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lower_Back-SMR/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lower_Back-SMR/1.jpg"
+    ],
+    "name_en": "Lower Back-SMR"
+  },
+  {
+    "id": "Lower_Back_Curl",
+    "name": "Estensione lombare a terra",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "addominali"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati a pancia in giù con le braccia lungo i fianchi. Questa è la posizione di partenza.",
+      "Usando i muscoli lombari, estendi la colonna sollevando il petto da terra. Non spingerti con le braccia. Mantieni la testa alta durante il movimento. Ripeti per 10-20 ripetizioni."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lower_Back_Curl/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lower_Back_Curl/1.jpg"
+    ],
+    "name_en": "Lower Back Curl"
+  },
+  {
+    "id": "Lying_Bent_Leg_Groin",
+    "name": "Inguine da sdraiato a gambe piegate",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "esperto",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "adduttori"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati sulla schiena con le ginocchia piegate e le piante dei piedi unite. Fatti tenere le ginocchia dal partner. Questa è la posizione di partenza.",
+      "Cerca di chiudere le ginocchia, mentre il partner impedisce qualsiasi movimento.",
+      "Dopo 10-20 secondi, rilassa i muscoli mentre il partner spinge delicatamente le ginocchia verso il pavimento. Comunica al partner quando l'allungamento è sufficiente, per evitare di forzare troppo o farti male."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Bent_Leg_Groin/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Bent_Leg_Groin/1.jpg"
+    ],
+    "name_en": "Lying Bent Leg Groin"
+  },
+  {
+    "id": "Lying_Crossover",
+    "name": "Torsione da sdraiato",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "esperto",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "abduttori"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati sulla schiena con le gambe distese.",
+      "Porta una gamba piegata dall'altro lato del corpo, cercando di toccare terra con il ginocchio. Il partner, in ginocchio accanto a te, ti tiene la spalla a terra con una mano e controlla la gamba incrociata con l'altra. Questa è la posizione di partenza.",
+      "Cerca di sollevare il ginocchio piegato da terra mentre il partner impedisce qualsiasi movimento.",
+      "Dopo 10-20 secondi, rilassa la gamba mentre il partner spinge delicatamente il ginocchio verso il pavimento. Ripeti dall'altro lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Crossover/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Crossover/1.jpg"
+    ],
+    "name_en": "Lying Crossover"
+  },
+  {
+    "id": "Lying_Glute",
+    "name": "Glutei da sdraiato",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "esperto",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "glutei"
+    ],
+    "secondaryMuscles": [
+      "abduttori"
+    ],
+    "instructions": [
+      "Sdraiati sulla schiena con il partner in ginocchio accanto a te.",
+      "Fletti l'anca di una gamba sollevandola da terra. Ruota la gamba in modo che il piede sia sopra l'anca opposta, con la parte bassa della gamba perpendicolare al corpo. Il partner tiene fermi ginocchio e caviglia. Questa è la posizione di partenza.",
+      "Cerca di spingere la gamba verso il partner, che deve impedire qualsiasi movimento.",
+      "Dopo 10-20 secondi, rilassati completamente mentre il partner spinge delicatamente caviglia e ginocchio verso il petto. Comunica al partner quando l'allungamento è sufficiente, per evitare di forzare troppo o farti male."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Glute/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Glute/1.jpg"
+    ],
+    "name_en": "Lying Glute"
+  },
+  {
+    "id": "Lying_Hamstring",
+    "name": "Femorali da sdraiato",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "esperto",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [
+      "polpacci"
+    ],
+    "instructions": [
+      "Sdraiati sulla schiena con le gambe distese e il partner in ginocchio accanto a te. Solleva una gamba verso il soffitto e fatti tenere la caviglia dal partner, che può usare la spalla per sostenere la gamba se necessario. Questa è la posizione di partenza.",
+      "Con il partner che tiene ferma la gamba, cerca di flettere il ginocchio contraendo i femorali per 10-20 secondi.",
+      "Poi rilassa la gamba, lasciando che il partner la spinga delicatamente verso la testa. Comunica al partner quando l'allungamento è sufficiente, per evitare di forzare troppo o farti male. Al termine cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Hamstring/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Hamstring/1.jpg"
+    ],
+    "name_en": "Lying Hamstring"
+  },
+  {
+    "id": "Lying_Prone_Quadriceps",
+    "name": "Quadricipite da prono",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "esperto",
+    "force": "unspecified",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati a pancia in giù con il partner in ginocchio accanto a te. Fletti un ginocchio e solleva la gamba da terra, cercando di toccare i glutei con il piede. Il partner tiene ginocchio e caviglia. Questa è la posizione di partenza.",
+      "Cerca di estendere il ginocchio mentre il partner impedisce qualsiasi movimento.",
+      "Dopo 10-20 secondi, rilassa i muscoli mentre il partner spinge delicatamente il piede verso i glutei, allungando ulteriormente quadricipite e flessori dell'anca.",
+      "Dopo 10-20 secondi, cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Prone_Quadriceps/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Prone_Quadriceps/1.jpg"
+    ],
+    "name_en": "Lying Prone Quadriceps"
+  },
+  {
+    "id": "Middle_Back_Stretch",
+    "name": "Allungamento parte centrale della schiena",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "parte centrale della schiena"
+    ],
+    "secondaryMuscles": [
+      "addominali",
+      "dorsali",
+      "zona lombare"
+    ],
+    "instructions": [
+      "In piedi, piedi alla larghezza delle spalle e mani sui fianchi.",
+      "Ruota il busto all'altezza della vita finché non senti l'allungamento. Mantieni per 10-15 secondi, poi ruota dall'altro lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Middle_Back_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Middle_Back_Stretch/1.jpg"
+    ],
+    "name_en": "Middle Back Stretch"
+  },
+  {
+    "id": "Mountain_Climbers",
+    "name": "Mountain climber",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "plyometrics",
+    "level": "principiante",
+    "force": "pull",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [
+      "pettorali",
+      "femorali",
+      "spalle"
+    ],
+    "instructions": [
+      "Parti in posizione di piegamento, con il peso sostenuto da mani e punte dei piedi. Flettendo ginocchio e anca, porta una gamba in avanti finché il ginocchio non è circa sotto l'anca. Questa è la posizione di partenza.",
+      "Inverti in modo esplosivo la posizione delle gambe: distendi la gamba piegata appoggiandola sulla punta e porta avanti l'altra flettendo anca e ginocchio. Ripeti alternando per 20-30 secondi."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Mountain_Climbers/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Mountain_Climbers/1.jpg"
+    ],
+    "name_en": "Mountain Climbers"
+  },
+  {
+    "id": "Moving_Claw_Series",
+    "name": "Serie della corsa ad artiglio",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "plyometrics",
+    "level": "principiante",
+    "force": "unspecified",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [
+      "polpacci",
+      "quadricipiti"
+    ],
+    "instructions": [
+      "Questo esercizio prepara la tecnica di corsa per migliorare nello sprint. Mentre corri, fletti il ginocchio cercando di calciare i glutei quando l'anca si estende.",
+      "Ricarica il quadricipite mentre la gamba torna in avanti, attaccando il suolo al passo successivo.",
+      "Durante la corsa, accompagna con le braccia, spingendole con un rapido movimento 1-2."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Moving_Claw_Series/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Moving_Claw_Series/1.jpg"
+    ],
+    "name_en": "Moving Claw Series"
+  },
+  {
+    "id": "Neck-SMR",
+    "name": "Collo (automassaggio)",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "collo"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Con un roller da massaggio o un mattarello, posiziona il rullo dietro la testa, contro il collo. Non appoggiarlo direttamente sulla colonna: ruotalo leggermente in modo che prema sui muscoli ai lati della colonna. Questa è la posizione di partenza.",
+      "Partendo dalla parte alta del collo, rulla lentamente verso il basso lungo i muscoli, fermandoti sui punti di tensione per 10-30 secondi."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Neck-SMR/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Neck-SMR/1.jpg"
+    ],
+    "name_en": "Neck-SMR"
+  },
+  {
+    "id": "On-Your-Back_Quad_Stretch",
+    "name": "Allungamento quadricipite supino",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati su una panca piana o un gradino e lascia pendere di lato una gamba e un braccio.",
+      "Piega il ginocchio e afferra il dorso del piede, facendo attenzione a non inarcare la zona lombare.",
+      "Porta l'ombelico verso la colonna per restare in posizione neutra. Spingi il piede verso il basso, contro la mano. Per aggiungere l'allungamento dell'anca, solleva verso il soffitto l'anca della gamba che stai tenendo.",
+      "Cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/On-Your-Back_Quad_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/On-Your-Back_Quad_Stretch/1.jpg"
+    ],
+    "name_en": "On-Your-Back Quad Stretch"
+  },
+  {
+    "id": "On_Your_Side_Quad_Stretch",
+    "name": "Allungamento quadricipite sul fianco",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati sul fianco destro, con il ginocchio destro piegato a 90 gradi e appoggiato a terra davanti a te (stabilizza il busto).",
+      "Piega il ginocchio sinistro dietro di te e afferra il piede sinistro con la mano sinistra. Per allungare i flessori dell'anca, spingi l'anca sinistra in avanti mentre spingi il piede sinistro contro la mano. Cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/On_Your_Side_Quad_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/On_Your_Side_Quad_Stretch/1.jpg"
+    ],
+    "name_en": "On Your Side Quad Stretch"
+  },
+  {
+    "id": "One_Arm_Against_Wall",
+    "name": "Allungamento dorsale con braccio al muro",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "dorsali"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "In piedi, appoggia un braccio piegato contro un muro o lo stipite di una porta.",
+      "Inclinati lentamente verso il braccio finché non senti l'allungamento del dorsale."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One_Arm_Against_Wall/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One_Arm_Against_Wall/1.jpg"
+    ],
+    "name_en": "One Arm Against Wall"
+  },
+  {
+    "id": "One_Half_Locust",
+    "name": "Mezza locusta",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [
+      "addominali",
+      "bicipiti",
+      "pettorali"
+    ],
+    "instructions": [
+      "Sdraiati a pancia in giù.",
+      "Metti la mano sinistra sotto l'osso dell'anca sinistra per proteggere anca e pube.",
+      "Piega il ginocchio destro in modo da afferrare il piede con la mano destra.",
+      "Solleva il piede e contemporaneamente stacca le spalle da terra. Questo allunga anche il flessore dell'anca destro, il petto e le spalle. Cambia lato. Se la schiena non ti dà fastidio, puoi provare con entrambe le braccia e le gambe insieme."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One_Half_Locust/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One_Half_Locust/1.jpg"
+    ],
+    "name_en": "One Half Locust"
+  },
+  {
+    "id": "One_Handed_Hang",
+    "name": "Sospensione a un braccio",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "dorsali"
+    ],
+    "secondaryMuscles": [
+      "bicipiti"
+    ],
+    "instructions": [
+      "Afferra una sbarra per trazioni con una mano, presa prona. Tieni i piedi a terra o su un gradino. Lascia pendere la maggior parte del peso da quella mano, mantenendo i piedi a terra. Mantieni per 10-20 secondi e cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One_Handed_Hang/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One_Handed_Hang/1.jpg"
+    ],
+    "name_en": "One Handed Hang"
+  },
+  {
+    "id": "One_Knee_To_Chest",
+    "name": "Un ginocchio al petto",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "glutei"
+    ],
+    "secondaryMuscles": [
+      "femorali",
+      "zona lombare"
+    ],
+    "instructions": [
+      "Sdraiati a terra.",
+      "Distendi una gamba e porta l'altro ginocchio al petto. Afferra sotto l'articolazione del ginocchio per proteggere la rotula.",
+      "Tira delicatamente il ginocchio verso il naso.",
+      "Cambia lato. Questo allunga glutei e zona lombare della gamba piegata e il flessore dell'anca della gamba distesa."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One_Knee_To_Chest/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/One_Knee_To_Chest/1.jpg"
+    ],
+    "name_en": "One Knee To Chest"
+  },
+  {
+    "id": "Overhead_Lat",
+    "name": "Dorsale sopra la testa (con partner)",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "esperto",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "dorsali"
+    ],
+    "secondaryMuscles": [
+      "tricipiti"
+    ],
+    "instructions": [
+      "Siediti con il busto eretto a terra, con il partner dietro di te. Solleva un braccio verso l'alto e fletti il gomito, cercando di toccare la schiena con la mano. Il partner tiene tricipite e polso. Questa è la posizione di partenza.",
+      "Cerca di portare il braccio verso il fianco mentre il partner te lo impedisce.",
+      "Dopo 10-20 secondi, rilassa il braccio e lascia che il partner allunghi ulteriormente il dorsale esercitando una leggera pressione sul tricipite. Mantieni per 10-20 secondi, poi cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Overhead_Lat/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Overhead_Lat/1.jpg"
+    ],
+    "name_en": "Overhead Lat"
+  },
+  {
+    "id": "Overhead_Stretch",
+    "name": "Allungamento sopra la testa",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "addominali"
+    ],
+    "secondaryMuscles": [
+      "pettorali",
+      "avambracci",
+      "dorsali",
+      "tricipiti"
+    ],
+    "instructions": [
+      "In piedi con il busto eretto, intreccia le dita e gira i palmi verso il soffitto. Tieni le spalle basse mentre distendi le braccia verso l'alto.",
+      "Per allungare tutto il busto, porta il coccige verso il basso e stabilizza il tronco. Allunga i muscoli sia della parte anteriore sia di quella posteriore del busto."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Overhead_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Overhead_Stretch/1.jpg"
+    ],
+    "name_en": "Overhead Stretch"
+  },
+  {
+    "id": "Overhead_Triceps",
+    "name": "Tricipiti sopra la testa (con partner)",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "esperto",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "tricipiti"
+    ],
+    "secondaryMuscles": [
+      "dorsali"
+    ],
+    "instructions": [
+      "Siediti con il busto eretto a terra, con il partner dietro di te. Solleva un braccio verso l'alto e fletti il gomito, cercando di toccare la schiena con la mano. Il partner tiene gomito e polso. Questa è la posizione di partenza.",
+      "Cerca di distendere il braccio verso l'alto mentre il partner te lo impedisce.",
+      "Dopo 10-20 secondi, rilassa il braccio e lascia che il partner allunghi ulteriormente il tricipite esercitando una leggera pressione sul polso. Mantieni per 10-20 secondi, poi cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Overhead_Triceps/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Overhead_Triceps/1.jpg"
+    ],
+    "name_en": "Overhead Triceps"
+  },
+  {
+    "id": "Pelvic_Tilt_Into_Bridge",
+    "name": "Retroversione del bacino e ponte",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "zona lombare"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati con i piedi a terra e i talloni sotto le ginocchia.",
+      "Solleva solo il coccige verso il soffitto per allungare la zona lombare (non sollevare ancora tutta la colonna). Contrai l'addome.",
+      "Per passare al ponte, solleva tutta la colonna tranne il collo."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pelvic_Tilt_Into_Bridge/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pelvic_Tilt_Into_Bridge/1.jpg"
+    ],
+    "name_en": "Pelvic Tilt Into Bridge"
+  },
+  {
+    "id": "Peroneals-SMR",
+    "name": "Peronei (foam roller)",
+    "app_sub_category": "foam_rolling",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "foam roller",
+    "primaryMuscles": [
+      "polpacci"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati su un fianco, sostenendo il peso sull'avambraccio e su un foam roller posto sulla parte esterna della gamba. La gamba sopra può restare appoggiata su quella sotto oppure incrociata davanti a te. Questa è la posizione di partenza.",
+      "Solleva le anche da terra e rulla lungo il lato della gamba, da sotto il ginocchio fino a sopra la caviglia, fermandoti sui punti di tensione per 10-30 secondi. Ripeti sull'altra gamba."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Peroneals-SMR/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Peroneals-SMR/1.jpg"
+    ],
+    "name_en": "Peroneals-SMR"
+  },
+  {
+    "id": "Peroneals_Stretch",
+    "name": "Allungamento peronei",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "polpacci"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Da seduto, passa una cintura, una corda o un elastico attorno a un piede. Questa è la posizione di partenza.",
+      "Con la gamba distesa e il tallone sollevato da terra, tira la cintura in modo da ruotare il piede verso l'interno (inversione), portando verso di te il bordo interno. Mantieni per 10-20 secondi, poi cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Peroneals_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Peroneals_Stretch/1.jpg"
+    ],
+    "name_en": "Peroneals Stretch"
+  },
+  {
+    "id": "Piriformis-SMR",
+    "name": "Piriforme (foam roller)",
+    "app_sub_category": "foam_rolling",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "foam roller",
+    "primaryMuscles": [
+      "glutei"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Siediti con i glutei sopra un foam roller. Piega le ginocchia e incrocia una gamba appoggiando la caviglia sul ginocchio opposto. Questa è la posizione di partenza.",
+      "Sposta il peso sul lato della gamba incrociata, rullando sui glutei finché non senti tensione nella parte alta del gluteo. Puoi aumentare l'allungamento tirando con una mano il ginocchio piegato verso il petto. Mantieni per 10-30 secondi, poi cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Piriformis-SMR/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Piriformis-SMR/1.jpg"
+    ],
+    "name_en": "Piriformis-SMR"
+  },
+  {
+    "id": "Plyo_Push-up",
+    "name": "Piegamenti pliometrici",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "plyometrics",
+    "level": "principiante",
+    "force": "push",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "pettorali"
+    ],
+    "secondaryMuscles": [
+      "spalle",
+      "tricipiti"
+    ],
+    "instructions": [
+      "Mettiti a terra in posizione prona, sostenendo il peso su mani e punte dei piedi.",
+      "Le braccia sono completamente distese, mani circa alla larghezza delle spalle. Mantieni il corpo dritto per tutto il movimento. Questa è la posizione di partenza.",
+      "Scendi flettendo i gomiti e abbassando il petto verso il pavimento.",
+      "In basso, inverti il movimento spingendo il più rapidamente possibile per estendere i gomiti. Cerca di spingere il busto verso l'alto finché le mani non si staccano da terra.",
+      "Torna alla posizione di partenza e ripeti l'esercizio.",
+      "Per aumentare la difficoltà, aggiungi un battito di mani mentre sei in volo."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plyo_Push-up/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Plyo_Push-up/1.jpg"
+    ],
+    "name_en": "Plyo Push-up"
+  },
+  {
+    "id": "Posterior_Tibialis_Stretch",
+    "name": "Allungamento tibiale posteriore",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "polpacci"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Da seduto, passa una cintura, una corda o un elastico attorno a un piede. Questa è la posizione di partenza.",
+      "Con la gamba distesa e il tallone sollevato da terra, tira la cintura in modo da ruotare il piede verso l'esterno (eversione), portando verso di te il bordo esterno. Mantieni per 10-20 secondi, poi cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Posterior_Tibialis_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Posterior_Tibialis_Stretch/1.jpg"
+    ],
+    "name_en": "Posterior Tibialis Stretch"
+  },
+  {
+    "id": "Pyramid",
+    "name": "Piramide sulla fitball",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "fitball",
+    "primaryMuscles": [
+      "zona lombare"
+    ],
+    "secondaryMuscles": [
+      "spalle"
+    ],
+    "instructions": [
+      "Fai rotolare il busto in avanti sulla fitball in modo che le anche siano appoggiate sopra la palla e diventino il punto più alto del corpo.",
+      "Appoggia mani e piedi a terra. Braccia e gambe possono essere leggermente piegate o distese, a seconda della dimensione della palla, della tua flessibilità e della lunghezza degli arti. Questo aiuta anche a sviluppare la forza stabilizzatrice di busto e spalle."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pyramid/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pyramid/1.jpg"
+    ],
+    "name_en": "Pyramid"
+  },
+  {
+    "id": "Quad_Stretch",
+    "name": "Allungamento quadricipite",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati su un fianco. Passa una cintura, una corda o un elastico attorno al piede della gamba sopra. Fletti il ginocchio ed estendi l'anca, cercando di toccare i glutei con il piede e tenendo la cintura con le mani. Questa è la posizione di partenza.",
+      "Con la cintura tenuta sopra la spalla o sopra la testa, tira delicatamente per aumentare l'allungamento del quadricipite. Mantieni per 10-20 secondi, poi cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Quad_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Quad_Stretch/1.jpg"
+    ],
+    "name_en": "Quad Stretch"
+  },
+  {
+    "id": "Quadriceps-SMR",
+    "name": "Quadricipiti (foam roller)",
+    "app_sub_category": "foam_rolling",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "foam roller",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati a pancia in giù con il peso sostenuto da mani o avambracci. Posiziona un foam roller sotto il quadricipite di una gamba e tieni il piede sollevato da terra. Rilassa la gamba il più possibile. Questa è la posizione di partenza.",
+      "Scaricando sulla gamba da allungare quanto più peso riesci a tollerare, rulla da sopra il ginocchio fino a sotto l'anca, fermandoti sui punti di tensione per 10-30 secondi. Cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Quadriceps-SMR/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Quadriceps-SMR/1.jpg"
+    ],
+    "name_en": "Quadriceps-SMR"
+  },
+  {
+    "id": "Rear_Leg_Raises",
+    "name": "Slanci posteriori della gamba",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "push",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Mettiti in quadrupedia su un tappetino. Lo sguardo è rivolto in avanti e le ginocchia piegate formano un angolo di 90 gradi tra femorali e polpacci. Questa è la posizione di partenza.",
+      "Distendi una gamba in alto e indietro, estendendo sia il ginocchio sia l'anca. Ripeti per 5-10 ripetizioni, poi cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rear_Leg_Raises/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rear_Leg_Raises/1.jpg"
+    ],
+    "name_en": "Rear Leg Raises"
+  },
+  {
+    "id": "Rhomboids-SMR",
+    "name": "Romboidi (foam roller)",
+    "app_sub_category": "foam_rolling",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "foam roller",
+    "primaryMuscles": [
+      "parte centrale della schiena"
+    ],
+    "secondaryMuscles": [
+      "trapezi"
+    ],
+    "instructions": [
+      "Sdraiati con la schiena a terra. Posiziona un foam roller sotto la parte alta della schiena e incrocia le braccia davanti a te, portando le spalle in avanti. Questa è la posizione di partenza.",
+      "Solleva le anche da terra, scaricando il peso sul rullo. Sposta il peso su un lato alla volta, rullando sulla parte centrale e alta della schiena. Fermati sui punti di tensione per 10-30 secondi."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rhomboids-SMR/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rhomboids-SMR/1.jpg"
+    ],
+    "name_en": "Rhomboids-SMR"
+  },
+  {
+    "id": "Rocket_Jump",
+    "name": "Salto a razzo",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "plyometrics",
+    "level": "principiante",
+    "force": "push",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [
+      "polpacci",
+      "femorali"
+    ],
+    "instructions": [
+      "Parti in posizione rilassata con i piedi alla larghezza delle spalle e le braccia vicine al corpo.",
+      "Per iniziare, scendi in mezzo squat e scatta verso l'alto il più in alto possibile.",
+      "Distendi completamente tutto il corpo, allungando le braccia sopra la testa il più possibile. All'atterraggio, assorbi l'impatto con le gambe."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rocket_Jump/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Rocket_Jump/1.jpg"
+    ],
+    "name_en": "Rocket Jump"
+  },
+  {
+    "id": "Round_The_World_Shoulder_Stretch",
+    "name": "Circonduzione delle spalle con bastone",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "spalle"
+    ],
+    "secondaryMuscles": [
+      "bicipiti",
+      "pettorali"
+    ],
+    "instructions": [
+      "In piedi con il busto eretto e le gambe unite, tieni un bastone (bodybar o manico di scopa).",
+      "Tieni il bastone dietro le anche con una presa più larga delle spalle, palmi verso il basso e pollici verso l'esterno.",
+      "Solleva lentamente le braccia dietro la testa. Non forzare se diventa difficile salire ancora."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Round_The_World_Shoulder_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Round_The_World_Shoulder_Stretch/1.jpg"
+    ],
+    "name_en": "Round The World Shoulder Stretch"
+  },
+  {
+    "id": "Runners_Stretch",
+    "name": "Allungamento del corridore",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [
+      "polpacci"
+    ],
+    "instructions": [
+      "Il modo più semplice per entrare in questo allungamento è partire in piedi, portare una gamba indietro e abbassare lentamente il busto verso il pavimento.",
+      "Tieni il tallone anteriore a terra (se si solleva, porta più indietro l'altra gamba).",
+      "Appoggia le mani ai lati della gamba anteriore. Per intensificare l'allungamento, spingi i glutei verso il soffitto e poi riabbassali gradualmente verso il pavimento. Allungherai il flessore dell'anca della gamba dietro e femorali e glutei di quella davanti."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Runners_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Runners_Stretch/1.jpg"
+    ],
+    "name_en": "Runner's Stretch"
+  },
+  {
+    "id": "Scissor_Kick",
+    "name": "Sforbiciate",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "pull",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "addominali"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati con la schiena aderente al pavimento o su un tappetino (facoltativo). Le braccia sono completamente distese lateralmente, palmi verso il basso. Nota: le braccia restano ferme per tutto l'esercizio.",
+      "Con le ginocchia leggermente piegate, solleva le gambe in modo che i talloni siano a circa 15 cm da terra. Questa è la posizione di partenza.",
+      "Ora solleva la gamba sinistra fino a circa 45 gradi mentre abbassi la destra finché il tallone non è a 5-8 cm da terra.",
+      "Inverti il movimento sollevando la gamba destra e abbassando la sinistra. Ricorda di respirare durante l'esercizio.",
+      "Ripeti per il numero di ripetizioni indicato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Scissor_Kick/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Scissor_Kick/1.jpg"
+    ],
+    "name_en": "Scissor Kick"
+  },
+  {
+    "id": "Scissors_Jump",
+    "name": "Salto a forbice",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "plyometrics",
+    "level": "principiante",
+    "force": "push",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [
+      "glutei",
+      "femorali"
+    ],
+    "instructions": [
+      "Assumi la posizione di affondo, con un piede avanti e il ginocchio piegato, e il ginocchio posteriore quasi a terra.",
+      "Assicurati che il ginocchio anteriore sia sopra la linea mediana del piede. Distendendo entrambe le gambe, salta il più in alto possibile, slanciando le braccia per darti spinta.",
+      "Mentre salti, inverti la posizione delle gambe, portando quella anteriore dietro e quella posteriore avanti.",
+      "All'atterraggio, assorbi l'impatto con le gambe tornando in posizione di affondo, e ripeti."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Scissors_Jump/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Scissors_Jump/1.jpg"
+    ],
+    "name_en": "Scissors Jump"
+  },
+  {
+    "id": "Seated_Biceps",
+    "name": "Bicipiti da seduto (con partner)",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "esperto",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "bicipiti"
+    ],
+    "secondaryMuscles": [
+      "pettorali",
+      "spalle"
+    ],
+    "instructions": [
+      "Siediti a terra con le ginocchia piegate e il partner in piedi dietro di te. Distendi le braccia dietro di te con i palmi rivolti l'uno verso l'altro. Il partner ti tiene i polsi. Questa è la posizione di partenza.",
+      "Cerca di flettere i gomiti mentre il partner impedisce qualsiasi movimento.",
+      "Dopo 10-20 secondi, rilassa le braccia mentre il partner solleva delicatamente i polsi per allungare i bicipiti. Comunica al partner quando l'allungamento è sufficiente, per evitare di forzare troppo o farti male."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Biceps/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Biceps/1.jpg"
+    ],
+    "name_en": "Seated Biceps"
+  },
+  {
+    "id": "Seated_Calf_Stretch",
+    "name": "Allungamento polpaccio da seduto",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "polpacci"
+    ],
+    "secondaryMuscles": [
+      "femorali",
+      "zona lombare"
+    ],
+    "instructions": [
+      "Siediti con il busto eretto su un tappetino.",
+      "Piega un ginocchio e appoggia il piede a terra per stabilizzare il busto.",
+      "Distendi l'altra gamba e fletti la caviglia.",
+      "Con un elastico, un asciugamano o la mano (se ci arrivi), tira le dita del piede verso di te. Mantieni per 10-20 secondi, poi cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Calf_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Calf_Stretch/1.jpg"
+    ],
+    "name_en": "Seated Calf Stretch"
+  },
+  {
+    "id": "Seated_Floor_Hamstring_Stretch",
+    "name": "Allungamento femorali seduto a terra",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [
+      "polpacci"
+    ],
+    "instructions": [
+      "Siediti su un tappetino con la gamba destra distesa davanti a te e la sinistra piegata, con il piede appoggiato all'interno della coscia destra.",
+      "Inclinati in avanti partendo dalle anche e allunga le mani verso la caviglia finché non senti l'allungamento del femorale. Mantieni per 15 secondi, poi ripeti dall'altro lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Floor_Hamstring_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Floor_Hamstring_Stretch/1.jpg"
+    ],
+    "name_en": "Seated Floor Hamstring Stretch"
+  },
+  {
+    "id": "Seated_Front_Deltoid",
+    "name": "Deltoide anteriore da seduto (con partner)",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "esperto",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "spalle"
+    ],
+    "secondaryMuscles": [
+      "pettorali"
+    ],
+    "instructions": [
+      "Siediti con il busto eretto a terra, gambe piegate, con il partner in piedi dietro di te. Distendi le braccia lateralmente con i palmi verso il basso. Portale indietro il più possibile mentre il partner ti tiene i polsi. Questa è la posizione di partenza.",
+      "Mantenendo i gomiti tesi, cerca di portare le braccia in avanti, mentre il partner ti trattiene delicatamente impedendo qualsiasi movimento per 10-20 secondi.",
+      "Ora rilassa i muscoli e lascia che il partner aumenti delicatamente l'allungamento su spalle e petto. Mantieni per 10-20 secondi."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Front_Deltoid/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Front_Deltoid/1.jpg"
+    ],
+    "name_en": "Seated Front Deltoid"
+  },
+  {
+    "id": "Seated_Glute",
+    "name": "Glutei da seduto (con partner)",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "esperto",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "glutei"
+    ],
+    "secondaryMuscles": [
+      "adduttori"
+    ],
+    "instructions": [
+      "Da seduto con le ginocchia piegate, incrocia una caviglia sul ginocchio opposto. Il partner è in piedi dietro di te. Inclinati in avanti mentre il partner ti sostiene le spalle con le mani. Questa è la posizione di partenza.",
+      "Cerca di spingere il busto indietro per 10-20 secondi, mentre il partner impedisce qualsiasi movimento.",
+      "Ora rilassa i muscoli mentre il partner aumenta l'allungamento spingendo delicatamente il busto in avanti per 10-20 secondi."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Glute/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Glute/1.jpg"
+    ],
+    "name_en": "Seated Glute"
+  },
+  {
+    "id": "Seated_Hamstring",
+    "name": "Femorali da seduto (con partner)",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "esperto",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [
+      "polpacci"
+    ],
+    "instructions": [
+      "Da seduto con le gambe distese, fai mettere il partner in piedi dietro di te. Inclinati in avanti mentre il partner ti sostiene le spalle con le mani. Questa è la posizione di partenza.",
+      "Cerca di spingere il busto indietro per 10-20 secondi, mentre il partner impedisce qualsiasi movimento.",
+      "Ora rilassa i muscoli mentre il partner aumenta l'allungamento spingendo delicatamente il busto in avanti per 10-20 secondi."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Hamstring/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Hamstring/1.jpg"
+    ],
+    "name_en": "Seated Hamstring"
+  },
+  {
+    "id": "Seated_Hamstring_and_Calf_Stretch",
+    "name": "Allungamento femorali e polpacci da seduto",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [
+      "polpacci"
+    ],
+    "instructions": [
+      "Passa una cintura, una corda o un elastico attorno a un piede. Siediti con entrambe le gambe distese. Questa è la posizione di partenza.",
+      "Inclinandoti leggermente in avanti, tira la cintura per portare le dita del piede verso di te. Mantieni per 10-20 secondi, poi ripeti con l'altra gamba."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Hamstring_and_Calf_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Hamstring_and_Calf_Stretch/1.jpg"
+    ],
+    "name_en": "Seated Hamstring and Calf Stretch"
+  },
+  {
+    "id": "Seated_Overhead_Stretch",
+    "name": "Allungamento laterale da seduto",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "addominali"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Siediti con il busto eretto su un tappetino.",
+      "Unisci le piante dei piedi, tenendoli a 15-20 cm davanti alle anche.",
+      "Appoggia una mano a terra accanto a te e l'altra dietro la testa.",
+      "Porta il gomito verso il soffitto mentre inclini il busto dall'altro lato. Mantieni per 10-20 secondi, poi cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Overhead_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Seated_Overhead_Stretch/1.jpg"
+    ],
+    "name_en": "Seated Overhead Stretch"
+  },
+  {
+    "id": "Shoulder_Circles",
+    "name": "Circonduzioni delle spalle",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "pull",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "spalle"
+    ],
+    "secondaryMuscles": [
+      "trapezi"
+    ],
+    "instructions": [
+      "Con le spalle rilassate e le braccia morbide lungo i fianchi (o in grembo se sei seduto), ruota delicatamente le spalle in avanti, in alto, indietro e in basso.",
+      "Inverti la direzione. Puoi eseguire l'esercizio alternando le spalle oppure con entrambe insieme."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Shoulder_Circles/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Shoulder_Circles/1.jpg"
+    ],
+    "name_en": "Shoulder Circles"
+  },
+  {
+    "id": "Shoulder_Raise",
+    "name": "Sollevamento delle spalle",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "pull",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "spalle"
+    ],
+    "secondaryMuscles": [
+      "dorsali"
+    ],
+    "instructions": [
+      "Rilassa le braccia lungo i fianchi e solleva le spalle verso le orecchie, poi riabbassale."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Shoulder_Raise/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Shoulder_Raise/1.jpg"
+    ],
+    "name_en": "Shoulder Raise"
+  },
+  {
+    "id": "Shoulder_Stretch",
+    "name": "Allungamento della spalla",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "pull",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "spalle"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Porta il braccio sinistro davanti al corpo, verso il lato opposto, e mantienilo disteso."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Shoulder_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Shoulder_Stretch/1.jpg"
+    ],
+    "name_en": "Shoulder Stretch"
+  },
+  {
+    "id": "Side-Lying_Floor_Stretch",
+    "name": "Allungamento laterale sdraiato a terra",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "dorsali"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati sul fianco sinistro, piegando il ginocchio sinistro davanti a te per stabilizzare il busto (usa anche gli addominali per restare in posizione).",
+      "Distendi la gamba destra e appoggia il piede destro a terra dietro il sinistro. Distendi il braccio destro sopra la testa e tira delicatamente il polso destro per allungare tutto il lato destro del corpo. Cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side-Lying_Floor_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side-Lying_Floor_Stretch/1.jpg"
+    ],
+    "name_en": "Side-Lying Floor Stretch"
+  },
+  {
+    "id": "Side_Leg_Raises",
+    "name": "Slanci laterali della gamba",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "pull",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "adduttori"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "In piedi accanto a una sedia, a cui puoi tenerti come sostegno. Stai in appoggio su una gamba. Questa è la posizione di partenza.",
+      "Mantenendo la gamba tesa, slanciala lateralmente il più possibile e poi riportala giù, lasciandola incrociare davanti alla gamba opposta.",
+      "Ripeti questo slancio 5-10 volte, aumentando gradualmente l'ampiezza del movimento."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Leg_Raises/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Leg_Raises/1.jpg"
+    ],
+    "name_en": "Side Leg Raises"
+  },
+  {
+    "id": "Side_Lying_Groin_Stretch",
+    "name": "Allungamento inguine sdraiato sul fianco",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "adduttori"
+    ],
+    "secondaryMuscles": [
+      "femorali"
+    ],
+    "instructions": [
+      "Sdraiati sul fianco destro e piega il ginocchio destro davanti a te per stabilizzare il busto.",
+      "Appoggia la testa sulla mano destra o sulla spalla. Solleva la gamba sinistra e afferrala dietro il ginocchio (più facile) o dal piede (più difficile).",
+      "Porta il ginocchio sinistro verso la spalla sinistra e contemporaneamente spingi il piede o il ginocchio verso il pavimento. Per intensificare l'allungamento, distendi la gamba sinistra. Cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Lying_Groin_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Lying_Groin_Stretch/1.jpg"
+    ],
+    "name_en": "Side Lying Groin Stretch"
+  },
+  {
+    "id": "Side_Neck_Stretch",
+    "name": "Allungamento laterale del collo",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "collo"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Con le spalle rilassate, inclina delicatamente la testa verso la spalla.",
+      "Aiuta l'allungamento tirando delicatamente con la mano sul lato della testa."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Neck_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Neck_Stretch/1.jpg"
+    ],
+    "name_en": "Side Neck Stretch"
+  },
+  {
+    "id": "Side_Standing_Long_Jump",
+    "name": "Salto in lungo laterale da fermo",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "plyometrics",
+    "level": "principiante",
+    "force": "push",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [
+      "polpacci",
+      "glutei",
+      "femorali"
+    ],
+    "instructions": [
+      "In piedi, piedi alla larghezza delle anche, in posizione atletica. Testa e petto alti, ginocchia e anche leggermente piegate. Questa è la posizione di partenza.",
+      "Inclinandoti verso destra, estendi anche, ginocchia e caviglie per saltare. Usa le braccia per guidare il movimento, saltando il più lontano possibile verso destra.",
+      "Atterra rivolto nella stessa direzione con i piedi alla larghezza delle anche, assorbendo l'impatto con la parte bassa del corpo."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Standing_Long_Jump/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Standing_Long_Jump/1.jpg"
+    ],
+    "name_en": "Side Standing Long Jump"
+  },
+  {
+    "id": "Side_Wrist_Pull",
+    "name": "Trazione laterale del polso",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "spalle"
+    ],
+    "secondaryMuscles": [
+      "avambracci",
+      "dorsali"
+    ],
+    "instructions": [
+      "Questo allungamento si esegue meglio in piedi. Porta il braccio sinistro oltre la linea mediana del corpo e afferra il polso sinistro con la mano destra all'altezza delle anche. Inizia con il braccio sinistro piegato.",
+      "Distendilo lentamente, tiralo e sollevalo fino all'altezza della spalla. Devi sentire l'allungamento partire dalla schiena, non dalle spalle; non tirare troppo sull'articolazione della spalla. Cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Wrist_Pull/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Wrist_Pull/1.jpg"
+    ],
+    "name_en": "Side Wrist Pull"
+  },
+  {
+    "id": "Single_Leg_Butt_Kick",
+    "name": "Calciata ai glutei a una gamba",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "plyometrics",
+    "level": "principiante",
+    "force": "push",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [
+      "polpacci",
+      "femorali"
+    ],
+    "instructions": [
+      "In piedi su una gamba, con l'altro ginocchio piegato e sollevato. Questa è la posizione di partenza.",
+      "Con un salto con contromovimento, spingi verso l'alto estendendo anca, ginocchio e caviglia della gamba d'appoggio.",
+      "Fletti subito il ginocchio e cerca di toccare i glutei con il tallone della gamba che salta.",
+      "Riporta la gamba in posizione parzialmente piegata sotto le anche e atterra. La gamba opposta resta più o meno nella stessa posizione per tutto l'esercizio."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single_Leg_Butt_Kick/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single_Leg_Butt_Kick/1.jpg"
+    ],
+    "name_en": "Single Leg Butt Kick"
+  },
+  {
+    "id": "Sit_Squats",
+    "name": "Squat parziali",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "push",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [
+      "abduttori",
+      "glutei",
+      "femorali"
+    ],
+    "instructions": [
+      "In piedi, piedi alla larghezza delle spalle. Questa è la posizione di partenza.",
+      "Inizia il movimento flettendo ginocchia e anche, portando le anche indietro come per sederti.",
+      "Scendi solo in parte, restando sopra il parallelo, poi inverti rapidamente il movimento fino a tornare alla posizione di partenza. Ripeti per 5-10 ripetizioni."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Sit_Squats/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Sit_Squats/1.jpg"
+    ],
+    "name_en": "Sit Squats"
+  },
+  {
+    "id": "Spinal_Stretch",
+    "name": "Allungamento della colonna",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "parte centrale della schiena"
+    ],
+    "secondaryMuscles": [
+      "dorsali",
+      "zona lombare",
+      "collo",
+      "trapezi"
+    ],
+    "instructions": [
+      "Siediti su una sedia con la schiena dritta e i piedi ben appoggiati a terra.",
+      "Intreccia le dita dietro la testa, gomiti verso l'esterno e mento basso.",
+      "Ruota il busto da un lato il più possibile, per circa 3 volte. Poi inclinati in avanti e ruota il busto per portare il gomito verso il pavimento, all'interno del ginocchio.",
+      "Torna in posizione eretta e ripeti dall'altro lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Spinal_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Spinal_Stretch/1.jpg"
+    ],
+    "name_en": "Spinal Stretch"
+  },
+  {
+    "id": "Split_Jump",
+    "name": "Split jump",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "plyometrics",
+    "level": "principiante",
+    "force": "push",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [
+      "polpacci",
+      "glutei",
+      "femorali"
+    ],
+    "instructions": [
+      "Assumi la posizione di affondo, con un piede avanti e il ginocchio piegato, e il ginocchio posteriore quasi a terra.",
+      "Assicurati che il ginocchio anteriore sia sopra la linea mediana del piede.",
+      "Distendendo entrambe le gambe, salta il più in alto possibile, slanciando le braccia per darti spinta.",
+      "Mentre salti, avvicina i piedi e riportali nella posizione iniziale all'atterraggio.",
+      "Assorbi l'impatto tornando alla posizione di partenza."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Split_Jump/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Split_Jump/1.jpg"
+    ],
+    "name_en": "Split Jump"
+  },
+  {
+    "id": "Split_Squats",
+    "name": "Affondi saltati alternati",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "push",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [
+      "polpacci",
+      "glutei",
+      "quadricipiti"
+    ],
+    "instructions": [
+      "Parti in piedi. Salta in posizione di affondo, con una gamba avanti e una dietro, flettendo le ginocchia e abbassando leggermente le anche.",
+      "Mentre scendi, inverti subito la direzione: risali e salta, invertendo la posizione delle gambe. Ripeti 5-10 volte per gamba."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Split_Squats/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Split_Squats/1.jpg"
+    ],
+    "name_en": "Split Squats"
+  },
+  {
+    "id": "Standing_Biceps_Stretch",
+    "name": "Allungamento bicipiti in piedi",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "bicipiti"
+    ],
+    "secondaryMuscles": [
+      "pettorali",
+      "spalle"
+    ],
+    "instructions": [
+      "Intreccia le mani dietro la schiena con i palmi uniti, distendi le braccia e ruotale in modo che i palmi siano rivolti verso il basso.",
+      "Solleva le braccia e mantieni finché non senti l'allungamento dei bicipiti."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Biceps_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Biceps_Stretch/1.jpg"
+    ],
+    "name_en": "Standing Biceps Stretch"
+  },
+  {
+    "id": "Standing_Elevated_Quad_Stretch",
+    "name": "Allungamento quadricipite con piede rialzato",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "In piedi, con la schiena a circa 60-90 cm da una panca o un gradino.",
+      "Porta una gamba indietro e appoggia il piede sul gradino, sul dorso o sull'avampiede, come ti risulta più comodo.",
+      "Tieni il ginocchio della gamba d'appoggio leggermente piegato ed evita che superi la punta del piede. Cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Elevated_Quad_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Elevated_Quad_Stretch/1.jpg"
+    ],
+    "name_en": "Standing Elevated Quad Stretch"
+  },
+  {
+    "id": "Standing_Gastrocnemius_Calf_Stretch",
+    "name": "Allungamento gastrocnemio in piedi",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "polpacci"
+    ],
+    "secondaryMuscles": [
+      "femorali"
+    ],
+    "instructions": [
+      "Appoggia il tallone destro su un gradino con il ginocchio disteso e inclinati in avanti per afferrare le dita del piede destro con la mano destra. Il ginocchio sinistro è leggermente piegato e la schiena dritta.",
+      "Sostieni il peso sulla gamba sinistra e appoggia la mano sinistra sulla coscia sinistra.",
+      "Tira le dita del piede destro verso il ginocchio finché non senti l'allungamento del polpaccio."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Gastrocnemius_Calf_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Gastrocnemius_Calf_Stretch/1.jpg"
+    ],
+    "name_en": "Standing Gastrocnemius Calf Stretch"
+  },
+  {
+    "id": "Standing_Hamstring_and_Calf_Stretch",
+    "name": "Allungamento femorali e polpacci in piedi",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "altro",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Passa una cintura, un elastico o una corda attorno a un piede. In piedi, porta quel piede avanti.",
+      "Piega la gamba dietro mantenendo tesa quella davanti. Ora solleva da terra le dita del piede anteriore e inclinati in avanti.",
+      "Con la cintura, tira la parte superiore del piede per aumentare l'allungamento del polpaccio. Mantieni per 10-20 secondi e ripeti con l'altro piede."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Hamstring_and_Calf_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Hamstring_and_Calf_Stretch/1.jpg"
+    ],
+    "name_en": "Standing Hamstring and Calf Stretch"
+  },
+  {
+    "id": "Standing_Hip_Circles",
+    "name": "Circonduzioni dell'anca in piedi",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "pull",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "abduttori"
+    ],
+    "secondaryMuscles": [
+      "adduttori"
+    ],
+    "instructions": [
+      "In piedi su una gamba, tenendoti a un sostegno verticale.",
+      "Solleva il ginocchio libero a 90 gradi. Questa è la posizione di partenza.",
+      "Apri l'anca il più possibile, cercando di disegnare un grande cerchio con il ginocchio.",
+      "Esegui lentamente per alcune ripetizioni, poi ripeti dall'altro lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Hip_Circles/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Hip_Circles/1.jpg"
+    ],
+    "name_en": "Standing Hip Circles"
+  },
+  {
+    "id": "Standing_Hip_Flexors",
+    "name": "Flessori dell'anca in piedi",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "In piedi, con la colonna verticale e il piede sinistro leggermente davanti al destro.",
+      "Piega entrambe le ginocchia e solleva il tallone posteriore da terra mentre spingi l'anca destra in avanti. In questa posizione l'allungamento non è molto profondo, perché è difficile rilassare il flessore dell'anca mentre ci si appoggia sopra. Cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Hip_Flexors/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Hip_Flexors/1.jpg"
+    ],
+    "name_en": "Standing Hip Flexors"
+  },
+  {
+    "id": "Standing_Lateral_Stretch",
+    "name": "Allungamento laterale in piedi",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "addominali"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Divarica i piedi poco più della larghezza delle anche, con le ginocchia leggermente piegate.",
+      "Appoggia la mano destra sul fianco destro per sostenere la colonna.",
+      "Solleva il braccio sinistro in verticale e porta la mano sinistra dietro la testa. Tienila lì mentre inclini il busto verso destra.",
+      "Distribuisci il peso in modo uniforme su entrambe le gambe (non spingere sull'anca sinistra). Cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Lateral_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Lateral_Stretch/1.jpg"
+    ],
+    "name_en": "Standing Lateral Stretch"
+  },
+  {
+    "id": "Standing_Long_Jump",
+    "name": "Salto in lungo da fermo",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "plyometrics",
+    "level": "principiante",
+    "force": "push",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [
+      "polpacci",
+      "glutei",
+      "femorali"
+    ],
+    "instructions": [
+      "È meglio eseguirlo sulla sabbia o su un'altra superficie morbida. Assicurati di poter misurare la distanza. Parti in posizione di squat parziale con i piedi alla larghezza delle spalle.",
+      "Con un ampio slancio delle braccia e un contromovimento delle gambe, salta in avanti il più lontano possibile.",
+      "Cerca di atterrare con i piedi davanti a te, allungando le gambe il più possibile.",
+      "Misura la distanza tra il punto di atterraggio e quello di partenza e annota i risultati."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Long_Jump/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Long_Jump/1.jpg"
+    ],
+    "name_en": "Standing Long Jump"
+  },
+  {
+    "id": "Standing_Pelvic_Tilt",
+    "name": "Retroversione del bacino in piedi",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "zona lombare"
+    ],
+    "secondaryMuscles": [
+      "glutei"
+    ],
+    "instructions": [
+      "Parti con i piedi alla larghezza delle anche.",
+      "Piega leggermente le ginocchia, mantenendole morbide ed elastiche.",
+      "Puoi muovere il bacino avanti e indietro qualche volta prima di mantenere il coccige in avanti in questo allungamento."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Pelvic_Tilt/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Pelvic_Tilt/1.jpg"
+    ],
+    "name_en": "Standing Pelvic Tilt"
+  },
+  {
+    "id": "Standing_Soleus_And_Achilles_Stretch",
+    "name": "Allungamento soleo e tendine d'Achille in piedi",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "polpacci"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "In piedi con i piedi alla larghezza delle anche, uno leggermente davanti all'altro.",
+      "Piega entrambe le ginocchia, tenendo il tallone posteriore a terra. Cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Soleus_And_Achilles_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Soleus_And_Achilles_Stretch/1.jpg"
+    ],
+    "name_en": "Standing Soleus And Achilles Stretch"
+  },
+  {
+    "id": "Standing_Toe_Touches",
+    "name": "Flessione in avanti in piedi (mani ai piedi)",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [
+      "polpacci"
+    ],
+    "instructions": [
+      "In piedi, con un po' di spazio davanti e dietro di te.",
+      "Piegati in avanti dalla vita mantenendo le gambe tese, finché non riesci a rilassarti e a lasciare pendere il busto davanti a te. Lascia cadere braccia e mani in modo naturale. Mantieni per 10-20 secondi."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Toe_Touches/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Toe_Touches/1.jpg"
+    ],
+    "name_en": "Standing Toe Touches"
+  },
+  {
+    "id": "Star_Jump",
+    "name": "Salto a stella",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "plyometrics",
+    "level": "principiante",
+    "force": "push",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [
+      "polpacci",
+      "glutei",
+      "femorali",
+      "spalle"
+    ],
+    "instructions": [
+      "Parti in posizione rilassata con i piedi alla larghezza delle spalle e le braccia vicine al corpo.",
+      "Per iniziare, scendi in mezzo squat e scatta verso l'alto il più in alto possibile. Distendi completamente il corpo, aprendo gambe e braccia.",
+      "All'atterraggio, richiudi braccia e gambe e assorbi l'impatto con le gambe."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Star_Jump/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Star_Jump/1.jpg"
+    ],
+    "name_en": "Star Jump"
+  },
+  {
+    "id": "Stomach_Vacuum",
+    "name": "Vacuum addominale",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "addominali"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "In piedi, con il busto eretto e i piedi alla larghezza delle spalle. Mani sui fianchi. Questa è la posizione di partenza.",
+      "Inspira lentamente quanta più aria possibile, poi espira il più possibile portando l'addome in dentro al massimo e mantieni la posizione. Immagina che l'ombelico tocchi la colonna.",
+      "Una contrazione isometrica dura circa 20 secondi. Durante i 20 secondi cerca di respirare normalmente. Poi inspira e riporta l'addome alla posizione di partenza.",
+      "Una volta presa confidenza, prova a mantenere la contrazione per più di 20 secondi, arrivando gradualmente a 40-60 secondi.",
+      "Ripeti per il numero di serie indicato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Stomach_Vacuum/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Stomach_Vacuum/1.jpg"
+    ],
+    "name_en": "Stomach Vacuum"
+  },
+  {
+    "id": "Superman",
+    "name": "Superman",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "compound",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "zona lombare"
+    ],
+    "secondaryMuscles": [
+      "glutei",
+      "femorali"
+    ],
+    "instructions": [
+      "Sdraiati a pancia in giù sul pavimento o su un tappetino, con le braccia completamente distese davanti a te. Questa è la posizione di partenza.",
+      "Solleva contemporaneamente braccia, gambe e petto da terra e mantieni la contrazione per 2 secondi. Contrai la zona lombare per ottenere il massimo dall'esercizio ed espira durante il movimento. Nella posizione di contrazione dovresti assomigliare a Superman in volo.",
+      "Riabbassa lentamente braccia, gambe e petto alla posizione di partenza, inspirando.",
+      "Ripeti per il numero di ripetizioni previsto dal tuo programma."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Superman/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Superman/1.jpg"
+    ],
+    "name_en": "Superman"
+  },
+  {
+    "id": "The_Straddle",
+    "name": "Divaricata da seduto",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [
+      "adduttori",
+      "polpacci"
+    ],
+    "instructions": [
+      "Parti da seduto con il busto eretto. Distendi le gambe davanti a te aprendole a V.",
+      "Con le mani a terra, inclinati in avanti il più possibile. Mantieni per 10-20 secondi."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/The_Straddle/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/The_Straddle/1.jpg"
+    ],
+    "name_en": "The Straddle"
+  },
+  {
+    "id": "Toe_Touchers",
+    "name": "Toe touch (crunch mani ai piedi)",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "pull",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "addominali"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "Sdraiati sul pavimento o su un tappetino con la schiena aderente a terra. Le braccia sono lungo i fianchi con i palmi verso il basso.",
+      "Le gambe sono unite. Sollevale lentamente finché non sono quasi perpendicolari al pavimento, con le ginocchia leggermente piegate. I piedi sono paralleli al pavimento.",
+      "Porta le braccia completamente distese a 45 gradi rispetto al pavimento. Questa è la posizione di partenza.",
+      "Mantenendo la zona lombare aderente a terra, solleva lentamente il busto e cerca di toccare le punte dei piedi con le mani. Espira durante questa fase.",
+      "Riabbassa lentamente busto e braccia alla posizione di partenza, inspirando. Tieni le braccia tese e rivolte verso le punte dei piedi.",
+      "Ripeti per il numero di ripetizioni indicato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Toe_Touchers/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Toe_Touchers/1.jpg"
+    ],
+    "name_en": "Toe Touchers"
+  },
+  {
+    "id": "Torso_Rotation",
+    "name": "Rotazione del busto",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "pull",
+    "mechanic": "unspecified",
+    "equipment": "fitball",
+    "primaryMuscles": [
+      "addominali"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "In piedi, tieni una fitball con entrambe le mani. Distendi le braccia in modo che la palla sia davanti a te. Questa è la posizione di partenza.",
+      "Ruota il busto da un lato, seguendo la palla con lo sguardo. Poi ruota nella direzione opposta. Ripeti per 10-20 ripetizioni."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Torso_Rotation/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Torso_Rotation/1.jpg"
+    ],
+    "name_en": "Torso Rotation"
+  },
+  {
+    "id": "Trail_Running_Walking",
+    "name": "Corsa/camminata su sentiero",
+    "app_sub_category": "cardio_warmup",
+    "original_category": "cardio",
+    "level": "principiante",
+    "force": "unspecified",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "quadricipiti"
+    ],
+    "secondaryMuscles": [
+      "polpacci",
+      "glutei",
+      "femorali"
+    ],
+    "instructions": [
+      "Correre o camminare sui sentieri fa aumentare quasi subito circolazione e battito cardiaco. Assicurati di avere scarpe adatte. In salita usi polpacci e glutei per spingerti verso l'alto, mentre in discesa ginocchia, articolazioni e caviglie assorbono la maggior parte degli impatti. In discesa fai passi più corti, tieni le ginocchia piegate per ridurre l'impatto e rallenta per evitare di cadere.",
+      "Una persona di circa 68 kg può bruciare oltre 200 calorie in 30 minuti di camminata in salita, contro circa 175 in piano. Correndo sul sentiero, la stessa persona può bruciare ben oltre 500 calorie in 30 minuti."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Trail_Running_Walking/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Trail_Running_Walking/1.jpg"
+    ],
+    "name_en": "Trail Running/Walking"
+  },
+  {
+    "id": "Tricep_Side_Stretch",
+    "name": "Allungamento laterale del tricipite",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "tricipiti"
+    ],
+    "secondaryMuscles": [
+      "spalle"
+    ],
+    "instructions": [
+      "Porta il braccio destro davanti al corpo, oltre la spalla sinistra, tenendo il gomito con la mano sinistra finché non senti l'allungamento del tricipite. Poi ripeti con l'altro braccio."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Tricep_Side_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Tricep_Side_Stretch/1.jpg"
+    ],
+    "name_en": "Tricep Side Stretch"
+  },
+  {
+    "id": "Triceps_Stretch",
+    "name": "Allungamento tricipiti",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "tricipiti"
+    ],
+    "secondaryMuscles": [
+      "dorsali"
+    ],
+    "instructions": [
+      "Porta la mano dietro la testa, afferra il gomito con l'altra mano e tira delicatamente. Mantieni per 10-20 secondi, poi cambia lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Triceps_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Triceps_Stretch/1.jpg"
+    ],
+    "name_en": "Triceps Stretch"
+  },
+  {
+    "id": "Upper_Back-Leg_Grab",
+    "name": "Allungamento parte alta della schiena abbracciando le gambe",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [
+      "zona lombare",
+      "parte centrale della schiena"
+    ],
+    "instructions": [
+      "Da seduto, piegati in avanti e abbraccia le cosce da sotto con entrambe le braccia.",
+      "Tieni le ginocchia unite e le gambe distese mentre porti il petto verso le ginocchia. Puoi allungare anche la parte centrale della schiena allontanandola dalle ginocchia mentre le abbracci."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Upper_Back-Leg_Grab/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Upper_Back-Leg_Grab/1.jpg"
+    ],
+    "name_en": "Upper Back-Leg Grab"
+  },
+  {
+    "id": "Upper_Back_Stretch",
+    "name": "Allungamento parte alta della schiena",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "parte centrale della schiena"
+    ],
+    "secondaryMuscles": [
+      "parte centrale della schiena"
+    ],
+    "instructions": [
+      "Intreccia le dita con i pollici rivolti verso il basso e arrotonda le spalle mentre spingi le mani in avanti."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Upper_Back_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Upper_Back_Stretch/1.jpg"
+    ],
+    "name_en": "Upper Back Stretch"
+  },
+  {
+    "id": "Upward_Stretch",
+    "name": "Allungamento verso l'alto",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "spalle"
+    ],
+    "secondaryMuscles": [
+      "pettorali",
+      "dorsali"
+    ],
+    "instructions": [
+      "Distendi entrambe le braccia sopra la testa, palmi a contatto.",
+      "Spingi lentamente le mani in alto e indietro, mantenendo la schiena dritta."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Upward_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Upward_Stretch/1.jpg"
+    ],
+    "name_en": "Upward Stretch"
+  },
+  {
+    "id": "Windmills",
+    "name": "Mulinelli (windmills)",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "pull",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "abduttori"
+    ],
+    "secondaryMuscles": [
+      "glutei",
+      "femorali",
+      "zona lombare"
+    ],
+    "instructions": [
+      "Sdraiati sulla schiena con le braccia aperte lateralmente e le gambe distese. Questa è la posizione di partenza.",
+      "Solleva una gamba e incrociala rapidamente sopra il corpo, cercando di toccare il pavimento vicino alla mano opposta.",
+      "Torna alla posizione di partenza e ripeti con l'altra gamba. Continua alternando per 10-20 ripetizioni."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Windmills/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Windmills/1.jpg"
+    ],
+    "name_en": "Windmills"
+  },
+  {
+    "id": "Worlds_Greatest_Stretch",
+    "name": "World's Greatest Stretch",
+    "app_sub_category": "static_stretching",
+    "original_category": "stretching",
+    "level": "intermedio",
+    "force": "static",
+    "mechanic": "unspecified",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "femorali"
+    ],
+    "secondaryMuscles": [
+      "polpacci",
+      "glutei",
+      "quadricipiti"
+    ],
+    "instructions": [
+      "Allungamento in tre fasi. Inizia con un affondo in avanti, piede anteriore ben appoggiato e piede posteriore sulle punte. Con le ginocchia piegate, scendi finché il ginocchio posteriore quasi tocca terra. Mantieni il busto eretto e tieni la posizione per 10-20 secondi.",
+      "Ora appoggia a terra il braccio dello stesso lato della gamba anteriore, con il gomito accanto al piede. L'altra mano va a terra, parallela alla gamba avanti, per sostenerti in questa fase.",
+      "Dopo 10-20 secondi, appoggia le mani ai lati del piede anteriore. Solleva le dita del piede anteriore da terra e distendi la gamba; potrebbe essere necessario riposizionare la gamba posteriore. Mantieni per 10-20 secondi, poi ripeti l'intera sequenza dall'altro lato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Worlds_Greatest_Stretch/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Worlds_Greatest_Stretch/1.jpg"
+    ],
+    "name_en": "World's Greatest Stretch"
+  },
+  {
+    "id": "Wrist_Circles",
+    "name": "Circonduzioni dei polsi",
+    "app_sub_category": "dynamic_mobility",
+    "original_category": "stretching",
+    "level": "principiante",
+    "force": "pull",
+    "mechanic": "isolation",
+    "equipment": "corpo libero",
+    "primaryMuscles": [
+      "avambracci"
+    ],
+    "secondaryMuscles": [],
+    "instructions": [
+      "In piedi con il busto eretto e i piedi alla larghezza delle spalle. Solleva le braccia lateralmente fino a distenderle completamente, parallele al pavimento e all'altezza delle spalle. Busto e braccia formano una \"T\", con i palmi rivolti verso il basso. Questa è la posizione di partenza.",
+      "Tenendo fermo tutto il corpo tranne i polsi, inizia a ruotarli in avanti con un movimento circolare, come se disegnassi dei cerchi usando le mani come pennello. Respira normalmente durante l'esercizio.",
+      "Ripeti per il numero di ripetizioni indicato."
+    ],
+    "images": [
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Wrist_Circles/0.jpg",
+      "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Wrist_Circles/1.jpg"
+    ],
+    "name_en": "Wrist Circles"
+  }
+]
