@@ -143,3 +143,18 @@ test('rimuovi pasto e rimuovi opzione', async () => {
     assert.equal(nuova.pasti.length, 2);
   } finally { await chiudi(); }
 });
+
+test('"Valido dal" non può essere nel passato', async () => {
+  const { page, chiudi } = await trainer({ seme: { 'alimentazione/a1': PIANO() } });
+  try {
+    await vaiAlPiano(page);
+    await page.getByLabel('Indicazioni generali').fill('Nuove');
+    await page.getByRole('button', { name: 'Salva come nuova versione da…' }).click();
+    const dialogo = page.getByRole('dialog', { name: 'Salva come nuova versione da…' });
+    assert.equal(await dialogo.getByLabel('Valido dal').getAttribute('min'), '2026-11-04');
+    await dialogo.getByLabel('Valido dal').fill('2026-11-03');
+    await dialogo.getByRole('button', { name: 'Salva', exact: true }).click();
+    await dialogo.getByText('La data non può essere nel passato').waitFor();
+    assert.equal(versioni(await dump(page)).length, 1);
+  } finally { await chiudi(); }
+});

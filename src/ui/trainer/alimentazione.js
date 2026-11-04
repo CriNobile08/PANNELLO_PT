@@ -6,6 +6,7 @@ import { versioneValida, versioniFuture } from '../../logic/versioni.js';
 import { formatoData, formatoDataIso } from '../../logic/date.js';
 
 const DATA_OK = /^\d{4}-\d{2}-\d{2}$/;
+const MSG_DATA_PASSATA = 'La data non può essere nel passato';
 const testo = (n) => (n === null || n === undefined ? '' : String(n).replace('.', ','));
 
 // ---------- bozza (i grammi sono testo finché non si salva) ----------
@@ -165,10 +166,13 @@ function Editor() {
     setOpzioni({});
   };
 
-  const errData = dialogo && !DATA_OK.test(data) ? 'Campo obbligatorio' : undefined;
+  // "Valido dal" ≥ oggi (una nuova versione non riscrive il passato), salvo il primo piano.
+  const primaVersione = dati.alimentazione.length === 0;
+  const nelPassato = !primaVersione && DATA_OK.test(data) && data < oggi;
+  const errData = !dialogo ? undefined : !DATA_OK.test(data) ? 'Campo obbligatorio' : nelPassato ? MSG_DATA_PASSATA : undefined;
 
   async function conferma() {
-    if (!DATA_OK.test(data)) return;
+    if (!DATA_OK.test(data) || nelPassato) return;
     setTentato(true);
     setMessaggio(null);
     const trovati = validaPiano(bozza);
@@ -239,7 +243,7 @@ function Editor() {
     { testo: 'Salva', primaria: true, disabled: !puoScrivere || inCorso, onClick: conferma },
   ]}>
           <${Campo} etichetta="Valido dal" errore=${errData}>
-            <input type="date" value=${data} onInput=${(e) => setData(e.target.value)} />
+            <input type="date" value=${data} min=${primaVersione ? undefined : oggi} onInput=${(e) => setData(e.target.value)} />
           </${Campo}>
         </${Dialogo}>`}
     </div>`;

@@ -10,6 +10,7 @@ import { GIORNI, lunediDi, aggiungiGiorni, giorniDellaSettimana, formatoData, fo
 const NOMI_GIORNI = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
 const TIPI = { palestra: 'Palestra', corsa: 'Corsa', trekking: 'Trekking', altro: 'Altro' };
 const DATA_OK = /^\d{4}-\d{2}-\d{2}$/;
+export const MSG_DATA_PASSATA = 'La data non può essere nel passato';
 
 /** Select di schede: non archiviate (più quella attualmente scelta) e "Riposo". Valore '' = riposo. */
 function SelezioneScheda({ etichetta, valore, onCambia }) {
@@ -109,7 +110,11 @@ export function EditorNuovaVersione({ onChiudi }) {
   const [tentato, setTentato] = useState(false);
   const [messaggio, setMessaggio] = useState(null);
   const [inCorso, setInCorso] = useState(false);
-  const errore = tentato && !DATA_OK.test(validaDal) ? 'Campo obbligatorio' : undefined;
+  // Una nuova versione non riscrive il passato: "Valida dal" ≥ oggi. Fa eccezione la prima versione
+  // (non c'è storia da riscrivere): così la prima settimana tipo può valere anche per i giorni già passati.
+  const primaVersione = dati.settimane.length === 0;
+  const nelPassato = !primaVersione && DATA_OK.test(validaDal) && validaDal < oggi;
+  const errore = !tentato ? undefined : !DATA_OK.test(validaDal) ? 'Campo obbligatorio' : nelPassato ? MSG_DATA_PASSATA : undefined;
 
   const cambiaData = (v) => {
     setValidaDal(v);
@@ -121,7 +126,7 @@ export function EditorNuovaVersione({ onChiudi }) {
   async function salva() {
     setTentato(true);
     setMessaggio(null);
-    if (!DATA_OK.test(validaDal)) return;
+    if (!DATA_OK.test(validaDal) || nelPassato) return;
     setInCorso(true);
     try {
       await store.salvaSettimana({ validaDal, giorni: Object.fromEntries(GIORNI.map((g) => [g, giorni[g] || null])) });
@@ -140,7 +145,7 @@ export function EditorNuovaVersione({ onChiudi }) {
       <div class="card">
         <h2 class="titolo-blocco">Nuova versione da una data…</h2>
         <${Campo} etichetta="Valida dal" errore=${errore}>
-          <input type="date" value=${validaDal} onInput=${(e) => cambiaData(e.target.value)} />
+          <input type="date" value=${validaDal} min=${primaVersione ? undefined : oggi} onInput=${(e) => cambiaData(e.target.value)} />
         </${Campo}>
         <div class="griglia-campi">
           ${GIORNI.map((g, i) => html`<${SelezioneScheda} key=${g} etichetta=${NOMI_GIORNI[i]} valore=${giorni[g]} onCambia=${(v) => cambiaGiorno(g, v)} />`)}

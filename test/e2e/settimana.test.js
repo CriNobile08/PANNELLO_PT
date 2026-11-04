@@ -157,3 +157,27 @@ test('solo questa settimana: non sovrascrive un giorno cambiato da un altro ment
     assert.equal(d['eccezioni/2026-11-07'].autore, 'u-altro');
   } finally { await chiudi(); }
 });
+
+test('nuova versione: "Valida dal" non può essere nel passato (salvo la prima versione)', async () => {
+  const { page, chiudi } = await trainer({ seme: SEME });
+  try {
+    await page.getByRole('button', { name: 'Nuova versione da una data…' }).click();
+    assert.equal(await page.getByLabel('Valida dal').getAttribute('min'), '2026-11-04');
+    await page.getByLabel('Valida dal').fill('2026-11-03');
+    await page.getByRole('button', { name: 'Salva' }).click();
+    await page.getByText('La data non può essere nel passato').waitFor();
+    assert.equal(Object.keys(await dump(page)).filter((p) => p.startsWith('settimane/')).length, 2);
+    await page.getByLabel('Valida dal').fill('2026-11-04');
+    await page.getByRole('button', { name: 'Salva' }).click();
+    await page.getByText('In vigore dal mer 4 nov · versione 3', { exact: false }).waitFor();
+  } finally { await chiudi(); }
+  // prima settimana tipo: si può partire da questo lunedì (nessuna versione precedente da riscrivere)
+  const vuota = await trainer();
+  try {
+    await vuota.page.getByRole('button', { name: 'Crea la prima settimana tipo' }).click();
+    assert.equal(await vuota.page.getByLabel('Valida dal').getAttribute('min'), null);
+    await vuota.page.getByLabel('Valida dal').fill('2026-11-02');
+    await vuota.page.getByRole('button', { name: 'Salva' }).click();
+    await vuota.page.getByText('In vigore dal lun 2 nov · versione 1', { exact: false }).waitFor();
+  } finally { await vuota.chiudi(); }
+});
