@@ -158,3 +158,41 @@ test('"Valido dal" non può essere nel passato', async () => {
     assert.equal(versioni(await dump(page)).length, 1);
   } finally { await chiudi(); }
 });
+
+test('versione in programma: si apre e si modifica; selettore di versione con guardia sulle modifiche', async () => {
+  const seme = {
+    'alimentazione/a1': PIANO(),
+    'alimentazione/a2': PIANO({ numero: 2, validaDal: '2026-11-16', indicazioni: 'Piano futuro', creataIl: '2026-11-03T10:00:00+01:00' }),
+  };
+  const { page, chiudi } = await trainer({ seme });
+  try {
+    await vaiAlPiano(page);
+    // di default: la versione più recente per validaDal (quella in programma)
+    await page.getByText('Stai modificando: Versione 2 · dal lun 16 nov · in programma').waitFor();
+    assert.equal(await page.getByLabel('Indicazioni generali').inputValue(), 'Piano futuro');
+    const selettore = page.getByLabel('Versione da modificare');
+    assert.deepEqual(await selettore.locator('option').allTextContents(), [
+      'Versione 2 · dal lun 16 nov · in programma', 'Versione 1 · dal gio 1 ott · in vigore',
+    ]);
+    // salvataggio: la data proposta è quella della versione in programma
+    await page.getByLabel('Indicazioni generali').fill('Piano futuro rivisto');
+    await page.getByRole('button', { name: 'Salva come nuova versione da…' }).click();
+    const dialogo = page.getByRole('dialog', { name: 'Salva come nuova versione da…' });
+    assert.equal(await dialogo.getByLabel('Valido dal').inputValue(), '2026-11-16');
+    await dialogo.getByRole('button', { name: 'Annulla' }).click();
+    // cambiare versione con modifiche in sospeso chiede conferma
+    await selettore.selectOption({ label: 'Versione 1 · dal gio 1 ott · in vigore' });
+    const guardia = page.getByRole('dialog', { name: "Hai modifiche non salvate. Caricare un'altra versione?" });
+    await guardia.getByRole('button', { name: 'Resta' }).click();
+    assert.equal(await page.getByLabel('Indicazioni generali').inputValue(), 'Piano futuro rivisto');
+    assert.equal(await selettore.inputValue(), 'a2');
+    await selettore.selectOption({ label: 'Versione 1 · dal gio 1 ott · in vigore' });
+    await guardia.getByRole('button', { name: 'Carica senza salvare' }).click();
+    await page.getByText('Stai modificando: Versione 1 · dal gio 1 ott · in vigore').waitFor();
+    assert.equal(await page.getByLabel('Indicazioni generali').inputValue(), 'Bere molto');
+    assert.equal(await page.getByText('Modifiche non salvate').count(), 0);
+    // versione in vigore: la data proposta è oggi
+    await page.getByRole('button', { name: 'Salva come nuova versione da…' }).click();
+    assert.equal(await dialogo.getByLabel('Valido dal').inputValue(), '2026-11-04');
+  } finally { await chiudi(); }
+});

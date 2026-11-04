@@ -42,13 +42,17 @@ function perSalvare(b) {
 
 const sostituisci = (lista, i, valore) => lista.map((x, k) => (k === i ? valore : x));
 
+/** Versioni dalla più recente per validaDal (a parità, numero più alto). */
+const perValidita = (versioni) => [...versioni]
+  .sort((a, b) => (a.validaDal < b.validaDal ? 1 : a.validaDal > b.validaDal ? -1 : b.numero - a.numero));
+
 // ---------- intestazione ----------
 function Intestazione({ sporco, inCorso, onAnnulla, onSalva }) {
   const { dati, oggi, puoScrivere, nomi } = useContext(Contesto);
   const [cronologia, setCronologia] = useState(false);
   const attuale = versioneValida(dati.alimentazione, oggi);
   const future = versioniFuture(dati.alimentazione, oggi);
-  const tutte = [...dati.alimentazione].sort((a, b) => (a.validaDal < b.validaDal ? 1 : a.validaDal > b.validaDal ? -1 : b.numero - a.numero));
+  const tutte = perValidita(dati.alimentazione);
   const autori = nomi(tutte.map((v) => v.autore));
   const chi = (v) => {
     return `creato da ${autori[v.autore] ?? 'Qualcuno'} il ${formatoDataIso(v.creataIl)}`;
@@ -130,9 +134,19 @@ function PastoAperto({ pasto, i, errori, opzioneAttiva, onOpzione, onCambia, onR
 }
 
 // ---------- editor ----------
+/** Etichetta di una versione: "Versione n · dal …" più "in vigore" / "in programma". */
+function etichettaVersione(v, attuale, oggi) {
+  const stato = attuale && v.id === attuale.id ? ' · in vigore' : v.validaDal > oggi ? ' · in programma' : '';
+  return `Versione ${v.numero} · dal ${formatoData(v.validaDal)}${stato}`;
+}
+
 function Editor() {
   const { dati, store, oggi, puoScrivere, segnalaRifiuto, setSporco } = useContext(Contesto);
-  const [base, setBase] = useState(() => bozzaDa(versioneValida(dati.alimentazione, oggi)));
+  // Base della bozza: di default la versione più recente per validaDal (anche se in programma), così un
+  // piano futuro si vede e si modifica; il trainer può caricarne un'altra dal selettore.
+  const [versioneId, setVersioneId] = useState(() => perValidita(dati.alimentazione)[0]?.id ?? null);
+  const versione = dati.alimentazione.find((v) => v.id === versioneId) ?? null;
+  const [base, setBase] = useState(() => bozzaDa(dati.alimentazione.find((v) => v.id === versioneId)));
   const [bozza, setBozza] = useState(base);
   const [sporco, setSporcoLocale] = useState(false);
   const [tentato, setTentato] = useState(false);
@@ -142,6 +156,32 @@ function Editor() {
   const [data, setData] = useState(oggi);
   const [inCorso, setInCorso] = useState(false);
   const [messaggio, setMessaggio] = useState(null);
+  const [daCaricare, setDaCaricare] = useState(null); // versione scelta col selettore, in attesa di conferma
+  const [giro, setGiro] = useState(0); // rimonta il select dopo "Resta"
+
+  const attuale = versioneValida(dati.alimentazione, oggi);
+  const versioni = perValidita(dati.alimentazione);
+
+  function carica(id) {
+    const nuova = bozzaDa(dati.alimentazione.find((v) => v.id === id));
+    setVersioneId(id);
+    setBase(nuova);
+    setBozza(nuova);
+    setSporcoLocale(false);
+    setSporco(false);
+    setTentato(false);
+    setMessaggio(null);
+    setAperto(0);
+    setOpzioni({});
+    setDaCaricare(null);
+  }
+  const scegliVersione = (id) => {
+    if (id === versioneId) return;
+    if (sporco) setDaCaricare(id);
+    else carica(id);
+  };
+  const resta = () => { setDaCaricare(null); setGiro((n) => n + 1); };
+  const dataProposta = () => (versione && versione.validaDal > oggi ? versione.validaDal : oggi);
 
   const cambia = (parte) => {
     setBozza((b) => ({ ...b, ...parte }));
@@ -190,7 +230,8 @@ function Editor() {
     }
     setInCorso(true);
     try {
-      await store.salvaPiano({ ...perSalvare(bozza), validaDal: data });
+      const id = await store.salvaPiano({ ...perSalvare(bozza), validaDal: data });
+      setVersioneId(id);
       setBase(bozza);
       setSporcoLocale(false);
       setSporco(false);
@@ -217,7 +258,16 @@ function Editor() {
 
   return html`
     <div class="editor-piano">
-      <${Intestazione} sporco=${sporco} inCorso=${inCorso} onAnnulla=${annulla} onSalva=${() => { setData(oggi); setDialogo(true); }} />
+      <${Intestazione} sporco=${sporco} inCorso=${inCorso} onAnnulla=${annulla} onSalva=${() => { setData(dataProposta()); setDialogo(true); }} />
+      ${versioni.length > 0 && html`
+        <div class="card">
+          <${Campo} etichetta="Versione da modificare">
+            <select key=${giro} value=${versioneId ?? ''} onChange=${(e) => scegliVersione(e.target.value)}>
+              ${versioni.map((v) => html`<option key=${v.id} value=${v.id}>${etichettaVersione(v, attuale, oggi)}</option>`)}
+            </select>
+          </${Campo}>
+          ${versione && html`<p class="secondario">${`Stai modificando: ${etichettaVersione(versione, attuale, oggi)}`}</p>`}
+        </div>`}
       <div class="card">
         <${Campo} etichetta="Indicazioni generali">
           <textarea value=${bozza.indicazioni} onInput=${(e) => cambia({ indicazioni: e.target.value })}></textarea>
@@ -246,6 +296,11 @@ function Editor() {
             <input type="date" value=${data} min=${primaVersione ? undefined : oggi} onInput=${(e) => setData(e.target.value)} />
           </${Campo}>
         </${Dialogo}>`}
+      ${daCaricare && html`
+        <${Dialogo} titolo="Hai modifiche non salvate. Caricare un'altra versione?" azioni=${[
+    { testo: 'Resta', onClick: resta },
+    { testo: 'Carica senza salvare', primaria: true, onClick: () => carica(daCaricare) },
+  ]} />`}
     </div>`;
 }
 
