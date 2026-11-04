@@ -145,3 +145,71 @@ test('aggiorna ora senza attività o non proprietario', async () => {
     assert.equal(await b.page.getByRole('button', { name: 'Aggiorna ora' }).count(), 0);
   } finally { await b.chiudi(); }
 });
+
+const REV = { validaDal: '2026-10-01', autore: 'u-trainer', salvataIl: '2026-10-01T10:00:00+02:00', nota: '', durataStimataMin: 60, riscaldamento: [], stretching: [],
+  principale: [{ nome: 'Panca', serie: 3, ripetizioni: 10, caricoKg: 40, recuperoSec: 90, nota: '', hevyTemplateId: null }] };
+const SCHEDA = { nome: 'Spinta A', tipo: 'palestra', archiviata: false, revisioneCorrente: 'r1', creataDa: 'u-trainer', creataIl: '2026-10-01T10:00:00Z' };
+const PROGRAMMA = {
+  'schede/spinta': SCHEDA, 'schede/spinta/revisioni/r1': REV,
+  'settimane/v1': { numero: 1, validaDal: '2026-10-26', giorni: { lun: null, mar: null, mer: 'spinta', gio: null, ven: null, sab: null, dom: null }, autore: 'u-trainer', creataIl: '2026-10-25T10:00:00Z' },
+};
+const SESS_OGGI = { 'sessioni/googleHealth_s1': { ...SESSIONI['sessioni/googleHealth_1'], idFonte: 's1' } };
+const apriOggi = async (seme) => {
+  const r = await cliente({ seme });
+  await r.page.getByText('Allenamento di oggi').waitFor();
+  await r.page.getByText('Allenamento di oggi').click();
+  await r.page.getByRole('heading', { name: 'Parte principale' }).waitFor();
+  return r;
+};
+
+test('colonna Fatto', async () => {
+  const { page, chiudi } = await apriOggi({ ...PROGRAMMA, ...SESS_OGGI });
+  try {
+    await page.getByText('Programmato', { exact: true }).waitFor();
+    await page.locator('.colonna-fatto').getByText('Fatto', { exact: true }).waitFor();
+    await page.locator('.colonna-fatto').getByText('1 h 02').waitFor();
+    await page.locator('.colonna-fatto').getByText('118 bpm').waitFor();
+    await page.getByRole('button', { name: 'Segna come fatta' }).waitFor();
+  } finally { await chiudi(); }
+  const b = await apriOggi(PROGRAMMA);
+  try { assert.equal(await b.page.locator('.colonna-fatto').count(), 0); } finally { await b.chiudi(); }
+});
+
+test('avviso Sì', async () => {
+  const { page, chiudi } = await apriOggi({ ...PROGRAMMA, ...SESS_OGGI });
+  try {
+    await page.getByText('Allenamento rilevato: segnalo come fatto?').waitFor();
+    await page.getByRole('button', { name: 'Sì' }).click();
+    await page.getByText('Allenamento rilevato: segnalo come fatto?').waitFor({ state: 'detached' });
+    const d = await page.evaluate(() => window.claude.dump());
+    assert.equal(d['diario/2026-11-04'].principaleFatto, true);
+    assert.deepEqual(d['diario/2026-11-04'].sessioniCollegate, ['googleHealth_s1']);
+    assert.equal(await page.getByRole('button', { name: 'Segna come fatta' }).getAttribute('aria-pressed'), 'true');
+  } finally { await chiudi(); }
+});
+
+test('avviso No', async () => {
+  const { page, chiudi } = await apriOggi({ ...PROGRAMMA, ...SESS_OGGI });
+  try {
+    await page.getByRole('button', { name: 'No', exact: true }).click();
+    await page.getByText('Allenamento rilevato: segnalo come fatto?').waitFor({ state: 'detached' });
+    const d = await page.evaluate(() => window.claude.dump());
+    assert.equal(d['diario/2026-11-04'].rilevamentoIgnorato, true);
+    assert.equal(d['diario/2026-11-04'].principaleFatto, false);
+  } finally { await chiudi(); }
+  const b = await apriOggi({ ...PROGRAMMA, ...SESS_OGGI, 'diario/2026-11-04': { rilevamentoIgnorato: true } });
+  try { assert.equal(await b.page.getByText('Allenamento rilevato: segnalo come fatto?').count(), 0); } finally { await b.chiudi(); }
+});
+
+test('nessun avviso nei giorni di riposo', async () => {
+  const s = { 'sessioni/googleHealth_s2': { ...SESS_OGGI['sessioni/googleHealth_s1'], idFonte: 's2', data: '2026-11-05',
+    inizio: '2026-11-05T07:30:00+01:00', fine: '2026-11-05T08:32:00+01:00' } };
+  const { page, chiudi } = await cliente({ seme: { ...PROGRAMMA, ...s } });
+  try {
+    await page.getByRole('navigation').getByRole('link', { name: 'Allenamento', exact: true }).click();
+    await page.getByTestId('riga-giorno').nth(3).click();
+    await page.getByText('Riposo', { exact: true }).waitFor();
+    await page.locator('.colonna-fatto').waitFor();
+    assert.equal(await page.getByText('Allenamento rilevato: segnalo come fatto?').count(), 0);
+  } finally { await chiudi(); }
+});

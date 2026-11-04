@@ -401,3 +401,10 @@ button[aria-pressed="true"].pulsante.primario { background: var(--allenamento); 
 .dettaglio-righe { margin: 0 0 12px; display: flex; flex-direction: column; }
 .dettaglio-riga { display: flex; justify-content: space-between; min-height: 44px; align-items: center; }
 .dettaglio-riga dd { margin: 0; font-weight: 600; }
+
+.colonne-giornata { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 480px) { .colonne-giornata { grid-template-columns: 1fr; } }
+.avviso-rilevamento { display: flex; flex-direction: column; gap: 12px; }
+.avviso-rilevamento p { margin: 0; }
+.azioni-avviso { display: flex; gap: 8px; }
+.azioni-avviso .pulsante { flex: 1; min-height: var(--tocco, 44px); }

@@ -6,6 +6,8 @@ import { revisionePerGiorno } from '../../logic/versioni.js';
 import { risolviGiorno } from '../../logic/risoluzione.js';
 import { statoBlocchi } from '../../logic/completamento.js';
 import { formatoDataLunga } from '../../logic/date.js';
+import { unisciSessioni } from '../../logic/sessioni.js';
+import { DettaglioSessione } from './sessioni.js';
 
 export const TIPI = { palestra: 'Palestra', corsa: 'Corsa', trekking: 'Trekking', camminata: 'Camminata', bici: 'Bici', altro: 'Altro' };
 
@@ -129,12 +131,37 @@ function BloccoSpunte({ titolo, esercizi, fatti, onCambia, disabilitato }) {
     </section>`;
 }
 
-function BloccoPrincipale({ revisione, fatto, onCambia, disabilitato }) {
+/** Spec §6.4: scheda in programma, principale non fatto, rilevamento non ignorato, almeno una sessione unita nel giorno. */
+export function avvisoRilevamento({ haScheda, voce, sessioniGiorno }) {
+  return Boolean(haScheda) && voce?.principaleFatto !== true && voce?.rilevamentoIgnorato !== true && sessioniGiorno.length > 0;
+}
+
+function ColonnaFatto({ sessioni }) {
+  return html`
+    <div class="colonna-fatto">
+      <div class="sottotitolo">Fatto</div>
+      ${sessioni.map((s) => html`<${DettaglioSessione} key=${s.id} sessione=${s} />`)}
+    </div>`;
+}
+
+function AvvisoRilevamento({ onSi, onNo, disabilitato }) {
+  return html`
+    <div class="card avviso-rilevamento" role="status">
+      <p>Allenamento rilevato: segnalo come fatto?</p>
+      <div class="azioni-avviso">
+        <button type="button" class="pulsante primario" disabled=${disabilitato} onClick=${onSi}>Sì</button>
+        <button type="button" class="pulsante" disabled=${disabilitato} onClick=${onNo}>No</button>
+      </div>
+    </div>`;
+}
+
+function BloccoPrincipale({ revisione, fatto, onCambia, disabilitato, sessioni = [] }) {
   const esercizi = revisione.principale ?? [];
   const ob = revisione.obiettivo;
   return html`
     <section class="card blocco-giornata" aria-label="Parte principale">
       <h2 class="titolo-blocco">Parte principale</h2>
+      <div class=${sessioni.length ? 'colonne-giornata' : ''}>
       <div class="colonna-programmato">
         <div class="sottotitolo">Programmato</div>
         ${ob && html`
@@ -152,6 +179,8 @@ function BloccoPrincipale({ revisione, fatto, onCambia, disabilitato }) {
   ].filter(Boolean).join(' · ')}</span>
           </div>`)}
         ${!ob && esercizi.length === 0 && html`<p class="secondario">Nessun esercizio</p>`}
+      </div>
+      ${sessioni.length > 0 && html`<${ColonnaFatto} sessioni=${sessioni} />`}
       </div>
       <button type="button" class=${fatto ? 'pulsante primario' : 'pulsante'} aria-pressed=${fatto ? 'true' : 'false'}
         disabled=${disabilitato} onClick=${onCambia}>Segna come fatta</button>
@@ -196,6 +225,7 @@ export function SezioneGiornata({ data: dataProp }) {
   const { voce, modifica, messaggio, inCorso } = useDiario(data);
   const { giorno, scheda, revisione, stato } = contestoGiorno(dati, data, voce);
   const disabilitato = !puoScrivere;
+  const sessioniGiorno = unisciSessioni(dati.sessioni ?? []).filter((s) => s.data === data);
 
   const intestazione = html`
     <header class="intestazione-giornata">
@@ -207,12 +237,15 @@ export function SezioneGiornata({ data: dataProp }) {
     return html`<section class="sezione">${intestazione}<${Vuoto} testo="Il trainer non ha ancora preparato il programma" /></section>`;
   }
   if (!giorno.schedaId) {
-    return html`<section class="sezione">${intestazione}<div class="card"><p>Riposo</p></div></section>`;
+    return html`<section class="sezione">${intestazione}<div class="card"><p>Riposo</p></div>
+      ${sessioniGiorno.length > 0 && html`<div class="card"><${ColonnaFatto} sessioni=${sessioniGiorno} /></div>`}</section>`;
   }
   if (!scheda || !revisione) {
     return html`<section class="sezione">${intestazione}<div class="card"><p>Scheda non disponibile</p></div></section>`;
   }
 
+  const mostraAvviso = avvisoRilevamento({ haScheda: true, voce, sessioniGiorno });
+  const ids = sessioniGiorno.flatMap((s) => s.parti.map((p) => p.id));
   const n = stato.completati;
   const segmenti = [stato.riscaldamento, stato.principale, stato.stretching];
   return html`
@@ -234,7 +267,10 @@ export function SezioneGiornata({ data: dataProp }) {
       ${messaggio && html`<p class="errore-scrittura" role="alert">${messaggio}</p>`}
       <${BloccoSpunte} titolo="Riscaldamento" esercizi=${revisione.riscaldamento ?? []} fatti=${voce.riscaldamentoFatti}
         disabilitato=${disabilitato} onCambia=${(i, v) => modifica(spunta('riscaldamentoFatti', i, v))} />
-      <${BloccoPrincipale} revisione=${revisione} fatto=${voce.principaleFatto === true}
+      ${mostraAvviso && html`<${AvvisoRilevamento} disabilitato=${disabilitato || inCorso}
+        onSi=${() => modifica({ principaleFatto: true, sessioniCollegate: ids })}
+        onNo=${() => modifica({ rilevamentoIgnorato: true })} />`}
+      <${BloccoPrincipale} revisione=${revisione} fatto=${voce.principaleFatto === true} sessioni=${sessioniGiorno}
         disabilitato=${disabilitato} onCambia=${() => modifica((att) => ({ principaleFatto: att.principaleFatto !== true }))} />
       <${BloccoSpunte} titolo="Stretching" esercizi=${revisione.stretching ?? []} fatti=${voce.stretchingFatti}
         disabilitato=${disabilitato} onCambia=${(i, v) => modifica(spunta('stretchingFatti', i, v))} />
