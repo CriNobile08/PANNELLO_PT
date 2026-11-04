@@ -385,3 +385,19 @@ h1, h2, h3 { margin: 0; font-weight: 600; }
 .sensazione[aria-pressed="true"] { background: var(--allenamento); color: #000; }
 button[aria-pressed="true"].pulsante.primario { background: var(--allenamento); }
 .scheda-opzione[aria-pressed="true"] { background: var(--attiva); }
+
+.dato-valore.presente { color: var(--testo); font-size: 1.1rem; }
+.riga-fasi, .stato-sync { margin: 0; text-align: center; }
+.aggiorna-ora { align-self: center; min-height: 44px; min-width: 44px; }
+.elenco-sessioni { display: flex; flex-direction: column; }
+.riga-sessione {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px; padding: 8px 0;
+  background: none; border: 0; border-bottom: 1px solid var(--bordo, rgba(255, 255, 255, 0.1)); color: inherit; font: inherit; text-align: left; width: 100%;
+}
+.riga-sessione:last-child { border-bottom: 0; }
+.sessione-principale, .sessione-valori { display: flex; flex-direction: column; gap: 2px; }
+.sessione-valori { align-items: flex-end; }
+.sessione-tipo { font-weight: 600; }
+.dettaglio-righe { margin: 0 0 12px; display: flex; flex-direction: column; }
+.dettaglio-riga { display: flex; justify-content: space-between; min-height: 44px; align-items: center; }
+.dettaglio-riga dd { margin: 0; font-weight: 600; }

@@ -7,7 +7,7 @@ import { risolviGiorno } from '../../logic/risoluzione.js';
 import { statoBlocchi } from '../../logic/completamento.js';
 import { formatoDataLunga } from '../../logic/date.js';
 
-export const TIPI = { palestra: 'Palestra', corsa: 'Corsa', trekking: 'Trekking', altro: 'Altro' };
+export const TIPI = { palestra: 'Palestra', corsa: 'Corsa', trekking: 'Trekking', camminata: 'Camminata', bici: 'Bici', altro: 'Altro' };
 
 /** Numero all'italiana: virgola decimale. */
 export const testoNumero = (n) => String(n).replace('.', ',');
