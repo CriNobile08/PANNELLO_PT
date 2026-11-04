@@ -4,11 +4,12 @@ import { mkdtempSync, existsSync, readFileSync, mkdirSync, writeFileSync, rmSync
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { creaClient, ErroreSync } from '../src/sync/googleHealth/client.js';
-import { eseguiSync } from '../src/sync/esegui.js';
+import { fonteGoogleHealth } from '../src/sync/fonti/googleHealth.js';
 import { main } from '../scripts/sync.js';
 import { puntoSonno, puntoFc, puntoHrv, rollupPassi, puntoEsercizio } from './fixtures/googleHealth.js';
+import { workout } from './fixtures/hevy.js';
 
-const env = { GH_CLIENT_ID: 'id-cliente', GH_CLIENT_SECRET: 'segreto-cliente', GH_REFRESH_TOKEN: 'refresh-segreto' };
+const env = { GH_CLIENT_ID: 'id-cliente', GH_CLIENT_SECRET: 'segreto-cliente', GH_REFRESH_TOKEN: 'refresh-segreto', HEVY_API_KEY: 'chiave-hevy-segreta' };
 const accessToken = 'access-segreto-123';
 const adesso = new Date('2026-11-04T08:52:00Z');
 const URL_TOKEN = 'https://oauth2.googleapis.com/token';
@@ -21,6 +22,10 @@ function creaFinto(guasti = {}) {
     url = String(url);
     chiamate.push({ url, opzioni });
     if (url === URL_TOKEN) return guasti.token ?? json({ access_token: accessToken, expires_in: 3599 });
+    if (url.startsWith('https://api.hevyapp.com/')) {
+      if (guasti.hevy) return guasti.hevy;
+      return json({ page: 1, page_count: 1, events: [{ type: 'updated', workout: workout() }] });
+    }
     const tipo = url.match(/dataTypes\/([^/]+)\/dataPoints/)[1];
     if (guasti[tipo]) { const g = guasti[tipo]; if (g instanceof Error) throw g; return g; }
     switch (tipo) {
@@ -35,12 +40,12 @@ function creaFinto(guasti = {}) {
   return { fetch, chiamate };
 }
 const clienteDa = (fetch) => creaClient({ env, fetch, attendi: async () => {} });
-const esegui = (guasti) => { const f = creaFinto(guasti); return eseguiSync({ client: clienteDa(f.fetch), adesso }).then((r) => ({ r, ...f })); };
+const esegui = (guasti) => { const f = creaFinto(guasti); return fonteGoogleHealth({ client: clienteDa(f.fetch), adesso }).then((r) => ({ r, ...f })); };
 
 test('finestra di tre giorni', async () => {
   const { r } = await esegui();
   assert.deepEqual(r.finestra, { dal: '2026-11-02', al: '2026-11-04' });
-  assert.equal(r.generatoIl, adesso.toISOString());
+  assert.equal(r.messaggio, '');
 });
 
 test('filtri esatti', async () => {
@@ -132,25 +137,44 @@ test('main scrive out/sync.json senza segreti', async () => {
   const codice = await main({ env, fetch, adesso, cartella: join(dir, 'out'), log: (t) => log.push(t), errore: () => {} });
   assert.equal(codice, 0);
   const testo = readFileSync(join(dir, 'out', 'sync.json'), 'utf8');
-  for (const s of [env.GH_CLIENT_SECRET, env.GH_REFRESH_TOKEN, accessToken]) assert.ok(!testo.includes(s));
-  assert.equal(JSON.parse(testo).esito, 'ok');
-  assert.deepEqual(log, ['sync: ok, 3 giorni, 1 sessioni']);
+  for (const s of [env.GH_CLIENT_SECRET, env.GH_REFRESH_TOKEN, env.HEVY_API_KEY, accessToken]) assert.ok(!testo.includes(s));
+  const file = JSON.parse(testo);
+  assert.equal(file.esito, 'ok');
+  assert.ok(file.operazioni.some((o) => o.doc_id === 'hevy_w1'));
+  assert.deepEqual(log, ['sync: ok · googleHealth ok · hevy ok']);
   rmSync(dir, { recursive: true });
 });
 
-test('main su invalid_grant', async () => {
+test('main con una fonte fallita scrive il file', async () => {
+  const dir = cartellaTemp();
+  const out = join(dir, 'out');
+  const log = [];
+  const { fetch } = creaFinto({ token: json({ error: 'invalid_grant' }, 400) });
+  const codice = await main({ env, fetch, adesso, cartella: out, log: (t) => log.push(t), errore: () => {} });
+  assert.equal(codice, 0);
+  const file = JSON.parse(readFileSync(join(out, 'sync.json'), 'utf8'));
+  assert.equal(file.esito, 'parziale');
+  assert.equal(file.fonti.googleHealth.esito, 'errore');
+  assert.deepEqual(file.operazioni.map((o) => o.doc_id), ['hevy_w1']);
+  assert.deepEqual(log, ['sync: parziale · googleHealth errore · hevy ok']);
+  rmSync(dir, { recursive: true });
+});
+
+test('main con tutte le fonti fallite', async () => {
   const dir = cartellaTemp();
   const out = join(dir, 'out');
   mkdirSync(out);
   writeFileSync(join(out, 'sync.json'), '{}');
   const { fetch } = creaFinto({ token: json({ error: 'invalid_grant' }, 400) });
   const { righe, err } = catturaErr();
-  const codice = await main({ env, fetch, adesso, cartella: out, log: () => {}, errore: err });
+  const { HEVY_API_KEY, ...senzaHevy } = env;
+  const codice = await main({ env: senzaHevy, fetch, adesso, cartella: out, log: () => {}, errore: err });
   assert.equal(codice, 1);
   assert.ok(!existsSync(join(out, 'sync.json')));
-  assert.equal(righe.length, 1);
-  assert.ok(righe[0].startsWith('ERRORE: autorizzazione: '));
-  assert.equal(righe[0], 'ERRORE: autorizzazione: Autorizzazione Google scaduta: va rinnovato il token');
+  assert.deepEqual(righe, [
+    'ERRORE: googleHealth: autorizzazione: Autorizzazione Google scaduta: va rinnovato il token',
+    'ERRORE: hevy: configurazione: Chiave Hevy mancante',
+  ]);
   rmSync(dir, { recursive: true });
 });
 
@@ -158,10 +182,10 @@ test('main: messaggi per rete e configurazione', async () => {
   const dir = cartellaTemp();
   const a = catturaErr();
   assert.equal(await main({ env: {}, fetch: creaFinto().fetch, adesso, cartella: dir, log: () => {}, errore: a.err }), 1);
-  assert.equal(a.righe[0], 'ERRORE: configurazione: Credenziali Google Health mancanti');
+  assert.equal(a.righe[0], 'ERRORE: googleHealth: configurazione: Credenziali Google Health mancanti');
   const b = catturaErr();
   const g = creaFinto({ token: new Error('giù') });
-  assert.equal(await main({ env, fetch: async (u, o) => { if (String(u) === URL_TOKEN) throw new Error('giù'); return g.fetch(u, o); }, adesso, cartella: dir, log: () => {}, errore: b.err, attendi: async () => {} }), 1);
-  assert.equal(b.righe[0], 'ERRORE: rete: Google Health non raggiungibile');
+  assert.equal(await main({ env, fetch: async (u, o) => { if (String(u) === URL_TOKEN || String(u).includes('hevyapp')) throw new Error('giù'); return g.fetch(u, o); }, adesso, cartella: dir, log: () => {}, errore: b.err, attendi: async () => {} }), 1);
+  assert.deepEqual(b.righe, ['ERRORE: googleHealth: rete: Google Health non raggiungibile', 'ERRORE: hevy: rete: Hevy non raggiungibile']);
   rmSync(dir, { recursive: true });
 });

@@ -1,58 +1,41 @@
-// Orchestrazione della sincronizzazione: legge i cinque tipi di dato dalla
-// Google Health API, li normalizza e produce il risultato di §4.2 del design.
-import { ErroreSync } from './googleHealth/client.js';
-import { giorniSalute, sessioniDa } from './googleHealth/normalizza.js';
-import { oggiRoma, aggiungiGiorni } from '../logic/date.js';
+// Orchestratore della sincronizzazione (spec 2c-1 §4): esegue le fonti in
+// sequenza, isola i fallimenti e compone il contenuto di out/sync.json.
+// Non lancia mai: se tutte le fonti falliscono restituisce esito "errore".
+import { ErroreSync } from './errore.js';
 
-const GIORNI_FINESTRA = 3;
+export const MESSAGGI = {
+  googleHealth: {
+    autorizzazione: 'Autorizzazione Google scaduta: va rinnovato il token',
+    rete: 'Google Health non raggiungibile',
+    configurazione: 'Credenziali Google Health mancanti',
+  },
+  hevy: {
+    configurazione: 'Chiave Hevy mancante',
+    autorizzazione: 'Chiave Hevy non valida o abbonamento Pro scaduto',
+    rete: 'Hevy non raggiungibile',
+  },
+};
 
-export async function eseguiSync({ client, adesso }) {
-  const al = oggiRoma(adesso);
-  const dal = aggiungiGiorni(al, -(GIORNI_FINESTRA - 1));
-  const al1 = aggiungiGiorni(al, 1);
-  const intervallo = (campo) => `${campo} >= "${dal}" AND ${campo} < "${al1}"`;
-
-  const letture = [
-    ['sleep', () => client.elenca('sleep', intervallo('sleep.interval.civil_end_time'))],
-    ['daily-resting-heart-rate', () => client.elenca('daily-resting-heart-rate', intervallo('daily_resting_heart_rate.date'))],
-    ['daily-heart-rate-variability', () => client.elenca('daily-heart-rate-variability', intervallo('daily_heart_rate_variability.date'))],
-    ['exercise', () => client.elenca('exercise', intervallo('exercise.interval.civil_start_time'))],
-    ['steps', () => client.rollupGiornaliero('steps', dal, al1)],
-  ];
-
-  // Sequenziale: un solo scambio di token e nessun picco di richieste.
-  const dati = {};
-  const tipiMancanti = [];
-  for (const [tipo, leggi] of letture) {
+/**
+ * @param {{ fonti: Record<string, () => Promise<object>>, adesso: Date }} p
+ */
+export async function eseguiSync({ fonti, adesso }) {
+  const risultati = {};
+  const operazioni = [];
+  let finestra = null;
+  for (const [nome, esegui] of Object.entries(fonti)) {
     try {
-      dati[tipo] = await leggi();
+      const { operazioni: ops, finestra: f, ...resto } = await esegui();
+      risultati[nome] = resto;
+      operazioni.push(...ops);
+      if (nome === 'googleHealth') finestra = f ?? null;
     } catch (e) {
-      if (e instanceof ErroreSync && (e.codice === 'autorizzazione' || e.codice === 'configurazione')) throw e;
-      tipiMancanti.push(tipo);
+      const codice = e instanceof ErroreSync ? e.codice : 'rete';
+      const messaggi = MESSAGGI[nome] ?? {};
+      risultati[nome] = { esito: 'errore', codice, messaggio: messaggi[codice] ?? messaggi.rete ?? 'Fonte non raggiungibile' };
     }
   }
-  if (tipiMancanti.length === letture.length) throw new ErroreSync('rete', 'Google Health non raggiungibile');
-
-  const giorni = giorniSalute({
-    sonno: dati.sleep,
-    fcRiposo: dati['daily-resting-heart-rate'],
-    hrv: dati['daily-heart-rate-variability'],
-    passi: dati.steps,
-  }, { dal, al, adesso });
-  const sessioni = dati.exercise ? sessioniDa(dati.exercise, { dal, al, adesso }) : [];
-
-  const op = tipiMancanti.length ? 'update' : 'set';
-  const operazioni = [
-    ...Object.entries(giorni).map(([data, doc]) => ({ op, collection: 'salute', doc_id: data, data: doc })),
-    ...sessioni.map(({ id, doc }) => ({ op: 'set', collection: 'sessioni', doc_id: id, data: doc })),
-  ];
-
-  return {
-    generatoIl: adesso.toISOString(),
-    finestra: { dal, al },
-    esito: tipiMancanti.length ? 'parziale' : 'ok',
-    tipiMancanti,
-    conteggi: { giorni: Object.keys(giorni).length, sessioni: sessioni.length },
-    operazioni,
-  };
+  const esiti = Object.values(risultati).map((r) => r.esito);
+  const esito = esiti.every((e) => e === 'errore') ? 'errore' : esiti.every((e) => e === 'ok') ? 'ok' : 'parziale';
+  return { generatoIl: adesso.toISOString(), finestra, esito, fonti: risultati, operazioni };
 }
