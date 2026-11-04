@@ -2,6 +2,7 @@ import { html, useState, useEffect, useRef } from './html.js';
 import { Contesto } from './contesto.js';
 import { Dialogo, AvvisoSolaLettura } from './componenti.js';
 import { oggiRoma } from '../logic/date.js';
+import { SezioneSchede } from './trainer/schede.js';
 import { vistaIniziale, salvaVista } from '../logic/vista.js';
 
 /** Memoria del browser: ogni accesso dentro try/catch (vista.js protegge getItem/setItem). */
@@ -34,7 +35,7 @@ export const SEZIONI = {
   alimentazione: segnaposto('Alimentazione'),
   // vista trainer
   settimana: segnaposto('Settimana tipo'),
-  schede: segnaposto('Schede di allenamento'),
+  schede: SezioneSchede,
   piano: segnaposto('Piano alimentare'),
 };
 

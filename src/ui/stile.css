@@ -294,3 +294,27 @@ h1, h2, h3 { margin: 0; font-weight: 600; }
 
 .vuoto { display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; color: var(--testo-2); }
 .vuoto p { margin: 0; }
+
+/* ---------- schede di allenamento (trainer) ---------- */
+.barra-libreria { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
+.campo-spunta { display: inline-flex; align-items: center; gap: 8px; min-height: var(--tocco); cursor: pointer; }
+.campo-spunta input { width: 22px; height: 22px; }
+.elenco-schede { display: flex; flex-direction: column; gap: 12px; }
+.lista-righe { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.riga-scheda {
+  display: flex; align-items: center; gap: 12px; width: 100%; min-height: var(--tocco);
+  border: 0; text-align: left; cursor: pointer; color: var(--testo);
+}
+.riga-nome { flex: 1; min-width: 0; font-weight: 600; }
+.riga-dettaglio { font-size: 13px; }
+.editor-scheda { display: flex; flex-direction: column; gap: 16px; align-items: stretch; }
+.editor-scheda > .pulsante { align-self: flex-start; }
+.blocco { display: flex; flex-direction: column; gap: 12px; }
+.titolo-blocco { font-size: 17px; }
+.sottotitolo { font-size: 14px; color: var(--testo-2); margin: 8px 0 4px; }
+.griglia-campi { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.riga-esercizio { display: flex; flex-direction: column; gap: 12px; }
+.azioni-riga, .azioni-editor { display: flex; flex-wrap: wrap; gap: 8px; }
+.errore-scrittura { color: var(--errore); margin: 0; }
+.vista-revisione { margin-top: 12px; }
+.vista-revisione ul { margin: 0; padding-left: 20px; }
