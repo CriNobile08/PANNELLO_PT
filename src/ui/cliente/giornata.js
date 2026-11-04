@@ -136,11 +136,16 @@ export function avvisoRilevamento({ haScheda, voce, sessioniGiorno }) {
   return Boolean(haScheda) && voce?.principaleFatto !== true && voce?.rilevamentoIgnorato !== true && sessioniGiorno.length > 0;
 }
 
-function ColonnaFatto({ sessioni }) {
+function ColonnaFatto({ sessioni, data }) {
+  const { vai } = useContext(Contesto);
   return html`
     <div class="colonna-fatto">
       <div class="sottotitolo">Fatto</div>
-      ${sessioni.map((s) => html`<${DettaglioSessione} key=${s.id} sessione=${s} />`)}
+      ${sessioni.map((s) => html`
+        <div class="fatto-sessione" key=${s.id}>
+          <${DettaglioSessione} sessione=${s} />
+          <button type="button" class="pulsante apri-scheda" onClick=${() => vai('sessione', { id: s.id, da: 'giornata', data })}>Apri scheda</button>
+        </div>`)}
     </div>`;
 }
 
@@ -155,7 +160,7 @@ function AvvisoRilevamento({ onSi, onNo, disabilitato }) {
     </div>`;
 }
 
-function BloccoPrincipale({ revisione, fatto, onCambia, disabilitato, sessioni = [] }) {
+function BloccoPrincipale({ revisione, fatto, onCambia, disabilitato, sessioni = [], data }) {
   const esercizi = revisione.principale ?? [];
   const ob = revisione.obiettivo;
   return html`
@@ -180,7 +185,7 @@ function BloccoPrincipale({ revisione, fatto, onCambia, disabilitato, sessioni =
           </div>`)}
         ${!ob && esercizi.length === 0 && html`<p class="secondario">Nessun esercizio</p>`}
       </div>
-      ${sessioni.length > 0 && html`<${ColonnaFatto} sessioni=${sessioni} />`}
+      ${sessioni.length > 0 && html`<${ColonnaFatto} sessioni=${sessioni} data=${data} />`}
       </div>
       <button type="button" class=${fatto ? 'pulsante primario' : 'pulsante'} aria-pressed=${fatto ? 'true' : 'false'}
         disabled=${disabilitato} onClick=${onCambia}>Segna come fatta</button>
@@ -238,7 +243,7 @@ export function SezioneGiornata({ data: dataProp }) {
   }
   if (!giorno.schedaId) {
     return html`<section class="sezione">${intestazione}<div class="card"><p>Riposo</p></div>
-      ${sessioniGiorno.length > 0 && html`<div class="card"><${ColonnaFatto} sessioni=${sessioniGiorno} /></div>`}</section>`;
+      ${sessioniGiorno.length > 0 && html`<div class="card"><${ColonnaFatto} sessioni=${sessioniGiorno} data=${data} /></div>`}</section>`;
   }
   if (!scheda || !revisione) {
     return html`<section class="sezione">${intestazione}<div class="card"><p>Scheda non disponibile</p></div></section>`;
@@ -270,7 +275,7 @@ export function SezioneGiornata({ data: dataProp }) {
       ${mostraAvviso && html`<${AvvisoRilevamento} disabilitato=${disabilitato || inCorso}
         onSi=${() => modifica({ principaleFatto: true, sessioniCollegate: ids })}
         onNo=${() => modifica({ rilevamentoIgnorato: true })} />`}
-      <${BloccoPrincipale} revisione=${revisione} fatto=${voce.principaleFatto === true} sessioni=${sessioniGiorno}
+      <${BloccoPrincipale} revisione=${revisione} fatto=${voce.principaleFatto === true} sessioni=${sessioniGiorno} data=${data}
         disabilitato=${disabilitato} onCambia=${() => modifica((att) => ({ principaleFatto: att.principaleFatto !== true }))} />
       <${BloccoSpunte} titolo="Stretching" esercizi=${revisione.stretching ?? []} fatti=${voce.stretchingFatti}
         disabilitato=${disabilitato} onCambia=${(i, v) => modifica(spunta('stretchingFatti', i, v))} />

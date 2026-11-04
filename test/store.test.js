@@ -192,7 +192,7 @@ test('osserva: 80 schede (anche archiviate) → prima emissione con tutte le rev
   const d = visti.at(-1);
   assert.equal(Object.keys(d.revisioni).length, 80);
   for (let i = 0; i < 80; i++) assert.equal(d.revisioni[`s${i}`][0].id, `r${i}`);
-  assert.ok(fake.iscrizioniAttive() <= 9, `iscrizioni attive: ${fake.iscrizioniAttive()}`);
+  assert.ok(fake.iscrizioniAttive() <= 10, `iscrizioni attive: ${fake.iscrizioniAttive()}`);
   // una nuova revisione scritta da un'altra persona arriva (scheda archiviata inclusa)
   await db.collection('schede/s0/revisioni').doc('nuova').set({ ...CONTENUTO_VALIDO, validaDal: '2026-11-04', autore: 'u-altro', salvataIl: '2026-11-04T08:00:00.000Z' });
   await db.doc('schede/s0').update({ revisioneCorrente: 'nuova' });
@@ -261,11 +261,17 @@ test('emette salute, sessioni, impostazioni, sync', async () => {
   assert.deepEqual(d.sync, { stato: { ultimaRiuscita: '2026-11-04T06:00:00Z' } });
 });
 
-test('nove sottoscrizioni', async () => {
+test('emette i tracciati per id della parte', async () => {
+  const { store } = await setup({ seme: { ...seme, 'tracciati/googleHealth_c1': { idParte: 'googleHealth_c1', nomeFile: 'corsa.gpx' } } });
+  const d = await primiDati(store);
+  assert.deepEqual(d.tracciati, { googleHealth_c1: { idParte: 'googleHealth_c1', nomeFile: 'corsa.gpx' } });
+});
+
+test('dieci sottoscrizioni', async () => {
   const { fake, store } = await setup();
   const off = store.osserva(() => {}, assert.fail);
   await new Promise((r) => setTimeout(r, 50));
-  assert.equal(fake.iscrizioniAttive(), 9);
+  assert.equal(fake.iscrizioniAttive(), 10);
   off();
 });
 

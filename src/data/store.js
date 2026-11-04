@@ -4,7 +4,7 @@ import { risolviGiorno, eccezioniSpostamento, usiScheda } from '../logic/risoluz
 import { validaScheda, validaPiano } from '../logic/validazione.js';
 
 export const DIARIO_VUOTO = { riscaldamentoFatti: [], stretchingFatti: [], principaleFatto: false, sensazione: null, nota: '', sessioniCollegate: [], rilevamentoIgnorato: false };
-const COLLEZIONI = ['schede', 'settimane', 'eccezioni', 'alimentazione', 'diario', 'salute', 'sessioni', 'impostazioni', 'sync'];
+const COLLEZIONI = ['schede', 'settimane', 'eccezioni', 'alimentazione', 'diario', 'salute', 'sessioni', 'impostazioni', 'sync', 'tracciati'];
 const CHIAVI_SISTEMA = ['id', 'validaDal', 'autore', 'salvataIl'];
 
 const conId = (d) => ({ ...d.data(), id: d.id });
@@ -48,7 +48,7 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
   }
 
   /**
-   * Sottoscrizioni: esattamente 9, una per collezione di primo livello, qualunque sia il numero di schede
+   * Sottoscrizioni: esattamente 10, una per collezione di primo livello, qualunque sia il numero di schede
    * (il db ammette al massimo 64 sottoscrizioni attive per vista).
    * Le revisioni (`schede/{id}/revisioni/{revId}`, §5.2) NON hanno un listener: si leggono con `get()`
    * una tantum. Ogni salvataggio aggiunge la revisione e POI aggiorna `revisioneCorrente` sul documento
@@ -62,7 +62,7 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
   function osserva(onDati, onErrore) {
     const LETTURE_PARALLELE = 4;
     const caricate = new Set();
-    const parziale = { schede: {}, settimane: [], eccezioni: {}, alimentazione: [], diario: {}, salute: {}, sessioni: [], impostazioni: {}, sync: {} };
+    const parziale = { schede: {}, settimane: [], eccezioni: {}, alimentazione: [], diario: {}, salute: {}, sessioni: [], impostazioni: {}, sync: {}, tracciati: {} };
     const revisioni = {};
     const statoRev = new Map(); // schedaId -> { letta: revisioneCorrente dell'ultima lettura riuscita | undefined, richiesta: chiave in lettura | undefined }
     const coda = [];
@@ -86,6 +86,7 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
         sessioni: parziale.sessioni,
         impostazioni: parziale.impostazioni,
         sync: parziale.sync,
+        tracciati: parziale.tracciati,
       };
       onDati(ultimi);
       emesso = true;
@@ -152,6 +153,7 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
       sessioni: (d) => { parziale.sessioni = elenco(d); },
       impostazioni: (d) => { parziale.impostazioni = perData(d); },
       sync: (d) => { parziale.sync = perData(d); },
+      tracciati: (d) => { parziale.tracciati = perData(d); },
     };
     const offs = COLLEZIONI.map((nome) =>
       db.collection(nome).onSnapshot((s) => {

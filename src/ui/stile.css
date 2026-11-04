@@ -424,3 +424,58 @@ button[aria-pressed="true"].pulsante.primario { background: var(--allenamento); 
 .obiettivo-campi { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; }
 .obiettivo-campi .campo { width: 96px; }
 .obiettivo-campi .pulsante { min-width: 44px; }
+
+/* scheda attività */
+.valore-link {
+  min-height: var(--tocco); padding: 0; background: none; border: 0; color: var(--allenamento);
+  font: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; text-align: inherit;
+}
+.riga-sessione[type="button"] { cursor: pointer; }
+.fatto-sessione { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.fatto-sessione .apri-scheda { align-self: flex-start; }
+.scheda-attivita { max-width: 720px; min-width: 0; }
+.testata-attivita { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+.testata-attivita p { margin: 0; }
+.testata-attivita .indietro { margin-bottom: 8px; }
+.nome-attivita { font-weight: 600; }
+.sezione-attivita { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.sezione-attivita > p { margin: 0; }
+.sezione-attivita .dettaglio-righe { margin: 0; }
+.barra-zone { display: flex; height: 12px; border-radius: 6px; overflow: hidden; gap: 2px; }
+.zona { display: block; min-width: 2px; }
+.pallino { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; }
+.zona-leggera { background: #8FD9C9; }
+.zona-moderata { background: var(--cuore); }
+.zona-intensa { background: var(--avviso); }
+.zona-picco { background: var(--errore); }
+.grafico svg, .tracciato svg { display: block; width: 100%; height: auto; touch-action: pan-y; }
+.grafico svg .griglia { stroke: rgba(255, 255, 255, 0.08); }
+.grafico svg .cursore { stroke: rgba(255, 255, 255, 0.4); }
+.grafico svg .asse, .tracciato svg .asse { fill: var(--testo-2); font-size: 20px; font-family: var(--font-testo); }
+.grafico-tooltip { margin: 0; min-height: 1.4em; color: var(--cuore); font-size: 18px; }
+.legenda { display: flex; flex-wrap: wrap; gap: 4px 16px; margin: 8px 0 0; font-size: 13px; }
+.legenda-voce { display: inline-flex; align-items: center; gap: 6px; }
+.tratteggio { display: inline-block; width: 18px; border-top: 2px dashed; }
+.tracciato { display: flex; flex-direction: column; gap: 12px; }
+.tracciato .mappa { max-width: 480px; align-self: center; background: var(--card-interna); border-radius: var(--raggio-interno); }
+.segno-km { fill: var(--testo); font-size: 26px; font-weight: 700; font-family: var(--font-numeri); }
+.nome-file { overflow-wrap: anywhere; }
+.tabella-split { width: 100%; border-collapse: collapse; font-size: 14px; }
+.tabella-split th, .tabella-split td { padding: 8px 4px; text-align: left; border-bottom: 1px solid var(--bordo, rgba(255, 255, 255, 0.1)); white-space: nowrap; }
+.tabella-split thead th { color: var(--testo-2); font-weight: 500; }
+.tabella-split tbody tr:last-child td { border-bottom: 0; }
+.cella-ritmo { position: relative; width: 40%; }
+.cella-ritmo .numero { position: relative; }
+.barra-ritmo { position: absolute; left: 0; top: 6px; bottom: 6px; border-radius: 4px; background: rgba(91, 155, 255, 0.25); }
+.piu-veloce .barra-ritmo { background: var(--allenamento); opacity: 0.7; }
+.piu-veloce td { font-weight: 700; }
+.esercizio-hevy { display: flex; flex-direction: column; gap: 4px; padding: 8px 0; }
+.esercizio-hevy p { margin: 0; }
+.nome-esercizio { font-size: 15px; margin: 0; font-weight: 600; }
+.elenco-serie { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.serie-hevy { display: flex; align-items: center; gap: 8px; min-height: 28px; }
+.serie-hevy.riscaldamento { color: var(--testo-2); }
+.etichetta-serie { font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--attiva); color: var(--avviso); }
+.superserie { border-left: 3px solid var(--allenamento); padding-left: 12px; }
+.etichetta-superserie { font-size: 13px; }
+.totali-hevy { margin: 0; font-weight: 600; }

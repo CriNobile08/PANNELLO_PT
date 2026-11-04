@@ -10,6 +10,7 @@ import { SezioneOggi } from './cliente/oggi.js';
 import { SezioneAllenamentoCliente } from './cliente/allenamento.js';
 import { SezioneAlimentazioneCliente } from './cliente/alimentazione.js';
 import { SezioneGiornata } from './cliente/giornata.js';
+import { SezioneSessione } from './cliente/scheda-attivita.js';
 import { vistaIniziale, salvaVista } from '../logic/vista.js';
 
 /** Memoria del browser: ogni accesso dentro try/catch (vista.js protegge getItem/setItem). */
@@ -29,6 +30,7 @@ export const SEZIONI = {
   // vista cliente
   oggi: SezioneOggi,
   giornata: SezioneGiornata,
+  sessione: SezioneSessione, // { id, da, data? }: scheda attività, in entrambe le viste
   allenamento: SezioneAllenamentoCliente,
   alimentazione: SezioneAlimentazioneCliente,
   dati: SezioneDatiCliente,
@@ -66,9 +68,15 @@ function SelettoreVista({ vista, onCambia }) {
     </div>`;
 }
 
-function Navigazione({ vista, sezione, onVai }) {
-  // `giornata` appartiene a "Oggi" per l'evidenziazione
-  const attiva = sezione === 'giornata' ? 'oggi' : sezione;
+/** Voce di navigazione evidenziata: `giornata` appartiene a "Oggi", `sessione` alla sezione di provenienza. */
+function voceAttiva(sezione, parametri) {
+  if (sezione === 'giornata') return 'oggi';
+  if (sezione === 'sessione') return !parametri?.da || parametri.da === 'giornata' ? 'oggi' : parametri.da;
+  return sezione;
+}
+
+function Navigazione({ vista, sezione, parametri, onVai }) {
+  const attiva = voceAttiva(sezione, parametri);
   return html`
     <nav class="navigazione" aria-label="Sezioni">
       ${NAVIGAZIONE[vista].map((v) => v.disattivata
@@ -157,7 +165,7 @@ export function App({ dati, store, utenteId = null, isOwner = false, puoScrivere
         </header>
         ${!puoScrivere && html`<${AvvisoSolaLettura} />`}
         <div class="corpo">
-          <${Navigazione} vista=${vista} sezione=${posizione.sezione} onVai=${vai} />
+          <${Navigazione} vista=${vista} sezione=${posizione.sezione} parametri=${posizione.parametri} onVai=${vai} />
           <main class="contenuto">
             <${Sezione} key=${vista + ':' + posizione.sezione} ...${posizione.parametri} />
           </main>

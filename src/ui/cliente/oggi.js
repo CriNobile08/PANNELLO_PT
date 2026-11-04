@@ -77,7 +77,7 @@ function AggiornaOra({ aggiornaOra }) {
 }
 
 function AttivitaRecenti() {
-  const { dati, oggi } = useContext(Contesto);
+  const { dati, oggi, vai } = useContext(Contesto);
   const dal = aggiungiGiorni(oggi, -6);
   const elenco = unisciSessioni(sessioniValide(dati.sessioni))
     .filter((s) => s.data >= dal && s.data <= oggi)
@@ -88,7 +88,7 @@ function AttivitaRecenti() {
     <section class="card" aria-label="Attività recenti">
       <h2 class="titolo-blocco">Attività recenti</h2>
       <div class="elenco-sessioni">
-        ${elenco.map((s) => html`<${RigaSessione} key=${s.id} sessione=${s} />`)}
+        ${elenco.map((s) => html`<${RigaSessione} key=${s.id} sessione=${s} onClick=${() => vai('sessione', { id: s.id, da: 'oggi' })} />`)}
       </div>
     </section>`;
 }

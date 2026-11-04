@@ -13,6 +13,7 @@ const ASSENTE = '—';
 const MSG_OBIETTIVO = "L'obiettivo deve essere tra 3 h e 12 h";
 const QUERY_DESKTOP = '(min-width: 900px)';
 const RIGHE = ['Sonno', 'Pisolini', 'FC a riposo', 'HRV', 'Recupero', 'Passi', 'Sessioni'];
+const RIGA_SESSIONI = RIGHE.indexOf('Sessioni');
 
 /** Testo dell'indice di recupero: numero, "In calibrazione" o "—". */
 export function testoIndice(rec) {
@@ -100,8 +101,12 @@ function ObiettivoSonno() {
     </section>`;
 }
 
+/** Prima sessione unita (per `inizio`) di un giorno; null se nessuna. */
+const primaDelGiorno = (unite, data) => unite.filter((s) => s.data === data)
+  .sort((a, b) => Date.parse(a.inizio) - Date.parse(b.inizio))[0] ?? null;
+
 export function SezioneDatiCliente() {
-  const { dati, oggi, vista } = useContext(Contesto);
+  const { dati, oggi, vista, sezione, vai } = useContext(Contesto);
   const [lunedi, setLunedi] = useState(() => lunediDi(oggi));
   const desktop = useDesktop();
   const obSalvato = dati.impostazioni?.obiettivi?.sonnoMinuti;
@@ -109,6 +114,11 @@ export function SezioneDatiCliente() {
   const giorni = giorniDellaSettimana(lunedi);
   const unite = unisciSessioni(sessioniValide(dati.sessioni));
   const colonne = giorni.map((g) => valoriGiorno(dati, g, obiettivo, unite));
+  const prime = giorni.map((g) => primaDelGiorno(unite, g));
+  // il numero di sessioni apre la scheda della prima sessione del giorno
+  const cella = (i, r) => (r === RIGA_SESSIONI && prime[i]
+    ? html`<button type="button" class="valore-link" onClick=${() => vai('sessione', { id: prime[i].id, da: sezione })}>${colonne[i][r]}</button>`
+    : colonne[i][r]);
   const vuota = colonne.every((c) => c.every((v) => v === ASSENTE));
   const etichetta = (l) => {
     const intervallo = `${formatoData(l)} – ${formatoData(aggiungiGiorni(l, 6))}`;
@@ -129,7 +139,7 @@ export function SezioneDatiCliente() {
             ${RIGHE.map((nome, r) => html`
               <tr key=${nome}>
                 <th scope="row">${nome}</th>
-                ${colonne.map((c, i) => html`<td key=${giorni[i]}>${c[r]}</td>`)}
+                ${colonne.map((c, i) => html`<td key=${giorni[i]}>${cella(i, r)}</td>`)}
               </tr>`)}
           </tbody>
         </table>
@@ -142,7 +152,7 @@ export function SezioneDatiCliente() {
             <h3 class="titolo-blocco">${formatoData(g)}</h3>
             <dl class="dettaglio-righe">
               ${RIGHE.map((nome, r) => html`
-                <div class="dettaglio-riga" key=${nome}><dt class="secondario">${nome}</dt><dd>${colonne[i][r]}</dd></div>`)}
+                <div class="dettaglio-riga" key=${nome}><dt class="secondario">${nome}</dt><dd>${cella(i, r)}</dd></div>`)}
             </dl>
           </article>`)}
       </div>`;
