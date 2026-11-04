@@ -123,3 +123,8 @@ export function unisciSessioni(sessioni) {
   }
   return unite.sort((a, b) => (ms(b.inizio) ?? 0) - (ms(a.inizio) ?? 0));
 }
+
+/** Esclude le sessioni cancellate alla fonte (`eliminata: true`, spec 2c-1 §6). */
+export function sessioniValide(docs) {
+  return (docs ?? []).filter((d) => d?.eliminata !== true);
+}

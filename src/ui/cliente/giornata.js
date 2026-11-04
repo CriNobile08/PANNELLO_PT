@@ -6,7 +6,7 @@ import { revisionePerGiorno } from '../../logic/versioni.js';
 import { risolviGiorno } from '../../logic/risoluzione.js';
 import { statoBlocchi } from '../../logic/completamento.js';
 import { formatoDataLunga } from '../../logic/date.js';
-import { unisciSessioni } from '../../logic/sessioni.js';
+import { unisciSessioni, sessioniValide } from '../../logic/sessioni.js';
 import { DettaglioSessione } from './sessioni.js';
 import { TIPI } from './tipi.js';
 
@@ -225,7 +225,7 @@ export function SezioneGiornata({ data: dataProp }) {
   const { voce, modifica, messaggio, inCorso } = useDiario(data);
   const { giorno, scheda, revisione, stato } = contestoGiorno(dati, data, voce);
   const disabilitato = !puoScrivere;
-  const sessioniGiorno = unisciSessioni(dati.sessioni ?? []).filter((s) => s.data === data);
+  const sessioniGiorno = unisciSessioni(sessioniValide(dati.sessioni)).filter((s) => s.data === data);
 
   const intestazione = html`
     <header class="intestazione-giornata">

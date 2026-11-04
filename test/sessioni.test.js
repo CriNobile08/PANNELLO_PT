@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { unisciSessioni, PRIORITA } from '../src/logic/sessioni.js';
+import { unisciSessioni, sessioniValide, PRIORITA } from '../src/logic/sessioni.js';
 
 const MIN = 60000;
 const T0 = Date.parse('2026-11-04T08:00:00Z');
@@ -111,4 +111,35 @@ test('ordinamento per inizio decrescente', () => {
 test('fonti ordinate alfabeticamente, non per inizio', () => {
   const [u] = unisciSessioni([sess('hevy', 0, 60), sess('googleHealth', 10, 60)]);
   assert.deepEqual(u.fonti, ['googleHealth', 'hevy']);
+});
+
+test('sessioniValide esclude eliminata', () => {
+  const a = sess('googleHealth', 0, 60);
+  const b = sess('hevy', 0, 60, { eliminata: true });
+  const c = sess('hevy', 200, 60, { eliminata: false });
+  const ridotto = { id: 'hevy_X', fonte: 'hevy', idFonte: 'X', eliminata: true, aggiornatoIl: '2026-11-04T09:00:00Z' };
+  assert.deepEqual(sessioniValide([a, b, c, ridotto]), [a, c]);
+  assert.deepEqual(sessioniValide(undefined), []);
+});
+
+test('hevy sovrapposta a WEIGHTS', () => {
+  const g = sess('googleHealth', 0, 62, { tipo: 'palestra', tipoOriginale: 'WEIGHTS', nome: 'Pesi', fcMedia: 118, calorie: 410 });
+  const h = sess('hevy', 5, 55, { tipo: 'palestra', nome: 'Spinta A', esercizi: [], volumeKg: 1000 });
+  const unite = unisciSessioni(sessioniValide([g, h]));
+  assert.equal(unite.length, 1);
+  assert.equal(unite[0].nome, 'Spinta A');
+  assert.equal(unite[0].fcMedia, 118);
+  assert.equal(unite[0].calorie, 410);
+  assert.deepEqual(unite[0].fonti, ['googleHealth', 'hevy']);
+  assert.ok(!('esercizi' in unite[0]));
+  assert.equal(unite[0].parti.find((p) => p.fonte === 'hevy').volumeKg, 1000);
+});
+
+test('parte hevy eliminata', () => {
+  const g = sess('googleHealth', 0, 62, { nome: 'Pesi' });
+  const h = sess('hevy', 5, 55, { nome: 'Spinta A', eliminata: true });
+  const unite = unisciSessioni(sessioniValide([g, h]));
+  assert.equal(unite.length, 1);
+  assert.deepEqual(unite[0].fonti, ['googleHealth']);
+  assert.equal(unite[0].nome, 'Pesi');
 });

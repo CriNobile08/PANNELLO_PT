@@ -3,7 +3,7 @@ import { Contesto } from '../contesto.js';
 import { Campo, SelettoreData, Vuoto } from '../componenti.js';
 import { lunediDi, aggiungiGiorni, giorniDellaSettimana, formatoData } from '../../logic/date.js';
 import { percentualeSonno, minutiPisolini, recupero, OBIETTIVO_SONNO_PREDEFINITO } from '../../logic/indici.js';
-import { unisciSessioni } from '../../logic/sessioni.js';
+import { unisciSessioni, sessioniValide } from '../../logic/sessioni.js';
 import { numeroDaInput } from '../../logic/validazione.js';
 import { testoDurata } from '../cliente/sessioni.js';
 import { TIPI } from '../cliente/tipi.js';
@@ -107,7 +107,7 @@ export function SezioneDatiCliente() {
   const obSalvato = dati.impostazioni?.obiettivi?.sonnoMinuti;
   const obiettivo = numero(obSalvato) && obSalvato > 0 ? obSalvato : OBIETTIVO_SONNO_PREDEFINITO;
   const giorni = giorniDellaSettimana(lunedi);
-  const unite = unisciSessioni(dati.sessioni ?? []);
+  const unite = unisciSessioni(sessioniValide(dati.sessioni));
   const colonne = giorni.map((g) => valoriGiorno(dati, g, obiettivo, unite));
   const vuota = colonne.every((c) => c.every((v) => v === ASSENTE));
   const etichetta = (l) => {

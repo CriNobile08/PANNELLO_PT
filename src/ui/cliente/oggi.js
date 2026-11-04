@@ -4,7 +4,8 @@ import { Anello, Dialogo, Campo, SelettoreData, Vuoto } from '../componenti.js';
 import { versioneValida } from '../../logic/versioni.js';
 import { formatoData, aggiungiGiorni, oraRoma } from '../../logic/date.js';
 import { percentualeSonno, minutiPisolini, recupero, OBIETTIVO_SONNO_PREDEFINITO } from '../../logic/indici.js';
-import { unisciSessioni } from '../../logic/sessioni.js';
+import { unisciSessioni, sessioniValide } from '../../logic/sessioni.js';
+import { fontiStato } from '../../logic/statoSync.js';
 import { RigaSessione, testoDurata } from './sessioni.js';
 import { Pasti } from './pasti.js';
 import { contestoGiorno, useDiario, impostaBlocco } from './giornata.js';
@@ -28,12 +29,30 @@ function datiCard(doc) {
 function StatoSync({ stato }) {
   if (!stato) return null;
   const ora = oraRoma(stato.ultimaEsecuzione);
-  const testo = stato.esito === 'errore'
-    ? `Ultimo aggiornamento non riuscito alle ${ora}: ${stato.messaggio || 'Google Health non raggiungibile'}`
-    : stato.esito === 'parziale'
-      ? `Aggiornato alle ${ora} · Alcuni dati non aggiornati`
-      : `Aggiornato alle ${ora}`;
-  return html`<p class=${stato.esito === 'errore' ? 'stato-sync errore-scrittura' : 'stato-sync secondario'}>${testo}</p>`;
+  const fonti = fontiStato(stato);
+  if (!stato.fonti) {
+    // Formato del 2a: testi invariati.
+    const testo = stato.esito === 'errore'
+      ? `Ultimo aggiornamento non riuscito alle ${ora}: ${stato.messaggio || 'Google Health non raggiungibile'}`
+      : stato.esito === 'parziale'
+        ? `Aggiornato alle ${ora} · Alcuni dati non aggiornati`
+        : `Aggiornato alle ${ora}`;
+    return html`<p class=${stato.esito === 'errore' ? 'stato-sync errore-scrittura' : 'stato-sync secondario'}>${testo}</p>`;
+  }
+  const inErrore = fonti.filter((f) => f.esito === 'errore');
+  const tutteInErrore = stato.esito === 'errore';
+  const principale = tutteInErrore
+    ? `Ultimo aggiornamento non riuscito alle ${ora}: ${inErrore[0]?.messaggio || 'Fonti non raggiungibili'}`
+    : `Aggiornato alle ${ora}`;
+  const righe = [
+    ...inErrore.slice(tutteInErrore ? 1 : 0).map((f) => `${f.nome}: ultimo aggiornamento non riuscito alle ${ora}: ${f.messaggio}`),
+    ...fonti.filter((f) => f.esito === 'parziale').map((f) => `${f.nome}: alcuni dati non aggiornati`),
+  ];
+  return html`
+    <div class="stato-sync">
+      <p class=${tutteInErrore ? 'errore-scrittura' : 'secondario'}>${principale}</p>
+      ${righe.map((r) => html`<p key=${r} class=${tutteInErrore ? 'errore-scrittura' : 'secondario'}>${r}</p>`)}
+    </div>`;
 }
 
 function AggiornaOra({ aggiornaOra }) {
@@ -60,7 +79,7 @@ function AggiornaOra({ aggiornaOra }) {
 function AttivitaRecenti() {
   const { dati, oggi } = useContext(Contesto);
   const dal = aggiungiGiorni(oggi, -6);
-  const elenco = unisciSessioni(dati.sessioni ?? [])
+  const elenco = unisciSessioni(sessioniValide(dati.sessioni))
     .filter((s) => s.data >= dal && s.data <= oggi)
     .sort((a, b) => Date.parse(b.inizio) - Date.parse(a.inizio))
     .slice(0, 10);

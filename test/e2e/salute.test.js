@@ -87,6 +87,45 @@ test('stato sync ok ed errore', async () => {
   } finally { await c.chiudi(); }
 });
 
+test('stato per fonte', async () => {
+  const fonti = (hevy) => ({ ultimaEsecuzione: '2026-11-04T10:52:00+01:00', esito: 'parziale', fonti: {
+    googleHealth: { esito: 'ok', messaggio: '', tipiMancanti: [], conteggi: { giorni: 3, sessioni: 1 } }, hevy } });
+  const a = await cliente({ seme: { ...seme(10), 'sync/stato': fonti({ esito: 'errore', codice: 'rete', messaggio: 'Hevy non raggiungibile' }) } });
+  try {
+    await a.page.getByText('Aggiornato alle 10:52', { exact: true }).waitFor();
+    await a.page.getByText('Hevy: ultimo aggiornamento non riuscito alle 10:52: Hevy non raggiungibile').waitFor();
+    assert.doesNotMatch(await a.page.locator('body').innerText(), /undefined/);
+  } finally { await a.chiudi(); }
+  const b = await cliente({ seme: { ...seme(10), 'sync/stato': fonti({ esito: 'parziale', messaggio: 'Catalogo esercizi non aggiornato', conteggi: {} }) } });
+  try { await b.page.getByText('Hevy: alcuni dati non aggiornati').waitFor(); } finally { await b.chiudi(); }
+  const c = await cliente({ seme: { ...seme(10), 'sync/stato': { ultimaEsecuzione: '2026-11-04T10:52:00+01:00', esito: 'errore', fonti: {
+    googleHealth: { esito: 'errore', codice: 'autorizzazione', messaggio: 'Autorizzazione Google scaduta: va rinnovato il token' },
+    hevy: { esito: 'errore', codice: 'rete', messaggio: 'Hevy non raggiungibile' } } } } });
+  try {
+    await c.page.getByText('Ultimo aggiornamento non riuscito alle 10:52: Autorizzazione Google scaduta: va rinnovato il token').waitFor();
+    await c.page.getByText('Hevy: ultimo aggiornamento non riuscito alle 10:52: Hevy non raggiungibile').waitFor();
+  } finally { await c.chiudi(); }
+});
+
+test('stato vecchio formato', async () => {
+  const a = await cliente({ seme: { ...seme(10), 'sync/stato': { ...STATO_OK, esito: 'errore', messaggio: '' } } });
+  try {
+    await a.page.getByText('Ultimo aggiornamento non riuscito alle 10:52: Google Health non raggiungibile').waitFor();
+    assert.doesNotMatch(await a.page.locator('body').innerText(), /undefined|Orologio:/);
+  } finally { await a.chiudi(); }
+});
+
+test('sessione hevy eliminata non compare', async () => {
+  const h = { 'sessioni/hevy_w1': { ...SESSIONI['sessioni/googleHealth_2'], fonte: 'hevy', idFonte: 'w1', data: '2026-11-03',
+    inizio: '2026-11-03T18:00:00+01:00', fine: '2026-11-03T19:00:00+01:00', tipo: 'palestra', nome: 'Gambe Hevy', eliminata: true } };
+  const { page, chiudi } = await cliente({ seme: { ...seme(10), ...SESSIONI, ...h } });
+  try {
+    await page.getByText('Attività recenti').waitFor();
+    await page.getByText('118 bpm').waitFor();
+    assert.doesNotMatch(await page.locator('body').innerText(), /18:00 · Hevy|1 h 00/);
+  } finally { await chiudi(); }
+});
+
 test('attività recenti', async () => {
   const { page, chiudi } = await cliente({ seme: { ...seme(10), ...SESSIONI } });
   try {
