@@ -23,7 +23,7 @@ function fasiDa(sleep) {
   if (sleep.type === 'CLASSIC') return null;
   const fasi = { profondo: 0, rem: 0, leggero: 0, sveglio: 0 };
   for (const f of sleep.summary?.stagesSummary ?? []) {
-    if (FASI[f.type]) fasi[FASI[f.type]] = Number(f.minutes);
+    if (FASI[f.type]) fasi[FASI[f.type]] = numero(f.minutes);
   }
   return fasi;
 }
@@ -44,16 +44,17 @@ export function giorniSalute({ sonno, fcRiposo, hrv, passi }, { dal, al, adesso 
     const s = p.sleep;
     const data = dataDaIso(s?.interval?.endTime);
     if (!giorni[data]) continue;
-    const minutiAddormentato = Number(s.summary.minutesAsleep);
+    const sm = s.summary ?? {};
+    const minutiAddormentato = numero(sm.minutesAsleep);
     if (s.metadata?.mainSleep === true) {
       const attuale = giorni[data].sonno;
-      if (attuale && attuale.minutiAddormentato >= minutiAddormentato) continue;
+      if (attuale && (minutiAddormentato === null || (attuale.minutiAddormentato ?? -1) >= minutiAddormentato)) continue;
       giorni[data].sonno = {
         inizio: s.interval.startTime,
         fine: s.interval.endTime,
         minutiAddormentato,
-        minutiSveglio: Number(s.summary.minutesAwake),
-        minutiPerAddormentarsi: Number(s.summary.minutesToFallAsleep),
+        minutiSveglio: numero(sm.minutesAwake),
+        minutiPerAddormentarsi: numero(sm.minutesToFallAsleep),
         fasi: fasiDa(s),
       };
     } else {
@@ -85,4 +86,66 @@ export function giorniSalute({ sonno, fcRiposo, hrv, passi }, { dal, al, adesso 
   }
 
   return giorni;
+}
+
+const GRUPPI = {
+  palestra: 'WEIGHTS WEIGHTLIFTING FREE_WEIGHTS WEIGHT_MACHINES STRENGTH_TRAINING FUNCTIONAL_STRENGTH_TRAINING POWERLIFTING BODY_WEIGHT CALISTHENICS CIRCUIT_TRAINING CORE_TRAINING CROSSFIT CROSS_TRAINING HIIT INTERVAL_WORKOUT TABATA_WORKOUT BOOTCAMP RESISTANCE_BANDS TRX WORKOUT',
+  corsa: 'RUNNING TRAIL_RUN TREADMILL INCLINE_RUN',
+  trekking: 'HIKING BACKPACKING RUCKING SNOWSHOEING',
+  camminata: 'WALKING POWER_WALKING NORDIC_WALKING TREADMILL_WALK INCLINE_WALK STROLLER_WALK WALK_WITH_WEIGHTS',
+  bici: 'BIKING OUTDOOR_BIKE MOUNTAIN_BIKE STATIONARY_BIKE SPINNING ELECTRIC_BIKE ASSAULT_BIKE HAND_CYCLING',
+};
+
+export const TIPI_ESERCIZIO = Object.fromEntries(
+  Object.entries(GRUPPI).flatMap(([tipo, lista]) => lista.split(' ').map((t) => [t, tipo])),
+);
+
+function arrotonda(v, divisore = 1) {
+  const n = numero(v);
+  return n === null ? null : Math.round(n / divisore);
+}
+
+export function sessioniDa(punti, { dal, al, adesso }) {
+  const aggiornatoIl = adesso.toISOString();
+  const risultato = [];
+  for (const p of punti ?? []) {
+    const e = p.exercise;
+    const inizio = e?.interval?.startTime;
+    if (!inizio) continue;
+    const data = dataDaIso(inizio);
+    if (data < dal || data > al) continue;
+    const fine = e.interval.endTime ?? null;
+    const m = e.metricsSummary ?? {};
+    const z = m.heartRateZoneDurations;
+    let durataAttivaMin = minutiDaDurata(e.activeDuration);
+    if (durataAttivaMin === null && fine) {
+      const ms = Date.parse(fine) - Date.parse(inizio);
+      durataAttivaMin = Number.isFinite(ms) ? Math.round(ms / 60000) : null;
+    }
+    const idFonte = p.name.split('/').pop();
+    risultato.push({
+      id: `googleHealth_${idFonte}`,
+      doc: {
+        fonte: 'googleHealth', idFonte, data, inizio, fine,
+        tipo: TIPI_ESERCIZIO[e.exerciseType] ?? 'altro',
+        tipoOriginale: e.exerciseType ?? null,
+        nome: e.displayName ?? null,
+        durataAttivaMin,
+        fcMedia: numero(m.averageHeartRateBeatsPerMinute),
+        zoneMin: z ? {
+          leggera: minutiDaDurata(z.lightTime),
+          moderata: minutiDaDurata(z.moderateTime),
+          intensa: minutiDaDurata(z.vigorousTime),
+          picco: minutiDaDurata(z.peakTime),
+        } : null,
+        calorie: arrotonda(m.caloriesKcal),
+        passi: numero(m.steps),
+        distanzaM: arrotonda(m.distanceMillimeters, 1000),
+        dislivelloM: arrotonda(m.elevationGainMillimeters, 1000),
+        gps: e.exerciseMetadata?.hasGps === true,
+        aggiornatoIl,
+      },
+    });
+  }
+  return risultato;
 }

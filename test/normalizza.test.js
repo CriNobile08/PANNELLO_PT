@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { giorniSalute, minutiDaDurata } from '../src/sync/googleHealth/normalizza.js';
-import { puntoSonno, puntoFc, puntoHrv, rollupPassi } from './fixtures/googleHealth.js';
+import { giorniSalute, minutiDaDurata, sessioniDa, TIPI_ESERCIZIO } from '../src/sync/googleHealth/normalizza.js';
+import { puntoSonno, puntoFc, puntoHrv, rollupPassi, puntoEsercizio } from './fixtures/googleHealth.js';
 
 const adesso = new Date('2026-11-04T09:52:00Z');
 const vuoti = { sonno: [], fcRiposo: [], hrv: [], passi: [] };
@@ -22,7 +22,7 @@ test('sonno principale nel giorno del risveglio', () => {
 });
 
 test("sonno a cavallo del cambio d'ora", () => {
-  const g = giorniSalute({ ...vuoti, sonno: [puntoSonno({ inizio: '2026-10-24T21:30:00Z', fine: '2026-10-25T05:30:00Z', minutiAddormentato: 450, fasi: { DEEP: 60, REM: 80, LIGHT: 300, AWAKE: 10 } })] }, { dal: '2026-10-24', al: '2026-10-25', adesso });
+  const g = giorniSalute({ ...vuoti, sonno: [puntoSonno({ inizio: '2026-10-24T21:30:00Z', fine: '2026-10-24T23:30:00Z', minutiAddormentato: 450, fasi: { DEEP: 60, REM: 80, LIGHT: 300, AWAKE: 10 } })] }, { dal: '2026-10-24', al: '2026-10-25', adesso });
   assert.equal(g['2026-10-25'].sonno.minutiAddormentato, 450);
   assert.equal(g['2026-10-24'].sonno, null);
 });
@@ -99,4 +99,70 @@ test('minutiDaDurata', () => {
   assert.equal(minutiDaDurata('3720s'), 62);
   assert.equal(minutiDaDurata('89.6s'), 1);
   assert.equal(minutiDaDurata(undefined), null);
+});
+
+test('sonno senza summary: minuti null, nessuna eccezione, perde contro uno con numero', () => {
+  const senza = puntoSonno({ inizio: '2026-11-04T00:00:00Z', fine: '2026-11-04T01:00:00Z', fasi: { LIGHT: 10 } });
+  delete senza.sleep.summary;
+  const con = puntoSonno({ inizio: '2026-11-03T22:00:00Z', fine: '2026-11-04T06:00:00Z', minutiAddormentato: 30, fasi: { LIGHT: 30 } });
+  for (const sonno of [[senza, con], [con, senza]]) {
+    const g = giorniSalute({ ...vuoti, sonno }, { dal: '2026-11-04', al: '2026-11-04', adesso });
+    assert.equal(g['2026-11-04'].sonno.minutiAddormentato, 30);
+  }
+  const solo = giorniSalute({ ...vuoti, sonno: [senza] }, { dal: '2026-11-04', al: '2026-11-04', adesso });
+  assert.equal(solo['2026-11-04'].sonno.minutiAddormentato, null);
+  assert.equal(solo['2026-11-04'].sonno.minutiSveglio, null);
+  assert.equal(solo['2026-11-04'].sonno.minutiPerAddormentarsi, null);
+  assert.deepEqual(solo['2026-11-04'].sonno.fasi, { profondo: 0, rem: 0, leggero: 0, sveglio: 0 });
+});
+
+const finestra = { dal: '2026-11-01', al: '2026-11-30', adesso };
+
+test('tipi convertiti', () => {
+  assert.equal(TIPI_ESERCIZIO.WEIGHTS, 'palestra');
+  assert.equal(TIPI_ESERCIZIO.TRAIL_RUN, 'corsa');
+  assert.equal(TIPI_ESERCIZIO.HIKING, 'trekking');
+  assert.equal(TIPI_ESERCIZIO.NORDIC_WALKING, 'camminata');
+  assert.equal(TIPI_ESERCIZIO.HAND_CYCLING, 'bici');
+  const tipo = (t) => sessioniDa([puntoEsercizio({ tipo: t, inizio: '2026-11-04T08:00:00Z', fine: '2026-11-04T09:00:00Z' })], finestra)[0].doc.tipo;
+  assert.equal(tipo('WEIGHTS'), 'palestra');
+  assert.equal(tipo('TRAIL_RUN'), 'corsa');
+  assert.equal(tipo('YOGA'), 'altro');
+  assert.equal(tipo('NUOVO_TIPO'), 'altro');
+});
+
+test('sessione completa', () => {
+  const [s] = sessioniDa([puntoEsercizio({
+    id: 'abc', inizio: '2026-11-04T08:00:00Z', fine: '2026-11-04T09:02:00Z', tipo: 'WEIGHTS', nome: 'Pesi',
+    durataAttiva: '3720s', fcMedia: 118, kcal: 410.4, passi: 1200, distanzaMm: 5000000, dislivelloMm: 120000, gps: true,
+  })], finestra);
+  assert.equal(s.id, 'googleHealth_abc');
+  assert.deepEqual(s.doc, {
+    fonte: 'googleHealth', idFonte: 'abc', data: '2026-11-04',
+    inizio: '2026-11-04T08:00:00Z', fine: '2026-11-04T09:02:00Z',
+    tipo: 'palestra', tipoOriginale: 'WEIGHTS', nome: 'Pesi',
+    durataAttivaMin: 62, fcMedia: 118,
+    zoneMin: { leggera: 10, moderata: 30, intensa: 15, picco: 1 },
+    calorie: 410, passi: 1200, distanzaM: 5000, dislivelloM: 120, gps: true,
+    aggiornatoIl: '2026-11-04T09:52:00.000Z',
+  });
+});
+
+test('sessione senza metriche', () => {
+  const p = { name: 'users/me/dataTypes/exercise/dataPoints/x1', exercise: {
+    interval: { startTime: '2026-11-04T08:00:00Z', endTime: '2026-11-04T08:30:00Z' }, exerciseType: 'YOGA' } };
+  const [s] = sessioniDa([p], finestra);
+  assert.equal(s.doc.durataAttivaMin, 30);
+  assert.equal(s.doc.nome, null);
+  for (const k of ['fcMedia', 'zoneMin', 'calorie', 'passi', 'distanzaM', 'dislivelloM']) assert.equal(s.doc[k], null, k);
+  assert.equal(s.doc.gps, false);
+  assert.equal(s.doc.tipo, 'altro');
+});
+
+test('data di Roma dell\'inizio e finestra', () => {
+  const tarda = puntoEsercizio({ id: 'a', inizio: '2026-11-03T23:30:00Z', fine: '2026-11-04T00:30:00Z' });
+  const fuori = puntoEsercizio({ id: 'b', inizio: '2026-12-03T10:00:00Z', fine: '2026-12-03T11:00:00Z' });
+  const r = sessioniDa([tarda, fuori], finestra);
+  assert.equal(r.length, 1);
+  assert.equal(r[0].doc.data, '2026-11-04');
 });
