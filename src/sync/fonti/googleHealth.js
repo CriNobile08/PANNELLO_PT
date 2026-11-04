@@ -3,11 +3,11 @@
 import { ErroreSync } from '../errore.js';
 import { giorniSalute, sessioniDa } from '../googleHealth/normalizza.js';
 import { serieFc } from '../../logic/fc.js';
+import { leggiFcIntervallo } from './fcGoogleHealth.js';
 import { oggiRoma, aggiungiGiorni } from '../../logic/date.js';
 
 const GIORNI_FINESTRA = 3;
 const MESSAGGIO_FC = 'FC dettagliata non aggiornata';
-const PAGE_SIZE_FC = 1000;
 
 export async function fonteGoogleHealth({ client, adesso }) {
   const al = oggiRoma(adesso);
@@ -51,9 +51,7 @@ export async function fonteGoogleHealth({ client, adesso }) {
     doc.fcSerie = null;
     if (!doc.fine) continue;
     try {
-      const filtro = `heart_rate.sample_time.physical_time >= "${doc.inizio}" AND heart_rate.sample_time.physical_time < "${doc.fine}"`;
-      const punti = await client.elenca('heart-rate', filtro, PAGE_SIZE_FC);
-      const campioni = punti.map((p) => ({ t: p?.heartRate?.sampleTime?.physicalTime, bpm: p?.heartRate?.beatsPerMinute }));
+      const campioni = await leggiFcIntervallo(client, doc.inizio, doc.fine);
       doc.fcSerie = serieFc(campioni, doc.inizio, doc.fine);
       fcSessioni++;
     } catch (e) {

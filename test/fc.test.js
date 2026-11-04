@@ -41,3 +41,42 @@ test('fcPerKm allinea inizioGpx a fcSerie.inizio', () => {
   assert.deepEqual(fcPerKm(null, iso(60), [100], 150), [null, null]);
   assert.deepEqual(fcPerKm({ ...fcSerie, bpm: [100] }, iso(600), [100], 150), [null, null]);
 });
+
+test('massima e media dai campioni, non dai blocchi', () => {
+  // blocco 0: 128,128,130 -> media 129; il picco 130 non deve sparire
+  const s = serieFc([camp(1, 128), camp(2, 128), camp(3, 130)], iso(0), iso(20));
+  assert.deepEqual(s.bpm, [129, null]);
+  assert.equal(s.massima, 130);
+  assert.equal(s.media, 129);
+});
+
+test('media dei campioni diversa dalla media dei blocchi', () => {
+  // blocco 0: 100,100,100 -> 100; blocco 1: 140 -> 140. Blocchi: 120; campioni: 110
+  const s = serieFc([camp(1, 100), camp(2, 100), camp(3, 100), camp(12, 140)], iso(0), iso(20));
+  assert.deepEqual(s.bpm, [100, 140]);
+  assert.equal(s.media, 110);
+  assert.equal(s.massima, 140);
+  assert.equal(statisticheFc(s).media, 110);
+});
+
+test('massima intera e solo campioni validi', () => {
+  const s = serieFc([camp(1, '120.4'), camp(2, 0), camp(3, 'x'), camp(50, 200)], iso(0), iso(20));
+  assert.equal(s.massima, 120);
+  assert.equal(s.media, 120);
+});
+
+test('nessun campione valido: massima e media null', () => {
+  const s = serieFc([camp(-5, 100), camp(2, 0)], iso(0), iso(20));
+  assert.equal(s.massima, null);
+  assert.equal(s.media, null);
+  assert.equal(statisticheFc(s), null);
+});
+
+test('statisticheFc usa i campi nuovi se presenti', () => {
+  assert.deepEqual(statisticheFc({ bpm: [100, 120], media: 111, massima: 130 }), { media: 111, massima: 130 });
+});
+
+test('statisticheFc ricade sui blocchi senza i campi nuovi', () => {
+  assert.deepEqual(statisticheFc({ bpm: [100, null, 120] }), { media: 110, massima: 120 });
+  assert.deepEqual(statisticheFc({ bpm: [100, 120], media: null, massima: 'x' }), { media: 110, massima: 120 });
+});

@@ -69,6 +69,19 @@ const BICI = base({
   tipo: 'bici', tipoOriginale: 'BIKING', nome: 'Bici', durataAttivaMin: 60, fcMedia: 130, calorie: 600,
 });
 
+// palestra solo Hevy con FC per orario: il picco 150 sta in un blocco che in media fa 120
+const HEVY_FC = base({
+  fonte: 'hevy', idFonte: 'w2', data: '2026-11-01', inizio: '2026-11-01T18:00:00+01:00', fine: '2026-11-01T18:30:00+01:00',
+  tipo: 'palestra', nome: 'Gambe Hevy', durataAttivaMin: 30, serieTotali: 3, volumeKg: 900, esercizi: [],
+  fcSerie: { passoSec: 10, inizio: '2026-11-01T18:00:00+01:00', bpm: blocchi(180, () => 120), massima: 150, media: 118 },
+});
+// stesso, ma nel vecchio formato (senza massima/media)
+const HEVY_FC_VECCHIA = base({
+  fonte: 'hevy', idFonte: 'w3', data: '2026-10-31', inizio: '2026-10-31T18:00:00+01:00', fine: '2026-10-31T18:30:00+01:00',
+  tipo: 'palestra', nome: 'Schiena Hevy', durataAttivaMin: 30, serieTotali: 3, volumeKg: 900, esercizi: [],
+  fcSerie: { passoSec: 10, inizio: '2026-10-31T18:00:00+01:00', bpm: blocchi(180, (i) => (i === 5 ? 141 : 120)) },
+});
+
 const SEME = {
   'sessioni/googleHealth_p1': GH_PALESTRA('p1', '2026-11-04T07:30:00+01:00', { fcSerie: FC_PALESTRA }),
   'sessioni/googleHealth_p2': GH_PALESTRA('p2', '2026-11-04T07:31:00+01:00', { fcSerie: null }),
@@ -162,6 +175,27 @@ test('corsa con tracciato', async () => {
     const grafico = sezione(page, 'Grafico FC').locator('svg');
     await grafico.hover();
     await sezione(page, 'Grafico FC').getByText(/^\d+′\d{2}″ · \d+ bpm$/).waitFor();
+    await senzaValoriRotti(page);
+  } finally { await chiudi(); }
+});
+
+test('sessione solo Hevy con fcSerie: grafico e massima dal campo massima', async () => {
+  const { page, chiudi } = await cliente({ seme: { 'sessioni/hevy_w2': HEVY_FC } });
+  try {
+    await apriDaRecenti(page, 'Palestra');
+    assert.equal(await sezione(page, 'Grafico FC').locator('svg').count(), 1);
+    assert.equal(await valore(page, 'Riepilogo', 'FC massima').innerText(), '150 bpm');
+    assert.equal(await valore(page, 'Riepilogo', 'FC media').innerText(), '118 bpm');
+    await senzaValoriRotti(page);
+  } finally { await chiudi(); }
+});
+
+test('fcSerie Hevy nel vecchio formato: valori dai blocchi', async () => {
+  const { page, chiudi } = await cliente({ seme: { 'sessioni/hevy_w3': HEVY_FC_VECCHIA } });
+  try {
+    await apriDaRecenti(page, 'Palestra');
+    assert.equal(await sezione(page, 'Grafico FC').locator('svg').count(), 1);
+    assert.equal(await valore(page, 'Riepilogo', 'FC massima').innerText(), '141 bpm');
     await senzaValoriRotti(page);
   } finally { await chiudi(); }
 });

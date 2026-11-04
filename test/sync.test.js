@@ -27,7 +27,7 @@ function creaFinto(guasti = {}) {
       return json({ page: 1, page_count: 1, events: [{ type: 'updated', workout: workout() }] });
     }
     const tipo = url.match(/dataTypes\/([^/]+)\/dataPoints/)[1];
-    if (guasti[tipo]) { const g = guasti[tipo]; if (g instanceof Error) throw g; return g; }
+    if (guasti[tipo]) { const g = guasti[tipo]; if (g instanceof Error) throw g; return typeof g === 'function' ? g(url) : g; }
     switch (tipo) {
       case 'sleep': return json({ dataPoints: [puntoSonno({ inizio: '2026-11-03T22:30:00Z', fine: '2026-11-04T06:30:00Z', minutiAddormentato: 420, fasi: { AWAKE: 30, DEEP: 80 } })] });
       case 'daily-resting-heart-rate': return json({ dataPoints: [puntoFc('2026-11-04', 54)] });
@@ -235,4 +235,65 @@ test('nessuna sessione = nessuna chiamata heart-rate', async () => {
   const { r, chiamate } = await esegui({ exercise: json({ dataPoints: [] }) });
   assert.equal(r.conteggi.fcSessioni, 0);
   assert.ok(!chiamate.some((x) => x.url.includes('dataTypes/heart-rate/')));
+});
+
+// FC per orario sulle sessioni Hevy (workout() di default: 06:35-07:30Z)
+const fcFinta = () => json({ dataPoints: [
+  campioneFc('2026-11-04T06:36:00Z', 120),
+  campioneFc('2026-11-04T06:36:05Z', 130),
+  campioneFc('2026-11-04T06:40:00Z', 110),
+] });
+const eseguiMain = async (guasti, envMain = env) => {
+  const dir = cartellaTemp();
+  const log = [];
+  const { fetch, chiamate } = creaFinto(guasti);
+  const codice = await main({ env: envMain, fetch, adesso, cartella: join(dir, 'out'), log: (t) => log.push(t), errore: () => {}, attendi: async () => {} });
+  const testo = readFileSync(join(dir, 'out', 'sync.json'), 'utf8');
+  rmSync(dir, { recursive: true });
+  return { codice, testo, file: JSON.parse(testo), log, chiamate };
+};
+const hevyW1 = (file) => file.operazioni.find((o) => o.doc_id === 'hevy_w1');
+
+test('main: la sessione Hevy riceve la FC per orario', async () => {
+  const { codice, file, testo, chiamate } = await eseguiMain({ 'heart-rate': fcFinta });
+  assert.equal(codice, 0);
+  const s = hevyW1(file).data.fcSerie;
+  assert.equal(s.inizio, '2026-11-04T06:35:00Z');
+  assert.equal(s.massima, 130);
+  assert.equal(s.media, 120);
+  assert.equal(file.fonti.hevy.conteggi.fcSessioni, 1);
+  assert.equal(file.fonti.hevy.esito, 'ok');
+  assert.equal(file.esito, 'ok');
+  const hr = chiamate.filter((c) => c.url.includes('dataTypes/heart-rate/')).map((c) => new URLSearchParams(c.url.split('?')[1]).get('filter'));
+  assert.ok(hr.includes('heart_rate.sample_time.physical_time >= "2026-11-04T06:35:00Z" AND heart_rate.sample_time.physical_time < "2026-11-04T07:30:00Z"'));
+  for (const s2 of [env.GH_CLIENT_SECRET, env.GH_REFRESH_TOKEN, env.HEVY_API_KEY, accessToken]) assert.ok(!testo.includes(s2));
+});
+
+test('main: FC Hevy fallita -> hevy parziale', async () => {
+  let n = 0;
+  // la prima lettura è quella dell'orologio (googleHealth), la seconda quella Hevy
+  const { file, log } = await eseguiMain({ 'heart-rate': () => (n++ === 0 ? fcFinta() : json({ error: { message: 'x' } }, 500)) });
+  assert.equal(file.fonti.googleHealth.esito, 'ok');
+  assert.equal(file.fonti.hevy.esito, 'parziale');
+  assert.equal(file.fonti.hevy.messaggio, 'FC dettagliata non aggiornata');
+  assert.equal(file.fonti.hevy.conteggi.fcSessioni, 0);
+  assert.equal(hevyW1(file).data.fcSerie, null);
+  assert.equal(file.esito, 'parziale');
+  assert.deepEqual(log, ['sync: parziale · googleHealth ok · hevy parziale']);
+});
+
+test('main: senza credenziali Google nessuna FC Hevy e nessun errore', async () => {
+  const { GH_CLIENT_ID, GH_CLIENT_SECRET, GH_REFRESH_TOKEN, ...soloHevy } = env;
+  const { codice, file, chiamate } = await eseguiMain({}, soloHevy);
+  assert.equal(codice, 0);
+  assert.equal(file.fonti.hevy.esito, 'ok');
+  assert.equal(file.fonti.hevy.conteggi.fcSessioni, 0);
+  assert.ok(!('fcSerie' in hevyW1(file).data));
+  assert.ok(!chiamate.some((c) => c.url.includes('heart-rate')));
+});
+
+test('main: hevy in errore non legge la FC', async () => {
+  const { file, chiamate } = await eseguiMain({ hevy: json({ error: 'x' }, 401) });
+  assert.equal(file.fonti.hevy.esito, 'errore');
+  assert.equal(chiamate.filter((c) => c.url.includes('dataTypes/heart-rate/')).length, 1);
 });

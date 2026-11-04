@@ -16,6 +16,12 @@ export const MESSAGGI = {
   },
 };
 
+/** Esito complessivo: ok solo se tutte le fonti sono ok, errore solo se tutte in errore. */
+export function esitoComplessivo(risultati) {
+  const esiti = Object.values(risultati).map((r) => r.esito);
+  return esiti.every((e) => e === 'errore') ? 'errore' : esiti.every((e) => e === 'ok') ? 'ok' : 'parziale';
+}
+
 /**
  * @param {{ fonti: Record<string, () => Promise<object>>, adesso: Date }} p
  */
@@ -35,7 +41,6 @@ export async function eseguiSync({ fonti, adesso }) {
       risultati[nome] = { esito: 'errore', codice, messaggio: messaggi[codice] ?? messaggi.rete ?? 'Fonte non raggiungibile' };
     }
   }
-  const esiti = Object.values(risultati).map((r) => r.esito);
-  const esito = esiti.every((e) => e === 'errore') ? 'errore' : esiti.every((e) => e === 'ok') ? 'ok' : 'parziale';
+  const esito = esitoComplessivo(risultati);
   return { generatoIl: adesso.toISOString(), finestra, esito, fonti: risultati, operazioni };
 }

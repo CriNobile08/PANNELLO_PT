@@ -10,7 +10,9 @@ const mediaArrotondata = (valori) =>
  * @param {string} inizio ISO
  * @param {string} fine ISO
  * @param {number} [passoSec]
- * @returns {{passoSec: number, inizio: string, bpm: Array<number|null>}}
+ * Aggiunge `massima` e `media` calcolate sui campioni veri (non sui blocchi,
+ * che spianano i picchi); null se nessun campione è valido.
+ * @returns {{passoSec: number, inizio: string, bpm: Array<number|null>, massima: number|null, media: number|null}}
  */
 export function serieFc(campioni, inizio, fine, passoSec = 10) {
   const t0 = Date.parse(inizio);
@@ -18,26 +20,39 @@ export function serieFc(campioni, inizio, fine, passoSec = 10) {
   const passoMs = passoSec * 1000;
   const n = Number.isNaN(t0) || Number.isNaN(t1) ? 0 : Math.max(0, Math.ceil((t1 - t0) / passoMs));
   const blocchi = Array.from({ length: n }, () => []);
+  const validi = [];
   for (const c of campioni ?? []) {
     const t = Date.parse(c?.t);
     const v = Number(c?.bpm);
     if (Number.isNaN(t) || !Number.isFinite(v) || v <= 0) continue;
     if (t < t0 || t >= t1) continue;
     const i = Math.floor((t - t0) / passoMs);
-    if (i >= 0 && i < n) blocchi[i].push(v);
+    if (i >= 0 && i < n) {
+      blocchi[i].push(v);
+      validi.push(v);
+    }
   }
-  return { passoSec, inizio, bpm: blocchi.map(mediaArrotondata) };
+  return {
+    passoSec, inizio, bpm: blocchi.map(mediaArrotondata),
+    massima: validi.length ? Math.round(Math.max(...validi)) : null,
+    media: mediaArrotondata(validi),
+  };
 }
 
 /**
- * Media e massima sui valori non nulli.
+ * Media e massima: dai campi `media`/`massima` se numeri finiti (campioni veri),
+ * altrimenti (documenti salvati prima) dai blocchi non nulli.
  * @param {{bpm: Array<number|null>}|null} fcSerie
  * @returns {{media: number, massima: number}|null}
  */
 export function statisticheFc(fcSerie) {
   const v = (fcSerie?.bpm ?? []).filter((x) => typeof x === 'number');
   if (!v.length) return null;
-  return { media: mediaArrotondata(v), massima: Math.max(...v) };
+  const vero = (x) => typeof x === 'number' && Number.isFinite(x);
+  return {
+    media: vero(fcSerie.media) ? fcSerie.media : mediaArrotondata(v),
+    massima: vero(fcSerie.massima) ? fcSerie.massima : Math.max(...v),
+  };
 }
 
 /**

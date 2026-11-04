@@ -50,8 +50,9 @@ export function parteDaCollegare(sessione) {
 
 /** fcSerie della parte Google Health più lunga che ne ha una. */
 function serieDellaSessione(sessione) {
-  const conSerie = sessione.parti.filter((p) => p.fonte === 'googleHealth' && Array.isArray(p.fcSerie?.bpm) && numero(p.fcSerie?.passoSec));
-  return piuLunga(conSerie)?.fcSerie ?? null;
+  const conSerie = (fonte) => sessione.parti.filter((p) => p.fonte === fonte && Array.isArray(p.fcSerie?.bpm) && numero(p.fcSerie?.passoSec));
+  // Prima l'orologio; se non c'è, la FC per orario salvata sulla sessione Hevy.
+  return (piuLunga(conSerie('googleHealth')) ?? piuLunga(conSerie('hevy')))?.fcSerie ?? null;
 }
 
 function Righe({ righe }) {
