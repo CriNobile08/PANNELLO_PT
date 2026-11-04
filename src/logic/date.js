@@ -15,8 +15,28 @@ export function oggiRoma(adesso = new Date()) {
   return fmtData.format(adesso);
 }
 
+const istanteValido = (iso) => {
+  if (iso === null || iso === undefined || iso === '') return null;
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? null : d;
+};
+
+/** Ora "HH:MM" (Roma) di un timestamp ISO; "…" se manca o non è valido. */
 export function oraRoma(iso) {
-  return fmtOra.format(new Date(iso));
+  const d = istanteValido(iso);
+  return d ? fmtOra.format(d) : '…';
+}
+
+/** Data "YYYY-MM-DD" (Roma) di un timestamp ISO; null se manca o non è valido. */
+export function dataDaIso(iso) {
+  const d = istanteValido(iso);
+  return d ? oggiRoma(d) : null;
+}
+
+/** Data breve (es. "mer 4 nov") di un timestamp ISO; "…" se manca o non è valido. */
+export function formatoDataIso(iso) {
+  const data = dataDaIso(iso);
+  return data ? formatoData(data) : '…';
 }
 
 function parti(data) {

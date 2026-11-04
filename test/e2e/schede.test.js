@@ -197,3 +197,17 @@ test('liste: sposta su/giù e rimuovi; modifiche non salvate chiedono conferma',
     await page.getByRole('dialog', { name: 'Hai modifiche non salvate. Uscire senza salvare?' }).waitFor();
   } finally { await chiudi(); }
 });
+
+test('revisione senza salvataIl: cronologia e dettaglio mostrano "…"', async () => {
+  const seme = {
+    'schede/s1': { nome: 'Senza ora', tipo: 'palestra', archiviata: false, revisioneCorrente: 'r1', creataDa: 'u-altro' },
+    'schede/s1/revisioni/r1': { ...REV, salvataIl: undefined },
+  };
+  const { page, chiudi } = await trainer({ seme });
+  try {
+    await vaiASchede(page);
+    await page.getByText('Senza ora').click();
+    await page.getByRole('button', { name: /gio 1 ott.*Marta.*…/ }).click();
+    await page.getByText('Revisione del gio 1 ott · Marta · …').waitFor();
+  } finally { await chiudi(); }
+});

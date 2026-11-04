@@ -3,14 +3,9 @@ import { Contesto } from '../contesto.js';
 import { Campo, Dialogo, Vuoto } from '../componenti.js';
 import { validaPiano, numeroDaInput } from '../../logic/validazione.js';
 import { versioneValida, versioniFuture } from '../../logic/versioni.js';
-import { oggiRoma, formatoData } from '../../logic/date.js';
+import { formatoData, formatoDataIso } from '../../logic/date.js';
 
 const DATA_OK = /^\d{4}-\d{2}-\d{2}$/;
-const dataDaIso = (iso) => {
-  if (!iso) return null;
-  const d = new Date(iso);
-  return Number.isNaN(d.getTime()) ? null : oggiRoma(d);
-};
 const testo = (n) => (n === null || n === undefined ? '' : String(n).replace('.', ','));
 
 // ---------- bozza (i grammi sono testo finché non si salva) ----------
@@ -55,8 +50,7 @@ function Intestazione({ sporco, inCorso, onAnnulla, onSalva }) {
   const tutte = [...dati.alimentazione].sort((a, b) => (a.validaDal < b.validaDal ? 1 : a.validaDal > b.validaDal ? -1 : b.numero - a.numero));
   const autori = nomi(tutte.map((v) => v.autore));
   const chi = (v) => {
-    const quando = dataDaIso(v.creataIl);
-    return `creato da ${autori[v.autore] ?? 'Qualcuno'}${quando ? ` il ${formatoData(quando)}` : ''}`;
+    return `creato da ${autori[v.autore] ?? 'Qualcuno'} il ${formatoDataIso(v.creataIl)}`;
   };
   return html`
     <div class="card intestazione-piano">

@@ -5,12 +5,11 @@ import { ElencoSchede } from './schede.js';
 import { risolviSettimana } from '../../logic/risoluzione.js';
 import { versioneValida, versioniFuture, revisionePerGiorno } from '../../logic/versioni.js';
 import { statoBlocchi } from '../../logic/completamento.js';
-import { GIORNI, lunediDi, aggiungiGiorni, giorniDellaSettimana, formatoData, giornoSettimana, oggiRoma } from '../../logic/date.js';
+import { GIORNI, lunediDi, aggiungiGiorni, giorniDellaSettimana, formatoData, formatoDataIso, giornoSettimana } from '../../logic/date.js';
 
 const NOMI_GIORNI = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
 const TIPI = { palestra: 'Palestra', corsa: 'Corsa', trekking: 'Trekking', altro: 'Altro' };
 const DATA_OK = /^\d{4}-\d{2}-\d{2}$/;
-const dataDaIso = (iso) => oggiRoma(new Date(iso));
 
 /** Select di schede: non archiviate (più quella attualmente scelta) e "Riposo". Valore '' = riposo. */
 function SelezioneScheda({ etichetta, valore, onCambia }) {
@@ -190,7 +189,7 @@ function CardGiorno({ giorno, indice, onAssegna }) {
       ${eccezione && html`
         <div class="giorno-eccezione">
           <span class="etichetta-eccezione">Eccezione</span>
-          <span class="secondario">${`da ${autore} · ${formatoData(dataDaIso(eccezione.creataIl))}`}</span>
+          <span class="secondario">${`da ${autore} · ${formatoDataIso(eccezione.creataIl)}`}</span>
           ${eccezione.origine && html`<span class="secondario">${`Spostata da ${giornoSettimana(eccezione.origine)}`}</span>`}
           <button type="button" class="pulsante" disabled=${!puoScrivere} onClick=${ripristina}>Ripristina</button>
         </div>`}
@@ -207,7 +206,7 @@ function Intestazione({ onSolo, onNuova }) {
   const tutte = [...dati.settimane].sort((a, b) => (a.validaDal < b.validaDal ? 1 : -1));
   const autori = nomi(tutte.map((v) => v.autore));
   const di = (v) => autori[v.autore] ?? 'Qualcuno';
-  const chi = (v) => `creata da ${di(v)} il ${formatoData(dataDaIso(v.creataIl))}`;
+  const chi = (v) => `creata da ${di(v)} il ${formatoDataIso(v.creataIl)}`;
   return html`
     <div class="card intestazione-settimana">
       <p class="versione-attuale">${attuale

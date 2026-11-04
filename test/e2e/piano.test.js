@@ -100,7 +100,7 @@ test('sola lettura e creataIl mancante', async () => {
   const { page, chiudi } = await trainer({ seme: { 'alimentazione/a1': PIANO({ creataIl: undefined }) }, puoScrivere: false });
   try {
     await vaiAlPiano(page);
-    await page.getByText('In vigore dal gio 1 ott · versione 1 · creato da Marta', { exact: true }).waitFor();
+    await page.getByText('In vigore dal gio 1 ott · versione 1 · creato da Marta il …', { exact: true }).waitFor();
     assert.equal(await page.getByRole('button', { name: 'Salva come nuova versione da…' }).isDisabled(), true);
   } finally { await chiudi(); }
 });

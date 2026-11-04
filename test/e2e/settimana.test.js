@@ -117,3 +117,16 @@ test('settimana vuota e sola lettura', async () => {
     assert.equal(await page.getByRole('button', { name: 'Nuova versione da una data…' }).isDisabled(), true);
   } finally { await c2(); }
 });
+
+test('timestamp mancanti (creataIl) non rompono la pagina: si mostra "…"', async () => {
+  const seme = {
+    ...SEME,
+    'settimane/v2': { ...SEME['settimane/v2'], creataIl: undefined },
+    'eccezioni/2026-11-05': { schedaId: 'gambe', origine: null, autore: 'u-altro' },
+  };
+  const { page, chiudi } = await trainer({ seme });
+  try {
+    await page.getByText('In vigore dal lun 26 ott · versione 2 · creata da Marta il …').waitFor({ timeout: 5000 });
+    await page.getByRole('article', { name: 'gio 5 nov' }).getByText('da Marta · …').waitFor();
+  } finally { await chiudi(); }
+});

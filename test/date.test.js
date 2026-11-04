@@ -2,7 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   GIORNI, oggiRoma, oraRoma, giornoSettimana, aggiungiGiorni,
-  lunediDi, giorniDellaSettimana, formatoData, formatoDataLunga,
+  lunediDi, giorniDellaSettimana, formatoData, formatoDataLunga, dataDaIso, formatoDataIso,
 } from '../src/logic/date.js';
 
 test('GIORNI', () => {
@@ -47,4 +47,15 @@ test('giorniDellaSettimana', () => {
 test('formatoData', () => {
   assert.equal(formatoData('2026-11-04'), 'mer 4 nov');
   assert.equal(formatoDataLunga('2026-11-04'), 'mercoledì 4 novembre');
+});
+
+test('timestamp mancanti o non validi: nessuna eccezione, "…"', () => {
+  assert.equal(oraRoma(undefined), '…');
+  assert.equal(oraRoma('non una data'), '…');
+  assert.equal(oraRoma('2026-11-04T10:30:00+01:00'), '10:30');
+  assert.equal(dataDaIso(undefined), null);
+  assert.equal(dataDaIso('xx'), null);
+  assert.equal(dataDaIso('2026-11-03T23:30:00Z'), '2026-11-04');
+  assert.equal(formatoDataIso(null), '…');
+  assert.equal(formatoDataIso('2026-11-04T08:00:00Z'), 'mer 4 nov');
 });
