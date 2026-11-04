@@ -43,8 +43,8 @@ test('49% non unisce', () => {
   assert.equal(r.length, 2);
 });
 
-test('stessa fonte non si unisce mai', () => {
-  const r = unisciSessioni([sess('googleHealth', 0, 60), sess('googleHealth', 10, 60)]);
+test('stessa fonte poco sovrapposta non si unisce', () => {
+  const r = unisciSessioni([sess('googleHealth', 0, 60), sess('googleHealth', 40, 60)]);
   assert.equal(r.length, 2);
 });
 
@@ -142,4 +142,52 @@ test('parte hevy eliminata', () => {
   assert.equal(unite.length, 1);
   assert.deepEqual(unite[0].fonti, ['googleHealth']);
   assert.equal(unite[0].nome, 'Pesi');
+});
+
+test('stessa fonte all\'80% si fonde', () => {
+  const a = sess('googleHealth', 0, 65, { tipo: 'pesi', nome: 'WEIGHTS', fcMedia: 120 });
+  const b = sess('googleHealth', 1, 66, { tipo: 'forza', nome: 'STRENGTH_TRAINING', fcMedia: 130 });
+  const r = unisciSessioni([a, b]);
+  assert.equal(r.length, 1);
+  assert.equal(r[0].registrazioniUnite, 2);
+  assert.equal(r[0].parti.length, 2);
+  assert.equal(r[0].id, a.id);
+  assert.equal(r[0].nome, 'STRENGTH_TRAINING');
+  assert.equal(r[0].fcMedia, 130);
+});
+
+test('stessa fonte al 79% no', () => {
+  // durata 100 e 100, sovrapposizione 79 min
+  const r = unisciSessioni([sess('googleHealth', 0, 100), sess('googleHealth', 21, 100)]);
+  assert.equal(r.length, 2);
+  assert.equal(r[0].registrazioniUnite, 1);
+});
+
+test('completamento dei campi dalle altre registrazioni', () => {
+  const lunga = sess('googleHealth', 0, 66, { calorie: null });
+  const corta = sess('googleHealth', 1, 60, { calorie: 400 });
+  const [u] = unisciSessioni([lunga, corta]);
+  assert.equal(u.calorie, 400);
+});
+
+test('doppioni Google poi unione con altra fonte', () => {
+  const a = sess('googleHealth', 0, 65, { nome: 'WEIGHTS' });
+  const b = sess('googleHealth', 1, 66, { nome: 'STRENGTH_TRAINING' });
+  const h = sess('hevy', 5, 60, { nome: 'Push' });
+  const r = unisciSessioni([a, b, h]);
+  assert.equal(r.length, 1);
+  assert.deepEqual(r[0].fonti, ['googleHealth', 'hevy']);
+  assert.equal(r[0].registrazioniUnite, 2);
+  assert.equal(r[0].parti.length, 3);
+});
+
+test('fusione transitiva a catena', () => {
+  const r = unisciSessioni([sess('googleHealth', 0, 100), sess('googleHealth', 15, 100), sess('googleHealth', 30, 100)]);
+  assert.equal(r.length, 1);
+  assert.equal(r[0].registrazioniUnite, 3);
+  assert.equal(r[0].parti.length, 3);
+});
+
+test('registrazioniUnite è 1 senza fusione', () => {
+  assert.equal(unisciSessioni([sess('googleHealth', 0, 60), sess('hevy', 10, 60)])[0].registrazioniUnite, 1);
 });

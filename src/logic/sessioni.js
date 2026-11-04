@@ -50,13 +50,71 @@ function scegli(parti, campo) {
   return null;
 }
 
+const SOGLIA_STESSA_FONTE = 0.8;
+const SOGLIA_FONTI_DIVERSE = 0.5;
+
+/** Gruppi (liste di indici) di registrazioni della stessa fonte quasi coincidenti. */
+function gruppiStessaFonte(sessioni) {
+  const n = sessioni.length;
+  const durate = sessioni.map(durataMs);
+  const padre = sessioni.map((_, i) => i);
+  const radice = (x) => {
+    while (padre[x] !== x) {
+      padre[x] = padre[padre[x]];
+      x = padre[x];
+    }
+    return x;
+  };
+  for (let i = 0; i < n; i++) {
+    for (let j = i + 1; j < n; j++) {
+      if (sessioni[i].fonte !== sessioni[j].fonte || !durate[i] || !durate[j]) continue;
+      const sov = sovrapposizioneMs(sessioni[i], sessioni[j]);
+      if (sov > 0 && sov >= SOGLIA_STESSA_FONTE * Math.min(durate[i], durate[j])) padre[radice(j)] = radice(i);
+    }
+  }
+  const gruppi = new Map();
+  sessioni.forEach((_, i) => {
+    const r = radice(i);
+    if (!gruppi.has(r)) gruppi.set(r, []);
+    gruppi.get(r).push(i);
+  });
+  return [...gruppi.values()];
+}
+
 /**
- * Unisce le sessioni di fonti diverse che si sovrappongono per almeno metà
- * della più breve. Un gruppo non contiene mai due parti della stessa fonte.
- * @param {Array<object>} sessioni documenti sessione con `id`
- * @returns {Array<object>} sessioni unite, per `inizio` decrescente
+ * Rappresentante di un gruppo di doppioni: la registrazione più lunga (a parità
+ * la prima per `inizio`), con i campi nulli completati dalle altre in ordine di
+ * durata decrescente. Porta con sé le parti originali in `_parti`.
  */
-export function unisciSessioni(sessioni) {
+function rappresentante(gruppo, sessioni) {
+  if (gruppo.length === 1) return { ...sessioni[gruppo[0]], _parti: [sessioni[gruppo[0]]] };
+  const originali = gruppo.map((i) => sessioni[i]);
+  const perDurata = [...originali].sort(
+    (a, b) => durataMs(b) - durataMs(a) || (ms(a.inizio) ?? 0) - (ms(b.inizio) ?? 0),
+  );
+  const rapp = { ...perDurata[0] };
+  for (const altra of perDurata.slice(1)) {
+    for (const [k, v] of Object.entries(altra)) {
+      if ((rapp[k] === null || rapp[k] === undefined) && v !== null && v !== undefined) rapp[k] = v;
+    }
+  }
+  rapp._parti = originali;
+  return rapp;
+}
+
+/**
+ * Unisce le sessioni in due passaggi. Primo: le registrazioni della stessa
+ * fonte che si sovrappongono per almeno l'80% della più breve sono doppioni e
+ * si fondono in un rappresentante. Secondo: le sessioni di fonti diverse che si
+ * sovrappongono per almeno metà della più breve; un gruppo non contiene mai due
+ * rappresentanti della stessa fonte.
+ * @param {Array<object>} sessioniOriginali documenti sessione con `id`
+ * @returns {Array<object>} sessioni unite, per `inizio` decrescente; `parti`
+ *   elenca tutti i documenti originali, `registrazioniUnite` il massimo di
+ *   doppioni della stessa fonte fusi (1 se nessuno)
+ */
+export function unisciSessioni(sessioniOriginali) {
+  const sessioni = gruppiStessaFonte(sessioniOriginali).map((g) => rappresentante(g, sessioniOriginali));
   const n = sessioni.length;
   const durate = sessioni.map(durataMs);
 
@@ -67,7 +125,7 @@ export function unisciSessioni(sessioni) {
       const b = sessioni[j];
       if (a.fonte === b.fonte || !durate[i] || !durate[j]) continue;
       const sov = sovrapposizioneMs(a, b);
-      if (sov > 0 && sov >= 0.5 * Math.min(durate[i], durate[j])) coppie.push({ i, j, sov });
+      if (sov > 0 && sov >= SOGLIA_FONTI_DIVERSE * Math.min(durate[i], durate[j])) coppie.push({ i, j, sov });
     }
   }
   coppie.sort((x, y) => y.sov - x.sov || x.i - y.i || x.j - y.j);
@@ -100,7 +158,7 @@ export function unisciSessioni(sessioni) {
 
   const unite = [];
   for (const gruppo of gruppi.values()) {
-    const parti = [...gruppo].sort((a, b) => (ms(a.inizio) ?? 0) - (ms(b.inizio) ?? 0));
+    const parti = gruppo.flatMap((r) => r._parti).sort((a, b) => (ms(a.inizio) ?? 0) - (ms(b.inizio) ?? 0));
     const inizio = parti[0].inizio;
     const fine = parti.reduce((m, p) => (ms(p.fine) > ms(m) ? p.fine : m), parti[0].fine);
     unite.push({
@@ -110,15 +168,16 @@ export function unisciSessioni(sessioni) {
       fine,
       fonti: [...new Set(parti.map((p) => p.fonte))].sort(),
       parti,
-      tipo: scegli(parti, 'tipo'),
-      nome: scegli(parti, 'nome'),
-      durataAttivaMin: scegli(parti, 'durataAttivaMin'),
-      fcMedia: scegli(parti, 'fcMedia'),
-      zoneMin: scegli(parti, 'zoneMin'),
-      calorie: scegli(parti, 'calorie'),
-      passi: scegli(parti, 'passi'),
-      distanzaM: scegli(parti, 'distanzaM'),
-      dislivelloM: scegli(parti, 'dislivelloM'),
+      registrazioniUnite: Math.max(...gruppo.map((r) => r._parti.length)),
+      tipo: scegli(gruppo, 'tipo'),
+      nome: scegli(gruppo, 'nome'),
+      durataAttivaMin: scegli(gruppo, 'durataAttivaMin'),
+      fcMedia: scegli(gruppo, 'fcMedia'),
+      zoneMin: scegli(gruppo, 'zoneMin'),
+      calorie: scegli(gruppo, 'calorie'),
+      passi: scegli(gruppo, 'passi'),
+      distanzaM: scegli(gruppo, 'distanzaM'),
+      dislivelloM: scegli(gruppo, 'dislivelloM'),
     });
   }
   return unite.sort((a, b) => (ms(b.inizio) ?? 0) - (ms(a.inizio) ?? 0));
