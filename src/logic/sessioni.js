@@ -108,7 +108,7 @@ export function unisciSessioni(sessioni) {
       data: dataDaIso(inizio),
       inizio,
       fine,
-      fonti: parti.map((p) => p.fonte),
+      fonti: [...new Set(parti.map((p) => p.fonte))].sort(),
       parti,
       tipo: scegli(parti, 'tipo'),
       nome: scegli(parti, 'nome'),

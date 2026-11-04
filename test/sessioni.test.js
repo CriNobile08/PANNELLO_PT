@@ -35,7 +35,7 @@ test('una sola fonte resta com\'è', () => {
 test('sovrapposizione esattamente 50% unisce', () => {
   const r = unisciSessioni([sess('googleHealth', 0, 60), sess('hevy', 30, 60)]);
   assert.equal(r.length, 1);
-  assert.deepEqual([...r[0].fonti].sort(), ['googleHealth', 'hevy']);
+  assert.deepEqual(r[0].fonti, ['googleHealth', 'hevy']);
 });
 
 test('49% non unisce', () => {
@@ -62,7 +62,7 @@ test('collegamento che unirebbe due parti della stessa fonte viene saltato', () 
 test('tre fonti transitive', () => {
   const r = unisciSessioni([sess('hevy', 0, 60), sess('googleHealth', 30, 60), sess('strava', 60, 60)]);
   assert.equal(r.length, 1);
-  assert.deepEqual([...r[0].fonti].sort(), ['googleHealth', 'hevy', 'strava']);
+  assert.deepEqual(r[0].fonti, ['googleHealth', 'hevy', 'strava']);
   assert.equal(r[0].inizio, new Date(T0).toISOString());
   assert.equal(r[0].fine, new Date(T0 + 120 * MIN).toISOString());
   assert.equal(r[0].id, 'hevy_0');
@@ -106,4 +106,9 @@ test('mezzanotte: data del giorno d\'inizio a Roma', () => {
 test('ordinamento per inizio decrescente', () => {
   const r = unisciSessioni([sess('googleHealth', 0, 30), sess('googleHealth', 500, 30), sess('hevy', 200, 30)]);
   assert.deepEqual(r.map((x) => x.inizio), [500, 200, 0].map((m) => new Date(T0 + m * MIN).toISOString()));
+});
+
+test('fonti ordinate alfabeticamente, non per inizio', () => {
+  const [u] = unisciSessioni([sess('hevy', 0, 60), sess('googleHealth', 10, 60)]);
+  assert.deepEqual(u.fonti, ['googleHealth', 'hevy']);
 });
