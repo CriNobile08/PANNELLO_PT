@@ -71,7 +71,7 @@ pagina: sessioni senza eliminata → unisciSessioni → UI
 | `src/sync/hevy/normalizza.js` | Pura: `sessioneDaWorkout(w, { adesso })`, `operazioniDaEventi(eventi, { adesso })` (un'operazione per id, la più recente), `catalogoCompatto(templates, { adesso })`. | `logic/date.js` |
 | `src/sync/fonti/googleHealth.js` | Il corpo attuale di `eseguiSync` del 2a, spostato senza cambi di logica; restituisce il risultato di fonte (§4.2). | moduli Google Health |
 | `src/sync/fonti/hevy.js` | Chiama client e normalizzazione; decide se leggere il catalogo; restituisce il risultato di fonte. | moduli Hevy |
-| `src/sync/esegui.js` | Orchestratore: esegue le fonti in sequenza, cattura l'errore di ciascuna, compone il file (§4.3). Lancia solo se **tutte** falliscono. | fonti |
+| `src/sync/esegui.js` | Orchestratore: esegue le fonti in sequenza, cattura l'errore di ciascuna, compone il risultato (§4.3). Non lancia mai: se **tutte** falliscono restituisce `esito: "errore"` senza operazioni, e `scripts/sync.js` non scrive il file. | fonti |
 | `scripts/sync.js` | Invariato nella forma; il log riassume per fonte; con tutte le fonti in errore stampa una riga `ERRORE:` per fonte ed esce con 1. | `esegui.js` |
 | `src/logic/sessioni.js` | Nuova funzione pura `sessioniValide(docs)` che esclude `eliminata: true`; `unisciSessioni` invariata. | — |
 | UI | Usa `sessioniValide` prima di `unisciSessioni` ovunque (Oggi, Giornata, Dati del cliente); card di stato per fonte. | logica pura |
