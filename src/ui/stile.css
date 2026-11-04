@@ -354,3 +354,34 @@ h1, h2, h3 { margin: 0; font-weight: 600; }
 .con-suffisso .suffisso { padding-top: 30px; }
 .avviso-modifiche { color: var(--avviso); }
 .da-correggere { color: var(--errore); font-size: 13px; font-weight: 600; }
+
+/* cliente: Oggi e giornata */
+.oggi, .giornata { max-width: 720px; }
+.anelli { display: flex; justify-content: space-around; gap: 8px; }
+.card-allenamento, .blocco-giornata, .modulo-sensazione, .testata-giornata { display: flex; flex-direction: column; gap: 12px; }
+.allenamento-testata { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.allenamento-link { display: flex; flex-direction: column; gap: 2px; color: inherit; text-decoration: none; min-height: var(--tocco); flex: 1; }
+.titolo-scheda { font-family: var(--font-numeri); font-size: 26px; font-weight: 600; margin: 0; }
+.blocchi { display: flex; flex-direction: column; gap: 4px; }
+.spunta, .riga-blocco { display: flex; align-items: center; gap: 12px; min-height: var(--tocco); }
+.spunta input { width: 22px; height: 22px; flex: none; accent-color: var(--allenamento); }
+.spunta-testo { display: flex; flex-direction: column; }
+.segno { width: 22px; height: 22px; flex: none; border: 2px solid var(--testo-2); border-radius: 6px; display: grid; place-items: center; font-size: 14px; }
+.segno.fatto { background: var(--allenamento); border-color: var(--allenamento); color: #000; }
+.dati-griglia { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.dato { display: flex; flex-direction: column; gap: 6px; padding: 14px; border-radius: 18px; }
+.dato-valore { color: var(--testo-2); font-weight: 600; }
+.alimenti-oggi { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.pasto-oggi { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.intestazione-giornata { display: flex; align-items: center; gap: 12px; }
+.blocco-testata { display: flex; justify-content: space-between; align-items: baseline; }
+.elenco-spunte { list-style: none; margin: 0; padding: 0; }
+.barra-segmenti { display: flex; gap: 6px; }
+.segmento { flex: 1; height: 8px; border-radius: 4px; background: var(--attiva); }
+.segmento.pieno { background: var(--allenamento); }
+.programmato-riga { display: flex; flex-direction: column; padding: 6px 0; }
+.sensazioni { display: flex; gap: 8px; }
+.sensazione { flex: 1; min-width: var(--tocco); }
+.sensazione[aria-pressed="true"] { background: var(--allenamento); color: #000; }
+button[aria-pressed="true"].pulsante.primario { background: var(--allenamento); }
+.scheda-opzione[aria-pressed="true"] { background: var(--attiva); }

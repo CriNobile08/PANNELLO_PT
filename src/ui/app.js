@@ -5,6 +5,8 @@ import { oggiRoma } from '../logic/date.js';
 import { SezioneSchede } from './trainer/schede.js';
 import { SezioneSettimana } from './trainer/settimana.js';
 import { SezionePiano } from './trainer/alimentazione.js';
+import { SezioneOggi } from './cliente/oggi.js';
+import { SezioneGiornata } from './cliente/giornata.js';
 import { vistaIniziale, salvaVista } from '../logic/vista.js';
 
 /** Memoria del browser: ogni accesso dentro try/catch (vista.js protegge getItem/setItem). */
@@ -31,8 +33,8 @@ const segnaposto = (titolo) => {
  */
 export const SEZIONI = {
   // vista cliente
-  oggi: segnaposto('Oggi'),
-  giornata: segnaposto('Giornata'),
+  oggi: SezioneOggi,
+  giornata: SezioneGiornata,
   allenamento: segnaposto('Allenamento'),
   alimentazione: segnaposto('Alimentazione'),
   // vista trainer
