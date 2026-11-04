@@ -64,13 +64,15 @@ Il ruolo si decide all'apertura della pagina:
 - altrimenti `user.canEdit()` → **trainer**
 - altrimenti → **sola lettura** (nessun pulsante di modifica)
 
+**Selettore di vista (solo per il proprietario).** Nell'intestazione, il cliente ha il selettore **"Vista: Cliente / Trainer"**, che passa alla vista trainer completa. In vista trainer il cliente può fare tutto quello che fa il trainer, piano alimentare compreso. Serve per vedere il pannello come lo vede il trainer e per usarlo insieme dal dispositivo del cliente. Le modifiche registrano comunque come `autore` la persona reale (`user.id()`), non la vista scelta. La vista scelta viene ricordata per dispositivo, nella memoria del browser. Il trainer non ha il selettore.
+
 ### 4.2 Permessi
 
 | Dato | Cliente (owner) | Trainer (editor) |
 |---|---|---|
 | Schede di allenamento | modifica | crea / modifica / archivia |
 | Settimana tipo e eccezioni | modifica | modifica |
-| Piano alimentare | legge | crea / modifica |
+| Piano alimentare | legge (modifica solo in vista trainer) | crea / modifica |
 | Diario | scrive | legge |
 
 Regole del database:
@@ -81,7 +83,7 @@ rules: [
 ]
 ```
 
-**Limite noto:** il proprietario ha sempre almeno i permessi di un editor, quindi il database non può impedire al cliente di scrivere il piano alimentare. Quel vincolo è applicato **solo dall'interfaccia**, che al cliente non mostra controlli di modifica. È accettabile perché il cliente è il proprietario.
+**Nota:** il proprietario ha sempre almeno i permessi di un editor, quindi il database non impedisce al cliente di scrivere il piano alimentare. È voluto: in vista cliente l'interfaccia non mostra controlli di modifica; in vista trainer (§4.1) il cliente può modificarlo.
 
 Il trainer, essendo editor, tecnicamente può anche ripubblicare il codice della pagina. È accettato perché è una persona fidata.
 
@@ -249,6 +251,7 @@ Riferimento visivo: le bozze nell'artefatto indicato in testa. I valori nelle bo
   4. Il trainer vede eccezione, spunte e nota.
   5. Il trainer modifica una scheda: il giorno passato mostra ancora la versione vecchia.
   6. Il trainer crea il piano alimentare con due opzioni per la colazione; il cliente lo vede.
+  7. Il cliente passa alla vista trainer con il selettore e modifica una scheda: la modifica risulta fatta dal cliente, e il trainer non vede il selettore.
 
 ## 10. Struttura del repository
 
@@ -268,4 +271,4 @@ scripts/build.js  → dist/pannello.html (un unico file con JS e CSS inline)
 ## 11. Punti aperti (non bloccanti per il sottoprogetto 1)
 
 - **Riempimento dell'anello "Cuore a riposo":** da definire nella specifica del sottoprogetto 2, quando sapremo quali dati sono disponibili.
-- **Invito del trainer all'artefatto:** da confermare nello spike (sottoprogetto 0) prima della consegna. Se non funziona, si torna alla scelta dell'architettura (web app classica).
+- **Invito del trainer all'artefatto come editor:** da confermare con un artefatto di prova (sottoprogetto 0) prima della consegna. Se non funziona, il ripiego è il selettore di vista (§4.1): il trainer usa il pannello insieme al cliente dal dispositivo del cliente, senza un accesso proprio. Le credenziali dell'account del cliente non si condividono.
