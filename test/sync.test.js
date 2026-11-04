@@ -33,6 +33,7 @@ function creaFinto(guasti = {}) {
       case 'daily-resting-heart-rate': return json({ dataPoints: [puntoFc('2026-11-04', 54)] });
       case 'daily-heart-rate-variability': return json({ dataPoints: [puntoHrv('2026-11-04', 41.2)] });
       case 'exercise': return json({ dataPoints: [puntoEsercizio({ id: 'es1', inizio: '2026-11-03T17:00:00Z', fine: '2026-11-03T18:05:00Z' })] });
+      case 'heart-rate': return json({ dataPoints: [] });
       case 'steps': return json({ rollupDataPoints: [rollupPassi('2026-11-04', 8423)] });
       default: throw new Error('tipo inatteso ' + tipo);
     }
@@ -53,7 +54,7 @@ test('filtri esatti', async () => {
   const filtri = {};
   for (const c of chiamate) {
     const m = c.url.match(/dataTypes\/([^/]+)\/dataPoints\?(.*)$/);
-    if (m) filtri[m[1]] = new URLSearchParams(m[2]).get('filter');
+    if (m && m[1] !== 'heart-rate') filtri[m[1]] = new URLSearchParams(m[2]).get('filter');
   }
   assert.deepEqual(filtri, {
     sleep: 'sleep.interval.civil_end_time >= "2026-11-02" AND sleep.interval.civil_end_time < "2026-11-05"',
@@ -78,7 +79,7 @@ test('operazioni set', async () => {
   assert.equal(sessioni.length, 1);
   assert.equal(sessioni[0].doc_id, 'googleHealth_es1');
   assert.ok(r.operazioni.every((o) => o.op === 'set'));
-  assert.deepEqual(r.conteggi, { giorni: 3, sessioni: 1 });
+  assert.deepEqual(r.conteggi, { giorni: 3, sessioni: 1, fcSessioni: 1 });
   assert.equal(salute[2].data.fcRiposo, 54);
   assert.equal(salute[2].data.passi, 8423);
 });
@@ -188,4 +189,50 @@ test('main: messaggi per rete e configurazione', async () => {
   assert.equal(await main({ env, fetch: async (u, o) => { if (String(u) === URL_TOKEN || String(u).includes('hevyapp')) throw new Error('giù'); return g.fetch(u, o); }, adesso, cartella: dir, log: () => {}, errore: b.err, attendi: async () => {} }), 1);
   assert.deepEqual(b.righe, ['ERRORE: googleHealth: rete: Google Health non raggiungibile', 'ERRORE: hevy: rete: Hevy non raggiungibile']);
   rmSync(dir, { recursive: true });
+});
+
+const campioneFc = (t, bpm) => ({ heartRate: { sampleTime: { physicalTime: t, civilTime: {}, utcOffset: '3600s' }, beatsPerMinute: bpm } });
+const sessioneEs1 = (r) => r.operazioni.find((o) => o.doc_id === 'googleHealth_es1');
+
+test('fcSerie nella sessione', async () => {
+  const { r } = await esegui({ 'heart-rate': json({ dataPoints: [
+    campioneFc('2026-11-03T17:00:02Z', '100'),
+    campioneFc('2026-11-03T17:00:05Z', 110),
+    campioneFc('2026-11-03T17:00:12Z', '120'),
+  ] }) });
+  const s = sessioneEs1(r);
+  assert.equal(s.data.fcSerie.passoSec, 10);
+  assert.equal(s.data.fcSerie.inizio, s.data.inizio);
+  assert.deepEqual(s.data.fcSerie.bpm.slice(0, 3), [105, 120, null]);
+  assert.equal(r.conteggi.fcSessioni, 1);
+  assert.equal(r.esito, 'ok');
+});
+
+test('filtro FC esatto', async () => {
+  const { r, chiamate } = await esegui();
+  const s = sessioneEs1(r);
+  const c = chiamate.filter((x) => x.url.includes('dataTypes/heart-rate/'));
+  assert.equal(c.length, 1);
+  const q = new URLSearchParams(c[0].url.split('?')[1]);
+  assert.equal(q.get('filter'), `heart_rate.sample_time.physical_time >= "${s.data.inizio}" AND heart_rate.sample_time.physical_time < "${s.data.fine}"`);
+  assert.equal(q.get('pageSize'), '1000');
+});
+
+test('FC fallita -> parziale con sessione senza serie', async () => {
+  const { r } = await esegui({ 'heart-rate': json({ error: { message: 'x' } }, 500) });
+  assert.equal(r.esito, 'parziale');
+  assert.equal(r.messaggio, 'FC dettagliata non aggiornata');
+  assert.deepEqual(r.tipiMancanti, []);
+  assert.equal(sessioneEs1(r).data.fcSerie, null);
+  assert.equal(r.conteggi.fcSessioni, 0);
+});
+
+test('FC con autorizzazione negata fa fallire la fonte', async () => {
+  await assert.rejects(esegui({ 'heart-rate': json({ error: { message: 'x' } }, 401) }), (e) => e instanceof ErroreSync && e.codice === 'autorizzazione');
+});
+
+test('nessuna sessione = nessuna chiamata heart-rate', async () => {
+  const { r, chiamate } = await esegui({ exercise: json({ dataPoints: [] }) });
+  assert.equal(r.conteggi.fcSessioni, 0);
+  assert.ok(!chiamate.some((x) => x.url.includes('dataTypes/heart-rate/')));
 });

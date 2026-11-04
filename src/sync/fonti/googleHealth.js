@@ -2,9 +2,12 @@
 // il risultato di fonte (spec 2c-1 §4.2). Lancia ErroreSync se non può leggere nulla.
 import { ErroreSync } from '../errore.js';
 import { giorniSalute, sessioniDa } from '../googleHealth/normalizza.js';
+import { serieFc } from '../../logic/fc.js';
 import { oggiRoma, aggiungiGiorni } from '../../logic/date.js';
 
 const GIORNI_FINESTRA = 3;
+const MESSAGGIO_FC = 'FC dettagliata non aggiornata';
+const PAGE_SIZE_FC = 1000;
 
 export async function fonteGoogleHealth({ client, adesso }) {
   const al = oggiRoma(adesso);
@@ -41,6 +44,24 @@ export async function fonteGoogleHealth({ client, adesso }) {
   }, { dal, al, adesso });
   const sessioni = dati.exercise ? sessioniDa(dati.exercise, { dal, al, adesso }) : [];
 
+  // FC dettagliata: una lettura per sessione conclusa, in sequenza. Mai loggare i valori.
+  let fcFallita = false;
+  let fcSessioni = 0;
+  for (const { doc } of sessioni) {
+    doc.fcSerie = null;
+    if (!doc.fine) continue;
+    try {
+      const filtro = `heart_rate.sample_time.physical_time >= "${doc.inizio}" AND heart_rate.sample_time.physical_time < "${doc.fine}"`;
+      const punti = await client.elenca('heart-rate', filtro, PAGE_SIZE_FC);
+      const campioni = punti.map((p) => ({ t: p?.heartRate?.sampleTime?.physicalTime, bpm: p?.heartRate?.beatsPerMinute }));
+      doc.fcSerie = serieFc(campioni, doc.inizio, doc.fine);
+      fcSessioni++;
+    } catch (e) {
+      if (e instanceof ErroreSync && e.codice === 'autorizzazione') throw e;
+      fcFallita = true;
+    }
+  }
+
   const op = tipiMancanti.length ? 'update' : 'set';
   const operazioni = [
     ...Object.entries(giorni).map(([data, doc]) => ({ op, collection: 'salute', doc_id: data, data: doc })),
@@ -48,11 +69,11 @@ export async function fonteGoogleHealth({ client, adesso }) {
   ];
 
   return {
-    esito: tipiMancanti.length ? 'parziale' : 'ok',
-    messaggio: '',
+    esito: tipiMancanti.length || fcFallita ? 'parziale' : 'ok',
+    messaggio: fcFallita ? MESSAGGIO_FC : '',
     finestra: { dal, al },
     tipiMancanti,
-    conteggi: { giorni: Object.keys(giorni).length, sessioni: sessioni.length },
+    conteggi: { giorni: Object.keys(giorni).length, sessioni: sessioni.length, fcSessioni },
     operazioni,
   };
 }
