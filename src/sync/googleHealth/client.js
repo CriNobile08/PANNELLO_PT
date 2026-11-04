@@ -2,19 +2,15 @@
 // roll-up giornaliero. Il `fetch` è iniettato; il modulo non stampa nulla e non
 // mette mai token o segreti nei messaggi d'errore.
 
+import { ErroreSync } from '../errore.js';
+
 const URL_TOKEN = 'https://oauth2.googleapis.com/token';
 const BASE = 'https://health.googleapis.com/v4/users/me/dataTypes';
 const ATTESE_RITENTATIVO = [2000, 4000, 8000];
 const TIPI_CON_PAGESIZE = new Set(['sleep', 'exercise']);
 const VARIABILI = ['GH_CLIENT_ID', 'GH_CLIENT_SECRET', 'GH_REFRESH_TOKEN'];
 
-export class ErroreSync extends Error {
-  constructor(codice, messaggio) {
-    super(messaggio);
-    this.name = 'ErroreSync';
-    this.codice = codice;
-  }
-}
+export { ErroreSync };
 
 const attesaPredefinita = (ms) => new Promise((r) => setTimeout(r, ms));
 
