@@ -25,6 +25,20 @@ function distanza(a, b) {
 const testoFiglio = (el, nome) => el.getElementsByTagName(nome)[0]?.textContent ?? null;
 
 /**
+ * Orario GPX in ms. Lo schema GPX vuole UTC: senza fuso si assume UTC (Date.parse userebbe l'ora locale),
+ * e un offset `±hhmm`/`±hh` diventa `±hh:mm`. NaN se non valido.
+ */
+function leggiOrario(testo) {
+  let s = (testo ?? '').trim();
+  if (!/^\d{4}-\d{2}-\d{2}T/.test(s)) return Date.parse(s);
+  const m = /([+-])(\d{2}):?(\d{2})?$/.exec(s.slice(11));
+  if (/z$/i.test(s)) s = s.slice(0, -1) + 'Z';
+  else if (m) s = `${s.slice(0, s.length - m[0].length)}${m[1]}${m[2]}:${m[3] ?? '00'}`;
+  else s += 'Z';
+  return Date.parse(s);
+}
+
+/**
  * Legge i punti dei segmenti di traccia di un GPX. I punti senza `time` valido
  * (o con `lat`/`lon` non validi) sono scartati, così come i segmenti rimasti vuoti.
  * @param {string} testo XML del file
@@ -47,7 +61,7 @@ export function leggiGpx(testo, DOMParserImpl = globalThis.DOMParser) {
       const lat = Number.parseFloat(el.getAttribute('lat'));
       const lon = Number.parseFloat(el.getAttribute('lon'));
       if (!Number.isFinite(lat) || !Number.isFinite(lon) || Math.abs(lat) > 90 || Math.abs(lon) > 180) continue;
-      const t = Date.parse((testoFiglio(el, 'time') ?? '').trim());
+      const t = leggiOrario(testoFiglio(el, 'time'));
       if (Number.isNaN(t)) continue;
       const testoEle = (testoFiglio(el, 'ele') ?? '').trim();
       const ele = testoEle === '' ? null : Number(testoEle);

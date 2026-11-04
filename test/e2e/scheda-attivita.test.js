@@ -439,3 +439,44 @@ test('palestra: nessun pulsante di caricamento', async () => {
     assert.equal(await page.locator('input[type=file]').count(), 0);
   } finally { await chiudi(); }
 });
+
+test('tracciato di un altro utente: nessun Sostituisci/Rimuovi, nome file visibile', async () => {
+  const seme = { ...SEME, 'tracciati/googleHealth_c1': { ...TRACCIATO, autore: 'u-altro' } };
+  const { page, chiudi } = await cliente({ seme, assets: true });
+  try {
+    await apriDaRecenti(page, 'Corsa');
+    const tracciato = sezione(page, 'Tracciato');
+    await tracciato.getByText('corsa.gpx').waitFor();
+    assert.equal(await tracciato.getByRole('button', { name: 'Sostituisci' }).count(), 0);
+    assert.equal(await tracciato.getByRole('button', { name: 'Rimuovi' }).count(), 0);
+    await senzaValoriRotti(page);
+  } finally { await chiudi(); }
+});
+
+test('tracciato dello stesso utente: Sostituisci e Rimuovi presenti', async () => {
+  const { page, chiudi } = await cliente({ assets: true });
+  try {
+    await apriDaRecenti(page, 'Corsa');
+    const tracciato = sezione(page, 'Tracciato');
+    await tracciato.getByRole('button', { name: 'Sostituisci' }).waitFor();
+    await tracciato.getByRole('button', { name: 'Rimuovi' }).waitFor();
+    await senzaValoriRotti(page);
+  } finally { await chiudi(); }
+});
+
+test('split con durata nulla: nessun NaN negli stili, riga non evidenziata', async () => {
+  const split = TRACCIATO.split.map((s, i) => (i === 2 ? { ...s, durataSec: 0 } : s));
+  const seme = { ...SEME, 'tracciati/googleHealth_c1': { ...TRACCIATO, split } };
+  const { page, chiudi } = await cliente({ seme });
+  try {
+    await apriDaRecenti(page, 'Corsa');
+    const righe = sezione(page, 'Split per km').locator('tbody tr');
+    assert.equal(await righe.count(), 8);
+    const stili = await sezione(page, 'Split per km').locator('[style]').evaluateAll((els) => els.map((e) => e.getAttribute('style')));
+    assert.ok(stili.length > 0);
+    for (const s of stili) assert.doesNotMatch(s, /NaN/);
+    assert.equal(await righe.nth(2).evaluate((r) => r.classList.contains('piu-veloce')), false);
+    assert.equal(await sezione(page, 'Split per km').locator('tr.piu-veloce').count(), 1);
+    await senzaValoriRotti(page);
+  } finally { await chiudi(); }
+});

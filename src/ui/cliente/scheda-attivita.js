@@ -143,12 +143,13 @@ const avvisa = (testo) => (e) => console.warn(testo, e);
  * store.salvaTracciato → (sostituzione) asset.elimina(vecchio). Se la scrittura fallisce si elimina l'asset nuovo.
  */
 function Tracciato({ sessione, tracciato }) {
-  const { dati, store, asset, puoScrivere, segnalaRifiuto } = useContext(Contesto);
+  const { dati, store, utenteId, asset, puoScrivere, segnalaRifiuto } = useContext(Contesto);
   const [occupato, setOccupato] = useState(false);
   const [messaggio, setMessaggio] = useState(null);
   const [dialogo, setDialogo] = useState(null); // null | { tipo: 'sovrapposizione', collega } | { tipo: 'rimuovi' }
   const input = useRef(null);
   const modificabile = puoScrivere && !!asset;
+  const mio = !!tracciato && tracciato.autore === utenteId; // l'asset store rifiuta delete a chi non l'ha caricato
   const chiave = chiaveTracciato(sessione, dati.tracciati);
 
   async function salva(file, analisi) {
@@ -223,7 +224,7 @@ function Tracciato({ sessione, tracciato }) {
       ref=${input} disabled=${occupato} onChange=${scelto} />
     <div class="azioni-riga">
       ${tracciato
-    ? html`
+    ? mio && html`
           <button type="button" class="pulsante" disabled=${occupato} onClick=${scegli}>Sostituisci</button>
           <button type="button" class="pulsante" disabled=${occupato} onClick=${() => setDialogo({ tipo: 'rimuovi' })}>Rimuovi</button>`
     : html`<button type="button" class="pulsante primario" disabled=${occupato} onClick=${scegli}>Carica tracciato GPX</button>`}
@@ -252,7 +253,7 @@ function Tracciato({ sessione, tracciato }) {
 function SplitKm({ tracciato, fcSerie }) {
   const split = tracciato.split ?? [];
   const fc = fcPerKm(fcSerie, tracciato.inizio, tracciato.istantiKm ?? [], tracciato.durataSec);
-  const ritmi = split.map((s) => (numero(s.durataSec) && numero(s.distanzaM) && s.distanzaM > 0 ? s.durataSec / (s.distanzaM / 1000) : null));
+  const ritmi = split.map((s) => (numero(s.durataSec) && s.durataSec > 0 && numero(s.distanzaM) && s.distanzaM > 0 ? s.durataSec / (s.distanzaM / 1000) : null));
   const interi = ritmi.filter((r, i) => numero(r) && split[i].distanzaM >= 1000);
   const migliore = interi.length ? Math.min(...interi) : null;
   const validi = ritmi.filter(numero);

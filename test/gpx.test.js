@@ -1,6 +1,8 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { leggiGpx, analizzaGpx, sovrapposizione } from '../src/logic/gpx.js';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 import { gpx, DOMParserFinto } from './fixtures/gpx.js';
 
 const R = 6371000;
@@ -244,4 +246,29 @@ test('GPX grande (150.000 punti) senza superare lo stack', () => {
   assert.ok(r.quote.length <= 300);
   for (const q of r.percorso) assert.ok(dentroCornice(q));
   nessunNaN(r);
+});
+
+const tempoLetto = (time) => leggiGpx(gpx({ punti: [{ lat: 0, lon: 0, time }, { lat: 0, lon: 0.001, time: '2026-11-04T09:00:00Z' }] }), DOMParserFinto)[0][0].t;
+
+test('orari GPX senza fuso: UTC', () => {
+  const atteso = Date.parse('2026-11-04T07:35:00Z');
+  assert.equal(tempoLetto('2026-11-04T07:35:00'), atteso);
+  assert.equal(tempoLetto('2026-11-04T07:35:00Z'), atteso);
+  assert.equal(tempoLetto('2026-11-04T07:35:00.500'), atteso + 500);
+});
+
+test('orari GPX con offset senza due punti', () => {
+  const atteso = Date.parse('2026-11-04T06:35:00Z');
+  assert.equal(tempoLetto('2026-11-04T07:35:00+0100'), atteso);
+  assert.equal(tempoLetto('2026-11-04T07:35:00+01:00'), atteso);
+  assert.equal(tempoLetto('2026-11-04T07:35:00+01'), atteso);
+  assert.equal(tempoLetto('2026-11-04T05:35:00-0100'), Date.parse('2026-11-04T06:35:00Z'));
+});
+
+test('orari GPX indipendenti dal fuso del processo (TZ=Europe/Rome)', () => {
+  if (process.env.TZ === 'Europe/Rome') return; // già in esecuzione sotto quel fuso: evita la ricorsione
+  const r = spawnSync(process.execPath, ['--test', '--test-name-pattern=orari GPX', fileURLToPath(import.meta.url)], {
+    env: { ...process.env, TZ: 'Europe/Rome' }, encoding: 'utf8',
+  });
+  assert.equal(r.status, 0, r.stdout + r.stderr);
 });
