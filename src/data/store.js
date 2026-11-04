@@ -18,6 +18,17 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
 
   const ora = () => adesso().toISOString();
 
+  // Serializza le scritture per percorso di documento; un errore non blocca la coda.
+  const code = new Map();
+  function serializza(path, fn) {
+    const prec = code.get(path) ?? Promise.resolve();
+    const corrente = prec.then(fn, fn);
+    const coda = corrente.then(() => {}, () => {});
+    code.set(path, coda);
+    coda.then(() => { if (code.get(path) === coda) code.delete(path); });
+    return corrente;
+  }
+
   function autore() {
     if (autoreId === null || autoreId === undefined) {
       return Promise.reject({ codice: 'senza_utente' });
@@ -109,7 +120,13 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
     };
   }
 
-  async function salvaScheda({ schedaId, nome, tipo, contenuto, revisioneAttesa, forza = false }) {
+  function salvaScheda(args) {
+    const { schedaId } = args;
+    if (schedaId === null || schedaId === undefined) return salvaSchedaInterno(args);
+    return serializza(`schede/${schedaId}`, () => salvaSchedaInterno(args));
+  }
+
+  async function salvaSchedaInterno({ schedaId, nome, tipo, contenuto, revisioneAttesa, forza = false }) {
     const utente = await autore();
     const errori = validaScheda({ nome, tipo }, contenuto);
     if (errori.length) throw { codice: 'non_valido', errori };
@@ -141,7 +158,7 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
     const dati = await correnti();
     const usi = usiScheda(schedaId, dati, oggiRoma(adesso()));
     if (usi.length) return { esito: 'in_uso', usi };
-    await db.doc(`schede/${schedaId}`).update({ archiviata: true });
+    await serializza(`schede/${schedaId}`, () => db.doc(`schede/${schedaId}`).update({ archiviata: true }));
     return { esito: 'ok' };
   }
 
@@ -156,7 +173,7 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
 
   async function impostaEccezione(data, schedaId) {
     const utente = await autore();
-    await db.doc(`eccezioni/${data}`).set({ schedaId, origine: null, autore: utente, creataIl: ora() });
+    await serializza(`eccezioni/${data}`, () => db.doc(`eccezioni/${data}`).set({ schedaId, origine: null, autore: utente, creataIl: ora() }));
   }
 
   async function spostaGiorno(da, a) {
@@ -164,13 +181,13 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
     const dati = await correnti();
     const { schedaId } = risolviGiorno(da, dati);
     for (const { data, doc } of eccezioniSpostamento(da, a, schedaId)) {
-      await db.doc(`eccezioni/${data}`).set({ ...doc, autore: utente, creataIl: ora() });
+      await serializza(`eccezioni/${data}`, () => db.doc(`eccezioni/${data}`).set({ ...doc, autore: utente, creataIl: ora() }));
     }
   }
 
   async function annullaEccezione(data) {
     await autore();
-    await db.doc(`eccezioni/${data}`).delete();
+    await serializza(`eccezioni/${data}`, () => db.doc(`eccezioni/${data}`).delete());
   }
 
   async function salvaPiano({ indicazioni, pasti, validaDal }) {
@@ -186,16 +203,19 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
 
   async function aggiornaDiario(data, modifiche) {
     await autore();
-    const rif = db.doc(`diario/${data}`);
-    const snap = await rif.get();
-    const dati = { ...modifiche, aggiornatoIl: ora() };
-    if (snap.exists) await rif.update(dati);
-    else {
-      await rif.set({
-        riscaldamentoFatti: [], stretchingFatti: [], principaleFatto: false, sensazione: null, nota: '',
-        ...dati,
-      });
-    }
+    const path = `diario/${data}`;
+    await serializza(path, async () => {
+      const rif = db.doc(path);
+      const snap = await rif.get();
+      const dati = { ...modifiche, aggiornatoIl: ora() };
+      if (snap.exists) await rif.update(dati);
+      else {
+        await rif.set({
+          riscaldamentoFatti: [], stretchingFatti: [], principaleFatto: false, sensazione: null, nota: '',
+          ...dati,
+        });
+      }
+    });
   }
 
   return { osserva, salvaScheda, archiviaScheda, salvaSettimana, impostaEccezione, spostaGiorno, annullaEccezione, salvaPiano, aggiornaDiario };

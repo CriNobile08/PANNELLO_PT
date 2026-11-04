@@ -134,3 +134,31 @@ test('osserva: prima emissione completa, poi aggiornamenti', async () => {
   assert.equal(Object.keys(ultimo.schede).length, 2);
   assert.ok(Object.values(ultimo.revisioni).every((a) => a.length >= 1));
 });
+
+test('scritture concorrenti sullo stesso documento sono serializzate', async () => {
+  const { fake, store } = await setup();
+  const d = '2026-11-10';
+  await Promise.all([store.aggiornaDiario(d, { sensazione: 4 }), store.aggiornaDiario(d, { nota: 'ok' })]);
+  assert.partialDeepStrictEqual(fake.dump()[`diario/${d}`], { sensazione: 4, nota: 'ok' });
+  await Promise.all([store.impostaEccezione('2026-11-11', 'tirata'), store.impostaEccezione('2026-11-11', null)]);
+  assert.equal(fake.dump()['eccezioni/2026-11-11'].schedaId, null);
+});
+
+test('una scrittura fallita non blocca la coda', async () => {
+  const { db } = await setup();
+  const ko = creaStore({ db, autoreId: 'u', adesso });
+  const orig = db.doc.bind(db);
+  let prima = true;
+  const dbRotto = { ...db, collection: db.collection, doc: (p) => {
+    const r = orig(p);
+    if (prima && p.startsWith('diario/')) { prima = false; return { ...r, get: () => Promise.reject(new Error('boom')) }; }
+    return r;
+  } };
+  const s = creaStore({ db: dbRotto, autoreId: 'u', adesso });
+  const a = s.aggiornaDiario('2026-11-12', { nota: 'a' });
+  const b = s.aggiornaDiario('2026-11-12', { nota: 'b' });
+  await assert.rejects(a, /boom/);
+  await b;
+  assert.equal((await db.doc('diario/2026-11-12').get()).data().nota, 'b');
+  void ko;
+});
