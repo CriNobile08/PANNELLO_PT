@@ -34,7 +34,7 @@ Ogni sottoprogetto ha la sua specifica, il suo piano e la sua implementazione.
 ## 3. Ambito
 
 **Incluso**
-- Riconoscimento dei ruoli (cliente / trainer) e permessi.
+- Selettore "Cliente / Trainer" disponibile a tutti, con permessi legati alla vista.
 - Libreria delle schede di allenamento, con versioni e archiviazione.
 - Settimana tipo con versioni per data ed eccezioni "solo questa settimana".
 - Piano alimentare con versioni per data: pasti, opzioni alternative per pasto, alimenti con grammatura.
@@ -51,41 +51,46 @@ Ogni sottoprogetto ha la sua specifica, il suo piano e la sua implementazione.
 
 ## 4. Architettura
 
-- **Un solo artefatto claude.ai**, pubblicato dal cliente, che ne è quindi il **proprietario**. Il trainer viene invitato con il ruolo di **editor**. Il trainer deve avere un account Claude (confermato).
+- **Un solo artefatto claude.ai**, pubblicato dal cliente, che ne è quindi il **proprietario**. Il trainer viene invitato con un livello che gli permetta di scrivere (almeno collaboratore). Il trainer deve avere un account Claude (confermato).
 - I dati stanno nel **database dell'artefatto** (capability `db`), con aggiornamento in tempo reale tramite `onSnapshot`. La capability `user` (scope `profile`) serve a riconoscere chi guarda la pagina e a mostrare i nomi degli autori delle modifiche.
 - Capability dichiarate: `{ db: { rules: [...] }, user: { scopes: ["profile"] } }`. Nient'altro.
-- **Pagina unica responsive.** Sotto i 900 px usa il layout telefono con barra di navigazione in basso; sopra usa il layout PC con menu laterale. Entrambi i ruoli possono usare entrambi i layout.
+- **Pagina unica responsive.** Sotto i 900 px usa il layout telefono con barra di navigazione in basso; sopra usa il layout PC con menu laterale. Entrambe le viste funzionano con entrambi i layout.
 - **Codice nel repository** (`crinobile08/pannello_pt`): logica pura separata dalla UI e uno script di build che produce un unico file HTML da pubblicare (vedi §10).
 
 ### 4.1 Ruoli
 
-Il ruolo si decide all'apertura della pagina:
-- `user.isOwner()` → **cliente**
-- altrimenti `user.canEdit()` → **trainer**
-- altrimenti → **sola lettura** (nessun pulsante di modifica)
+Il ruolo **non** viene dedotto in automatico dai permessi dell'artefatto. In prove precedenti le persone invitate non riuscivano ad accedere alla parte trainer quando l'accesso dipendeva dal loro livello di condivisione.
 
-**Selettore di vista (solo per il proprietario).** Nell'intestazione, il cliente ha il selettore **"Vista: Cliente / Trainer"**, che passa alla vista trainer completa. In vista trainer il cliente può fare tutto quello che fa il trainer, piano alimentare compreso. Serve per vedere il pannello come lo vede il trainer e per usarlo insieme dal dispositivo del cliente. Le modifiche registrano comunque come `autore` la persona reale (`user.id()`), non la vista scelta. La vista scelta viene ricordata per dispositivo, nella memoria del browser. Il trainer non ha il selettore.
+**Selettore "Cliente / Trainer" per tutti.** Nell'intestazione chiunque apra il pannello ha il selettore e passa liberamente da una vista all'altra:
+- **Vista cliente:** Oggi, dettaglio giornata, diario, piano alimentare in lettura.
+- **Vista trainer:** settimana tipo, schede, editor del piano alimentare, riepilogo del diario.
+
+Regole:
+- **Vista iniziale:** se `user.isOwner()` restituisce vero → Cliente; in tutti gli altri casi → Trainer. Dopo il primo cambio, la vista scelta viene ricordata per dispositivo, nella memoria del browser (se non è disponibile, si riparte dalla vista iniziale).
+- Le modifiche registrano sempre come `autore` la persona reale (`user.id()`), non la vista scelta. Così "modificato da" resta affidabile.
+- Chi non può scrivere nel database (per esempio un invitato in sola lettura) vede le stesse schermate, ma ogni salvataggio viene rifiutato con il messaggio di §8.
 
 ### 4.2 Permessi
 
-| Dato | Cliente (owner) | Trainer (editor) |
+I permessi dipendono dalla **vista**, non dalla persona:
+
+| Dato | Vista cliente | Vista trainer |
 |---|---|---|
 | Schede di allenamento | modifica | crea / modifica / archivia |
 | Settimana tipo e eccezioni | modifica | modifica |
-| Piano alimentare | legge (modifica solo in vista trainer) | crea / modifica |
+| Piano alimentare | legge | crea / modifica |
 | Diario | scrive | legge |
 
-Regole del database:
+Regole del database: chiunque abbia accesso almeno da **collaboratore** (`interact`) può scrivere tutto; i lettori leggono e basta.
 ```js
 rules: [
-  { path: "",       read: "view", write: "admin" },  // schede, settimane, eccezioni, alimentazione
-  { path: "diario", read: "view", write: "owner" }   // solo il cliente
+  { path: "", read: "view", write: "interact" }
 ]
 ```
 
-**Nota:** il proprietario ha sempre almeno i permessi di un editor, quindi il database non impedisce al cliente di scrivere il piano alimentare. È voluto: in vista cliente l'interfaccia non mostra controlli di modifica; in vista trainer (§4.1) il cliente può modificarlo.
-
-Il trainer, essendo editor, tecnicamente può anche ripubblicare il codice della pagina. È accettato perché è una persona fidata.
+**Conseguenze accettate:**
+- I vincoli della tabella sono applicati **solo dall'interfaccia**. Chiunque abbia accesso in scrittura può, passando di vista, modificare anche il diario o il piano alimentare. È coerente con il selettore libero e va bene tra persone che si fidano.
+- **Condivisione:** il trainer va invitato con un livello che permetta di **scrivere**, cioè almeno collaboratore. Come editor potrebbe anche ripubblicare il codice della pagina; è accettato perché è una persona fidata.
 
 ## 5. Modello dei dati
 
@@ -147,7 +152,7 @@ Per annullare un'eccezione si cancella il suo documento, e il giorno torna alla 
 L'ordine dei pasti è l'ordine dell'array.
 
 ### 5.6 `diario/{YYYY-MM-DD}`
-Lo scrive solo il cliente.
+Si scrive dalla vista cliente.
 ```js
 { riscaldamentoFatti: [0, 1, 2],  // indici degli esercizi spuntati
   stretchingFatti: [],
@@ -176,7 +181,7 @@ Riferimento visivo: le bozze nell'artefatto indicato in testa. I valori nelle bo
 
 **Stile:** tema scuro con sfondo `#000000`, card `#16171A`, card interne `#0E0F11`, testo secondario `#A0A3AB`. Colori per categoria: sonno `#E08A4F`, cuore/recupero `#2BC4A6`, allenamento `#5B9BFF`. Font *Barlow Condensed* per i numeri e *Inter* per il testo (Google Fonts). Card arrotondate (raggio 18–20 px), target di tocco ≥ 44 px.
 
-### 7.1 Cliente
+### 7.1 Vista cliente
 - **Oggi** (Home):
   - selettore della data;
   - tre anelli: Sonno · Cuore a riposo · Allenamento. Nel sottoprogetto 1 i primi due mostrano "Nessun dato";
@@ -198,7 +203,7 @@ Riferimento visivo: le bozze nell'artefatto indicato in testa. I valori nelle bo
   - modifica delle schede.
 - **Alimentazione:** il piano del giorno, con ogni pasto, le opzioni selezionabili e le grammature, più le indicazioni generali. Solo lettura.
 
-### 7.2 Trainer
+### 7.2 Vista trainer
 - **Settimana tipo:**
   - versione in vigore, con autore, data e cronologia;
   - i pulsanti "Modifica solo questa settimana" e "Nuova versione da una data…";
@@ -242,7 +247,7 @@ Riferimento visivo: le bozze nell'artefatto indicato in testa. I valori nelle bo
   - validazione dei campi;
   - regola di archiviazione;
   - conteggio dei blocchi completati.
-- **Verifica dei permessi dopo la pubblicazione:** lettura e scrittura con `ArtifactData` a livelli diversi. Un editor non deve poter scrivere in `diario/`; un viewer non deve poter scrivere da nessuna parte.
+- **Verifica dei permessi dopo la pubblicazione:** lettura e scrittura con `ArtifactData` a livelli diversi. Un collaboratore deve poter scrivere ovunque; un lettore non deve poter scrivere da nessuna parte.
 - **Verifica visiva:** screenshot a 390 px e a 1440 px dell'HTML generato, prima di consegnare il link.
 - **Prova finale con il trainer** (checklist):
   1. Il trainer crea due schede e una settimana tipo.
@@ -251,7 +256,8 @@ Riferimento visivo: le bozze nell'artefatto indicato in testa. I valori nelle bo
   4. Il trainer vede eccezione, spunte e nota.
   5. Il trainer modifica una scheda: il giorno passato mostra ancora la versione vecchia.
   6. Il trainer crea il piano alimentare con due opzioni per la colazione; il cliente lo vede.
-  7. Il cliente passa alla vista trainer con il selettore e modifica una scheda: la modifica risulta fatta dal cliente, e il trainer non vede il selettore.
+  7. Il trainer apre il pannello dal suo account: parte in vista trainer e può salvare.
+  8. Il cliente passa alla vista trainer e modifica una scheda: la modifica risulta fatta dal cliente. Ricaricando la pagina, resta in vista trainer.
 
 ## 10. Struttura del repository
 
@@ -271,4 +277,4 @@ scripts/build.js  → dist/pannello.html (un unico file con JS e CSS inline)
 ## 11. Punti aperti (non bloccanti per il sottoprogetto 1)
 
 - **Riempimento dell'anello "Cuore a riposo":** da definire nella specifica del sottoprogetto 2, quando sapremo quali dati sono disponibili.
-- **Invito del trainer all'artefatto come editor:** da confermare con un artefatto di prova (sottoprogetto 0) prima della consegna. Se non funziona, il ripiego è il selettore di vista (§4.1): il trainer usa il pannello insieme al cliente dal dispositivo del cliente, senza un accesso proprio. Le credenziali dell'account del cliente non si condividono.
+- **Scrittura da parte del trainer invitato:** da confermare con un artefatto di prova (sottoprogetto 0) prima della consegna. Va verificato che un invitato possa aprire il pannello e salvare con la regola `write: "interact"`. Se non funziona, il ripiego è che il trainer usi il pannello insieme al cliente, dal dispositivo del cliente. Le credenziali dell'account del cliente non si condividono.
