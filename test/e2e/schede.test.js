@@ -203,8 +203,12 @@ test('liste: sposta su/giù e rimuovi; modifiche non salvate chiedono conferma',
     const risc = page.getByRole('region', { name: 'Riscaldamento' });
     await risc.getByRole('button', { name: '+ Aggiungi esercizio' }).click();
     await risc.getByRole('button', { name: '+ Aggiungi esercizio' }).click();
-    await risc.getByRole('group', { name: 'Esercizio 1' }).getByLabel('Nome', { exact: true }).fill('Corda');
-    await risc.getByRole('group', { name: 'Esercizio 2' }).getByLabel('Nome', { exact: true }).fill('Cerchi');
+    // nomi liberi: si scrivono nella ricerca e si sceglie "Esercizio non in elenco…"
+    for (const [n, nome] of [[1, 'Corda'], [2, 'Cerchi']]) {
+      const riga = risc.getByRole('group', { name: `Esercizio ${n}` });
+      await riga.getByRole('combobox', { name: 'Nome' }).fill(nome);
+      await riga.getByRole('option', { name: 'Esercizio non in elenco…' }).click();
+    }
     await risc.getByRole('group', { name: 'Esercizio 2' }).getByRole('button', { name: 'Sposta su' }).click();
     assert.equal(await risc.getByRole('group', { name: 'Esercizio 1' }).getByLabel('Nome', { exact: true }).inputValue(), 'Cerchi');
     await risc.getByRole('group', { name: 'Esercizio 1' }).getByRole('button', { name: 'Rimuovi' }).click();

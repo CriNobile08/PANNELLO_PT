@@ -314,6 +314,34 @@ h1, h2, h3 { margin: 0; font-weight: 600; }
 .sottotitolo { font-size: 14px; color: var(--testo-2); margin: 8px 0 4px; }
 .griglia-campi { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
 .riga-esercizio { display: flex; flex-direction: column; gap: 12px; }
+
+/* selettore degli esercizi (combobox con filtri) */
+.selettore-esercizio { grid-column: 1 / -1; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.filtri-selettore { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 8px; }
+.lista-selettore {
+  list-style: none; margin: 0; padding: 4px; max-height: 320px; overflow-y: auto;
+  border: 1px solid var(--attiva); border-radius: 12px; background: var(--card);
+}
+.lista-selettore[hidden] { display: none; }
+.opzione-selettore {
+  display: flex; flex-direction: column; justify-content: center; gap: 2px; min-height: var(--tocco);
+  padding: 8px 12px; border-radius: 10px; cursor: pointer; overflow-wrap: anywhere;
+}
+.opzione-selettore:hover, .opzione-selettore.attiva { background: var(--attiva); }
+.opzione-selettore.attiva { outline: 2px solid var(--allenamento); outline-offset: -2px; }
+.opzione-libera { font-style: italic; color: var(--testo-2); }
+.esercizio-nome { display: block; font-weight: 600; }
+.esercizio-dettaglio { display: block; font-size: 13px; }
+.esercizio-scelto {
+  display: flex; align-items: center; gap: 12px; min-height: var(--tocco);
+  border: 1px solid var(--attiva); padding: 8px 8px 8px 12px; overflow-wrap: anywhere;
+}
+.esercizio-scelto-testi { flex: 1; min-width: 0; }
+.nota-catalogo, .nessun-risultato { margin: 0; font-size: 13px; }
+.link-azione {
+  align-self: flex-start; min-height: var(--tocco); padding: 0; border: 0; background: none;
+  color: var(--allenamento); text-decoration: underline; cursor: pointer; font-weight: 600;
+}
 .azioni-riga, .azioni-editor { display: flex; flex-wrap: wrap; gap: 8px; }
 .errore-scrittura { color: var(--errore); margin: 0; }
 .vista-revisione { margin-top: 12px; }

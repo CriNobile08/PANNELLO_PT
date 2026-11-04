@@ -126,7 +126,8 @@ Esercizio = { nome, durataSec: null|int, serie: null|int, ripetizioni: null|int,
 EsercizioPrincipale = { nome, serie: int, ripetizioni: int, caricoKg: null|number,
                         recuperoSec: null|int, nota: "", hevyTemplateId: null }
 ```
-`hevyTemplateId` resta sempre `null` nel sottoprogetto 1. Lo valorizza il sottoprogetto 2.
+`hevyTemplateId` resta sempre `null` nel sottoprogetto 1. Lo valorizza il sottoprogetto 2 (selettore esercizi: id del catalogo `hevy/catalogo`, `null` per un esercizio libero).
+Dal selettore esercizi, `Esercizio` ha anche `idCatalogo: null|string` (id del catalogo locale di riscaldamento/stretching, `src/data/catalogo-riscaldamento.json`); le revisioni precedenti senza il campo valgono come `null`.
 
 ### 5.3 `settimane/{versioneId}`
 ```js

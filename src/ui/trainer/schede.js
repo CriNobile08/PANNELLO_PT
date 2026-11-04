@@ -3,6 +3,9 @@ import { Contesto } from '../contesto.js';
 import { Campo, Dialogo, Vuoto } from '../componenti.js';
 import { validaScheda, numeroDaInput } from '../../logic/validazione.js';
 import { oraRoma, formatoData } from '../../logic/date.js';
+import { ETICHETTE_GRUPPI, ETICHETTE_ATTREZZI, ETICHETTE_CATEGORIE, etichetta } from '../../logic/catalogo.js';
+import { SelettoreEsercizio } from './selettore-esercizio.js';
+import CATALOGO_RISCALDAMENTO from '../../data/catalogo-riscaldamento.json' with { type: 'json' };
 
 const TIPI = [['palestra', 'Palestra'], ['corsa', 'Corsa'], ['trekking', 'Trekking'], ['altro', 'Altro']];
 const nomeTipo = (t) => TIPI.find(([v]) => v === t)?.[1] ?? t;
@@ -13,12 +16,17 @@ const coloreTipo = (tipo) => (conObiettivo(tipo) ? '#2BC4A6' : '#5B9BFF');
 const testo = (n) => (n === null || n === undefined ? '' : String(n).replace('.', ','));
 const num = (t) => numeroDaInput(t);
 
-const nuovoEsercizio = () => ({ nome: '', durataSec: '', serie: '', ripetizioni: '', perLato: false, nota: '' });
-const nuovoPrincipale = () => ({ nome: '', serie: '', ripetizioni: '', caricoKg: '', recuperoSec: '', nota: '' });
+// `chiave`: identità stabile della riga nella bozza (lo stato del selettore segue la riga quando si sposta); non si salva.
+let ultimaChiave = 0;
+const chiave = () => ++ultimaChiave;
+const idONull = (v) => (typeof v === 'string' && v !== '' ? v : null);
+
+const nuovoEsercizio = () => ({ chiave: chiave(), nome: '', idCatalogo: null, durataSec: '', serie: '', ripetizioni: '', perLato: false, nota: '' });
+const nuovoPrincipale = () => ({ chiave: chiave(), nome: '', hevyTemplateId: null, serie: '', ripetizioni: '', caricoKg: '', recuperoSec: '', nota: '' });
 const obiettivoVuoto = () => ({ descrizione: '', distanzaKm: '', dislivelloM: '' });
 
-const daEsercizio = (e) => ({ nome: e.nome ?? '', durataSec: testo(e.durataSec), serie: testo(e.serie), ripetizioni: testo(e.ripetizioni), perLato: !!e.perLato, nota: e.nota ?? '' });
-const daPrincipale = (e) => ({ nome: e.nome ?? '', serie: testo(e.serie), ripetizioni: testo(e.ripetizioni), caricoKg: testo(e.caricoKg), recuperoSec: testo(e.recuperoSec), nota: e.nota ?? '' });
+const daEsercizio = (e) => ({ chiave: chiave(), nome: e.nome ?? '', idCatalogo: idONull(e.idCatalogo), durataSec: testo(e.durataSec), serie: testo(e.serie), ripetizioni: testo(e.ripetizioni), perLato: !!e.perLato, nota: e.nota ?? '' });
+const daPrincipale = (e) => ({ chiave: chiave(), nome: e.nome ?? '', hevyTemplateId: idONull(e.hevyTemplateId), serie: testo(e.serie), ripetizioni: testo(e.ripetizioni), caricoKg: testo(e.caricoKg), recuperoSec: testo(e.recuperoSec), nota: e.nota ?? '' });
 
 function bozzaDa(scheda, rev) {
   const o = rev?.obiettivo;
@@ -41,7 +49,7 @@ function contenutoGrezzo(b) {
 
 /** Contenuto da salvare: numeri veri (numeroDaInput), null dove il campo è vuoto. */
 function contenutoPerSalvare(b) {
-  const esercizio = (e) => ({ nome: e.nome.trim(), durataSec: num(e.durataSec), serie: num(e.serie), ripetizioni: num(e.ripetizioni), perLato: e.perLato, nota: e.nota });
+  const esercizio = (e) => ({ nome: e.nome.trim(), idCatalogo: idONull(e.idCatalogo), durataSec: num(e.durataSec), serie: num(e.serie), ripetizioni: num(e.ripetizioni), perLato: e.perLato, nota: e.nota });
   const c = { nota: b.nota, durataStimataMin: num(b.durata), riscaldamento: b.riscaldamento.map(esercizio), stretching: b.stretching.map(esercizio) };
   if (conObiettivo(b.tipo)) {
     const o = b.obiettivo;
@@ -49,7 +57,7 @@ function contenutoPerSalvare(b) {
   } else {
     c.principale = b.principale.map((e) => ({
       nome: e.nome.trim(), serie: num(e.serie), ripetizioni: num(e.ripetizioni), caricoKg: num(e.caricoKg),
-      recuperoSec: num(e.recuperoSec), nota: e.nota, hevyTemplateId: null,
+      recuperoSec: num(e.recuperoSec), nota: e.nota, hevyTemplateId: idONull(e.hevyTemplateId),
     }));
   }
   return c;
@@ -97,6 +105,47 @@ export function ElencoSchede({ onScegli, mostraArchiviate = false }) {
     </div>`;
 }
 
+// ---------- cataloghi degli esercizi ----------
+const maiuscola = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+/** Opzioni di un filtro: i valori presenti nelle voci (anche dentro gli array), ordinati per testo. */
+const opzioniDa = (voci, campo, testoDi) => [...new Set(voci.flatMap((v) => (Array.isArray(v[campo]) ? v[campo] : [v[campo]])))]
+  .filter((k) => typeof k === 'string' && k !== '')
+  .map((k) => [k, testoDi(k)])
+  .sort((a, b) => a[1].localeCompare(b[1], 'it'));
+const unisci = (parti) => parti.filter(Boolean).join(' · ');
+
+function catalogoLocale(categorie) {
+  const voci = CATALOGO_RISCALDAMENTO.filter((v) => categorie.includes(v.categoria));
+  return {
+    voci,
+    campoId: 'idCatalogo',
+    filtri: [
+      { campo: 'categoria', etichetta: 'Categoria', opzioni: opzioniDa(voci, 'categoria', (k) => etichetta(ETICHETTE_CATEGORIE, k)) },
+      { campo: 'muscoli', etichetta: 'Muscolo', opzioni: opzioniDa(voci, 'muscoli', maiuscola) },
+    ],
+    descrivi: (v) => unisci([etichetta(ETICHETTE_CATEGORIE, v.categoria), (v.muscoli ?? []).join(', ')]),
+  };
+}
+const CATALOGO_RISC = catalogoLocale(['cardio_warmup', 'dynamic_mobility', 'foam_rolling']);
+const CATALOGO_STRETCHING = catalogoLocale(['static_stretching', 'foam_rolling']);
+
+/** Catalogo Hevy dal documento `hevy/catalogo`; null se manca o è vuoto. */
+function catalogoHevy(doc) {
+  const voci = Array.isArray(doc?.esercizi)
+    ? doc.esercizi.filter((v) => v && typeof v.id === 'string' && v.id !== '' && typeof v.nome === 'string')
+    : [];
+  if (!voci.length) return null;
+  return {
+    voci,
+    campoId: 'hevyTemplateId',
+    filtri: [
+      { campo: 'gruppo', etichetta: 'Gruppo muscolare', opzioni: opzioniDa(voci, 'gruppo', (k) => etichetta(ETICHETTE_GRUPPI, k)) },
+      { campo: 'attrezzo', etichetta: 'Attrezzo', opzioni: opzioniDa(voci, 'attrezzo', (k) => etichetta(ETICHETTE_ATTREZZI, k)) },
+    ],
+    descrivi: (v) => unisci([v.gruppo && etichetta(ETICHETTE_GRUPPI, v.gruppo), v.attrezzo && etichetta(ETICHETTE_ATTREZZI, v.attrezzo)]),
+  };
+}
+
 // ---------- editor ----------
 function Riga({ blocco, i, n, nomeRiga, onSposta, onRimuovi, children }) {
   return html`
@@ -118,7 +167,7 @@ function Blocco({ titolo, children }) {
     </section>`;
 }
 
-function ListaEsercizi({ titolo, lista, errori, prefisso, onCambia, principale = false }) {
+function ListaEsercizi({ titolo, lista, errori, prefisso, onCambia, catalogo, campoId, principale = false }) {
   const imposta = (i, campo, v) => onCambia(lista.map((e, k) => (k === i ? { ...e, [campo]: v } : e)));
   const campo = (i, chiave, etichetta, extra = {}) => html`
     <${Campo} etichetta=${etichetta} errore=${errori[`${prefisso}.${i}.${chiave}`]}>
@@ -129,9 +178,10 @@ function ListaEsercizi({ titolo, lista, errori, prefisso, onCambia, principale =
   return html`
     <${Blocco} titolo=${titolo}>
       ${lista.map((e, i) => html`
-        <${Riga} key=${i} i=${i} n=${lista.length} nomeRiga="Esercizio"
+        <${Riga} key=${e.chiave} i=${i} n=${lista.length} nomeRiga="Esercizio"
           onSposta=${(d) => onCambia(sposta(lista, i, d))} onRimuovi=${() => onCambia(lista.filter((_, k) => k !== i))}>
-          ${campo(i, 'nome', 'Nome')}
+          <${SelettoreEsercizio} etichetta="Nome" valore=${e} catalogo=${catalogo} campoId=${campoId}
+            errore=${errori[`${prefisso}.${i}.nome`]} onCambia=${(v) => onCambia(lista.map((x, k) => (k === i ? { ...x, ...v } : x)))} />
           ${principale
     ? html`${campo(i, 'serie', 'Serie', intero)}${campo(i, 'ripetizioni', 'Ripetizioni', intero)}
               ${campo(i, 'caricoKg', 'Carico (kg)', decimale)}${campo(i, 'recuperoSec', 'Recupero (s)', intero)}`
@@ -213,6 +263,9 @@ export function EditorScheda({ schedaId, onChiudi }) {
     setModificata(true);
     setSporco(true);
   };
+
+  const docHevy = dati.hevy?.catalogo;
+  const hevy = useMemo(() => catalogoHevy(docHevy), [docHevy]);
 
   const errori = useMemo(() => {
     if (!tentato) return {};
@@ -303,12 +356,15 @@ export function EditorScheda({ schedaId, onChiudi }) {
       </div>
 
       <${ListaEsercizi} titolo="Riscaldamento" prefisso="riscaldamento" lista=${bozza.riscaldamento} errori=${errori}
+        catalogo=${CATALOGO_RISC} campoId="idCatalogo"
         onCambia=${(l) => cambia({ riscaldamento: l })} />
       ${obiettivo
     ? html`<${Obiettivo} valore=${bozza.obiettivo} errori=${errori} onCambia=${(o) => cambia({ obiettivo: o })} />`
     : html`<${ListaEsercizi} titolo="Parte principale" prefisso="principale" principale=${true} lista=${bozza.principale} errori=${errori}
+        catalogo=${hevy} campoId="hevyTemplateId"
         onCambia=${(l) => cambia({ principale: l })} />`}
       <${ListaEsercizi} titolo="Stretching" prefisso="stretching" lista=${bozza.stretching} errori=${errori}
+        catalogo=${CATALOGO_STRETCHING} campoId="idCatalogo"
         onCambia=${(l) => cambia({ stretching: l })} />
 
       ${messaggio && html`<p class="errore-scrittura" role="alert">${messaggio}</p>`}
