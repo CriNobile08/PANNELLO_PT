@@ -11,8 +11,7 @@ test('proprietario: parte in vista cliente con la navigazione cliente', async ()
     await page.getByRole('button', { name: 'Trainer', pressed: false }).waitFor();
     for (const v of ['Oggi', 'Allenamento', 'Alimentazione']) await page.getByRole('link', { name: v }).waitFor();
     const dati = page.getByRole('link', { name: /Dati/ });
-    assert.equal(await dati.getAttribute('aria-disabled'), 'true');
-    await page.getByText('In arrivo').first().waitFor();
+    assert.equal(await dati.getAttribute('aria-disabled'), null);
     assert.equal(await page.getByText('Puoi solo leggere: chiedi al proprietario di invitarti come Editor').count(), 0);
   } finally { await chiudi(); }
 });

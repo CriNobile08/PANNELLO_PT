@@ -153,3 +153,25 @@ test('obiettivo corrotto: il trainer vede il predefinito', async () => {
     assert.equal(await page.getByLabel('Minuti').inputValue(), '0');
   } finally { await chiudi(); }
 });
+
+test('vista cliente: voce Dati attiva, tabella e obiettivo in sola lettura', async () => {
+  const { page, chiudi } = await apriPannello({ isOwner: true, seme: SEME, larghezza: 1100 });
+  try {
+    const voce = page.getByRole('link', { name: /^Dati/ });
+    assert.equal(await voce.getAttribute('aria-disabled'), null);
+    await voce.click();
+    await page.getByRole('heading', { name: 'Dati', exact: true }).waitFor();
+    await page.getByRole('table').waitFor();
+    await page.getByText('Obiettivo sonno: 8 h').waitFor();
+    assert.equal(await page.getByRole('button', { name: 'Salva' }).count(), 0);
+    assert.equal(await page.locator('.dati-cliente input[type=text]').count(), 0);
+  } finally { await chiudi(); }
+});
+
+test('vista cliente: obiettivo salvato 7 h 30 mostrato in lettura', async () => {
+  const { page, chiudi } = await apriPannello({ isOwner: true, seme: { ...SEME, 'impostazioni/obiettivi': { sonnoMinuti: 450 } }, larghezza: 1100 });
+  try {
+    await page.getByRole('link', { name: /^Dati/ }).click();
+    await page.getByText('Obiettivo sonno: 7 h 30').waitFor();
+  } finally { await chiudi(); }
+});

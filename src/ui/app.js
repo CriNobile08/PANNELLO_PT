@@ -31,6 +31,7 @@ export const SEZIONI = {
   giornata: SezioneGiornata,
   allenamento: SezioneAllenamentoCliente,
   alimentazione: SezioneAlimentazioneCliente,
+  dati: SezioneDatiCliente,
   // vista trainer
   settimana: SezioneSettimana,
   schede: SezioneSchede,
@@ -44,7 +45,7 @@ export const NAVIGAZIONE = {
     { sezione: 'oggi', etichetta: 'Oggi', icona: '◉' },
     { sezione: 'allenamento', etichetta: 'Allenamento', icona: '▤' },
     { sezione: 'alimentazione', etichetta: 'Alimentazione', icona: '◍' },
-    { sezione: 'dati', etichetta: 'Dati', icona: '∿', disattivata: true },
+    { sezione: 'dati', etichetta: 'Dati', icona: '∿' },
   ],
   trainer: [
     { sezione: 'settimana', etichetta: 'Settimana tipo', icona: '▦' },

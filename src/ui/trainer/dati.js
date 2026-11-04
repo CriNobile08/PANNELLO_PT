@@ -51,6 +51,12 @@ function useDesktop() {
   return desktop;
 }
 
+function ObiettivoSonnoLettura({ minuti }) {
+  const h = Math.floor(minuti / 60);
+  const m = minuti % 60;
+  return html`<p class="secondario obiettivo-sonno-lettura">Obiettivo sonno: ${m === 0 ? `${h} h` : `${h} h ${m}`}</p>`;
+}
+
 function ObiettivoSonno() {
   const { dati, store, puoScrivere, segnalaRifiuto } = useContext(Contesto);
   const obSalvato = dati.impostazioni?.obiettivi?.sonnoMinuti;
@@ -95,7 +101,7 @@ function ObiettivoSonno() {
 }
 
 export function SezioneDatiCliente() {
-  const { dati, oggi } = useContext(Contesto);
+  const { dati, oggi, vista } = useContext(Contesto);
   const [lunedi, setLunedi] = useState(() => lunediDi(oggi));
   const desktop = useDesktop();
   const obSalvato = dati.impostazioni?.obiettivi?.sonnoMinuti;
@@ -144,9 +150,9 @@ export function SezioneDatiCliente() {
 
   return html`
     <section class="sezione dati-cliente">
-      <h1 class="titolo-sezione">Dati del cliente</h1>
+      <h1 class="titolo-sezione">${vista === 'cliente' ? 'Dati' : 'Dati del cliente'}</h1>
       <${SelettoreData} data=${lunedi} passo=${7} formato=${etichetta} onCambia=${setLunedi} />
       ${corpo}
-      <${ObiettivoSonno} />
+      ${vista === 'cliente' ? html`<${ObiettivoSonnoLettura} minuti=${obiettivo} />` : html`<${ObiettivoSonno} />`}
     </section>`;
 }
