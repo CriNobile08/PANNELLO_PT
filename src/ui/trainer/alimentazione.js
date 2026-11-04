@@ -1,0 +1,245 @@
+import { html, useState, useMemo, useContext } from '../html.js';
+import { Contesto } from '../contesto.js';
+import { Campo, Dialogo, Vuoto } from '../componenti.js';
+import { validaPiano, numeroDaInput } from '../../logic/validazione.js';
+import { versioneValida, versioniFuture } from '../../logic/versioni.js';
+import { oggiRoma, formatoData } from '../../logic/date.js';
+
+const DATA_OK = /^\d{4}-\d{2}-\d{2}$/;
+const dataDaIso = (iso) => {
+  if (!iso) return null;
+  const d = new Date(iso);
+  return Number.isNaN(d.getTime()) ? null : oggiRoma(d);
+};
+const testo = (n) => (n === null || n === undefined ? '' : String(n).replace('.', ','));
+
+// ---------- bozza (i grammi sono testo finché non si salva) ----------
+const nuovoAlimento = () => ({ nome: '', grammi: '' });
+const nuovaOpzione = (n) => ({ nome: `Opzione ${n}`, nota: '', alimenti: [nuovoAlimento()] });
+const nuovoPasto = () => ({ nome: '', opzioni: [nuovaOpzione(1)] });
+
+function bozzaDa(versione) {
+  return {
+    indicazioni: versione?.indicazioni ?? '',
+    pasti: (versione?.pasti ?? []).map((p) => ({
+      nome: p.nome ?? '',
+      opzioni: (p.opzioni ?? []).map((o, j) => ({
+        nome: o.nome || `Opzione ${j + 1}`, nota: o.nota ?? '',
+        alimenti: (o.alimenti ?? []).map((a) => ({ nome: a.nome ?? '', grammi: testo(a.grammi) })),
+      })),
+    })),
+  };
+}
+
+function perSalvare(b) {
+  return {
+    indicazioni: b.indicazioni,
+    pasti: b.pasti.map((p) => ({
+      nome: p.nome.trim(),
+      opzioni: p.opzioni.map((o) => ({
+        nome: o.nome, nota: o.nota,
+        alimenti: o.alimenti.map((a) => ({ nome: a.nome.trim(), grammi: numeroDaInput(a.grammi) })),
+      })),
+    })),
+  };
+}
+
+const sostituisci = (lista, i, valore) => lista.map((x, k) => (k === i ? valore : x));
+
+// ---------- intestazione ----------
+function Intestazione({ sporco, inCorso, onAnnulla, onSalva }) {
+  const { dati, oggi, puoScrivere, nomi } = useContext(Contesto);
+  const [cronologia, setCronologia] = useState(false);
+  const attuale = versioneValida(dati.alimentazione, oggi);
+  const future = versioniFuture(dati.alimentazione, oggi);
+  const tutte = [...dati.alimentazione].sort((a, b) => (a.validaDal < b.validaDal ? 1 : a.validaDal > b.validaDal ? -1 : b.numero - a.numero));
+  const autori = nomi(tutte.map((v) => v.autore));
+  const chi = (v) => {
+    const quando = dataDaIso(v.creataIl);
+    return `creato da ${autori[v.autore] ?? 'Qualcuno'}${quando ? ` il ${formatoData(quando)}` : ''}`;
+  };
+  return html`
+    <div class="card intestazione-piano">
+      <p class="versione-attuale">${attuale
+    ? `In vigore dal ${formatoData(attuale.validaDal)} · versione ${attuale.numero} · ${chi(attuale)}`
+    : 'Nessuna versione in vigore'}</p>
+      ${future.map((v) => html`<p key=${v.id} class="secondario">${`In programma dal ${formatoData(v.validaDal)}`}</p>`)}
+      ${sporco && html`<p class="avviso-modifiche" role="status">Modifiche non salvate</p>`}
+      <div class="azioni-editor">
+        <button type="button" class="pulsante" disabled=${!sporco} onClick=${onAnnulla}>Annulla</button>
+        <button type="button" class="pulsante primario" disabled=${!puoScrivere || inCorso} onClick=${onSalva}>Salva come nuova versione da…</button>
+        ${tutte.length > 0 && html`<button type="button" class="pulsante" aria-expanded=${cronologia} onClick=${() => setCronologia(!cronologia)}>Cronologia</button>`}
+      </div>
+      ${cronologia && html`
+        <ul class="lista-righe" aria-label="Cronologia versioni">
+          ${tutte.map((v) => html`<li key=${v.id} class="card-interna riga-cronologia">${`Versione ${v.numero} · dal ${formatoData(v.validaDal)} · ${chi(v)}`}</li>`)}
+        </ul>`}
+    </div>`;
+}
+
+// ---------- pasto ----------
+function riassunto(pasto) {
+  const primi = pasto.opzioni.map((o) => o.alimenti[0]?.nome?.trim()).filter(Boolean);
+  const n = pasto.opzioni.length;
+  return [...primi, `${n} ${n === 1 ? 'opzione' : 'opzioni'}`].join(' · ');
+}
+
+function PastoAperto({ pasto, i, errori, opzioneAttiva, onOpzione, onCambia }) {
+  const attiva = Math.min(opzioneAttiva, pasto.opzioni.length - 1);
+  const opzione = pasto.opzioni[attiva];
+  const percorso = `pasti.${i}.opzioni.${attiva}`;
+  const cambiaOpzione = (nuova) => onCambia({ ...pasto, opzioni: sostituisci(pasto.opzioni, attiva, nuova) });
+  const cambiaAlimento = (k, parte) => cambiaOpzione({ ...opzione, alimenti: sostituisci(opzione.alimenti, k, { ...opzione.alimenti[k], ...parte }) });
+  return html`
+    <div class="pasto-aperto">
+      <${Campo} etichetta="Nome del pasto" errore=${errori[`pasti.${i}.nome`]}>
+        <input type="text" value=${pasto.nome} onInput=${(e) => onCambia({ ...pasto, nome: e.target.value })} />
+      </${Campo}>
+      <div class="schede-opzione" role="tablist" aria-label="Opzioni">
+        ${pasto.opzioni.map((o, j) => html`
+          <button key=${j} type="button" role="tab" class=${`pulsante scheda-opzione${j === attiva ? ' attiva' : ''}`} aria-selected=${j === attiva}
+            onClick=${() => onOpzione(j)}>${`Opzione ${j + 1}`}</button>`)}
+        <button type="button" class="pulsante" onClick=${() => {
+    onCambia({ ...pasto, opzioni: [...pasto.opzioni, nuovaOpzione(pasto.opzioni.length + 1)] });
+    onOpzione(pasto.opzioni.length);
+  }}>+ Opzione</button>
+      </div>
+      <div class="opzione" role="tabpanel">
+        ${opzione.alimenti.map((a, k) => html`
+          <div key=${`${attiva}-${k}`} class="riga-alimento card-interna" role="group" aria-label=${`Alimento ${k + 1}`}>
+            <${Campo} etichetta="Alimento" errore=${errori[`${percorso}.alimenti.${k}.nome`]}>
+              <input type="text" value=${a.nome} onInput=${(e) => cambiaAlimento(k, { nome: e.target.value })} />
+            </${Campo}>
+            <div class="con-suffisso">
+              <${Campo} etichetta="Grammi" errore=${errori[`${percorso}.alimenti.${k}.grammi`]}>
+                <input type="text" inputmode="decimal" value=${a.grammi} onInput=${(e) => cambiaAlimento(k, { grammi: e.target.value })} />
+              </${Campo}>
+              <span class="suffisso secondario" aria-hidden="true">g</span>
+            </div>
+            <button type="button" class="pulsante" onClick=${() => cambiaOpzione({ ...opzione, alimenti: opzione.alimenti.filter((_, x) => x !== k) })}>Rimuovi alimento</button>
+          </div>`)}
+        <button type="button" class="pulsante" onClick=${() => cambiaOpzione({ ...opzione, alimenti: [...opzione.alimenti, nuovoAlimento()] })}>+ Aggiungi alimento</button>
+        <${Campo} etichetta="Nota dell'opzione">
+          <textarea value=${opzione.nota} onInput=${(e) => cambiaOpzione({ ...opzione, nota: e.target.value })}></textarea>
+        </${Campo}>
+      </div>
+    </div>`;
+}
+
+// ---------- editor ----------
+function Editor() {
+  const { dati, store, oggi, puoScrivere, segnalaRifiuto, setSporco } = useContext(Contesto);
+  const [base, setBase] = useState(() => bozzaDa(versioneValida(dati.alimentazione, oggi)));
+  const [bozza, setBozza] = useState(base);
+  const [sporco, setSporcoLocale] = useState(false);
+  const [tentato, setTentato] = useState(false);
+  const [aperto, setAperto] = useState(0);
+  const [opzioni, setOpzioni] = useState({}); // indice del pasto -> opzione attiva
+  const [dialogo, setDialogo] = useState(false);
+  const [data, setData] = useState(oggi);
+  const [inCorso, setInCorso] = useState(false);
+  const [messaggio, setMessaggio] = useState(null);
+
+  const cambia = (parte) => {
+    setBozza((b) => ({ ...b, ...parte }));
+    setSporcoLocale(true);
+    setSporco(true);
+  };
+
+  const errori = useMemo(() => {
+    if (!tentato) return {};
+    const m = {};
+    for (const e of validaPiano(bozza)) m[e.campo] ??= e.messaggio;
+    return m;
+  }, [tentato, bozza]);
+
+  const annulla = () => {
+    setBozza(base);
+    setSporcoLocale(false);
+    setSporco(false);
+    setTentato(false);
+    setMessaggio(null);
+    setAperto(0);
+    setOpzioni({});
+  };
+
+  const errData = dialogo && !DATA_OK.test(data) ? 'Campo obbligatorio' : undefined;
+
+  async function conferma() {
+    if (!DATA_OK.test(data)) return;
+    setTentato(true);
+    setMessaggio(null);
+    const trovati = validaPiano(bozza);
+    if (trovati.length) {
+      // apre il pasto (e l'opzione) del primo errore
+      const [, p, , o] = trovati[0].campo.split('.');
+      setAperto(Number(p));
+      if (o !== undefined) setOpzioni((x) => ({ ...x, [Number(p)]: Number(o) }));
+      setDialogo(false);
+      return;
+    }
+    setInCorso(true);
+    try {
+      await store.salvaPiano({ ...perSalvare(bozza), validaDal: data });
+      setBase(bozza);
+      setSporcoLocale(false);
+      setSporco(false);
+      setTentato(false);
+      setDialogo(false);
+    } catch (e) {
+      setDialogo(false);
+      setMessaggio(segnalaRifiuto(e));
+    } finally {
+      setInCorso(false);
+    }
+  }
+
+  const cambiaPasto = (i, nuovo) => cambia({ pasti: sostituisci(bozza.pasti, i, nuovo) });
+  const aggiungiPasto = () => {
+    cambia({ pasti: [...bozza.pasti, nuovoPasto()] });
+    setAperto(bozza.pasti.length);
+  };
+
+  return html`
+    <div class="editor-piano">
+      <${Intestazione} sporco=${sporco} inCorso=${inCorso} onAnnulla=${annulla} onSalva=${() => { setData(oggi); setDialogo(true); }} />
+      <div class="card">
+        <${Campo} etichetta="Indicazioni generali">
+          <textarea value=${bozza.indicazioni} onInput=${(e) => cambia({ indicazioni: e.target.value })}></textarea>
+        </${Campo}>
+      </div>
+      ${bozza.pasti.map((p, i) => html`
+        <section key=${i} class="card pasto" role="region" aria-label=${p.nome.trim() || `Pasto ${i + 1}`}>
+          ${i === aperto
+    ? html`<${PastoAperto} pasto=${p} i=${i} errori=${errori} opzioneAttiva=${opzioni[i] ?? 0}
+              onOpzione=${(j) => setOpzioni((x) => ({ ...x, [i]: j }))} onCambia=${(n) => cambiaPasto(i, n)} />`
+    : html`<button type="button" class="riga-scheda card-interna pasto-chiuso" onClick=${() => setAperto(i)}>
+              <span class="riga-nome">${p.nome.trim() || `Pasto ${i + 1}`}</span>
+              <span class="riga-dettaglio secondario">${riassunto(p)}</span>
+            </button>`}
+        </section>`)}
+      <button type="button" class="pulsante" onClick=${aggiungiPasto}>+ Aggiungi pasto</button>
+      ${messaggio && html`<p class="errore-scrittura" role="alert">${messaggio}</p>`}
+      ${dialogo && html`
+        <${Dialogo} titolo="Salva come nuova versione da…" azioni=${[
+    { testo: 'Annulla', onClick: () => setDialogo(false) },
+    { testo: 'Salva', primaria: true, disabled: !puoScrivere || inCorso, onClick: conferma },
+  ]}>
+          <${Campo} etichetta="Valido dal" errore=${errData}>
+            <input type="date" value=${data} onInput=${(e) => setData(e.target.value)} />
+          </${Campo}>
+        </${Dialogo}>`}
+    </div>`;
+}
+
+// ---------- sezione ----------
+export function SezionePiano() {
+  const { dati, puoScrivere } = useContext(Contesto);
+  const [creando, setCreando] = useState(false);
+  const titolo = html`<h1 class="titolo-sezione">Piano alimentare</h1>`;
+  if (dati.alimentazione.length === 0 && !creando) {
+    return html`<section class="sezione">${titolo}
+      <${Vuoto} testo="Nessun piano alimentare" azione=${{ testo: 'Crea il piano alimentare', disabled: !puoScrivere, onClick: () => setCreando(true) }} /></section>`;
+  }
+  return html`<section class="sezione">${titolo}<${Editor} /></section>`;
+}

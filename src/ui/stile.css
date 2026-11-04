@@ -341,3 +341,15 @@ h1, h2, h3 { margin: 0; font-weight: 600; }
   .settimana-laterale { width: 320px; flex: none; }
   .giorni-settimana { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
 }
+
+/* piano alimentare (trainer) */
+.editor-piano { display: flex; flex-direction: column; gap: 16px; }
+.schede-opzione { display: flex; flex-wrap: wrap; gap: 8px; }
+.scheda-opzione.attiva { background: var(--attiva); }
+.riga-alimento { display: flex; flex-direction: column; gap: 12px; }
+.opzione { display: flex; flex-direction: column; gap: 12px; }
+.pasto-aperto { display: flex; flex-direction: column; gap: 12px; }
+.con-suffisso { display: flex; align-items: flex-start; gap: 8px; }
+.con-suffisso .campo { flex: 1; min-width: 0; }
+.con-suffisso .suffisso { padding-top: 30px; }
+.avviso-modifiche { color: var(--avviso); }
