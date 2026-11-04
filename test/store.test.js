@@ -173,3 +173,51 @@ test('una scrittura fallita non blocca la coda', async () => {
   assert.equal((await db.doc('diario/2026-11-12').get()).data().nota, 'b');
   void ko;
 });
+
+test('osserva: 80 schede (anche archiviate) → prima emissione con tutte le revisioni, iscrizioni costanti', async () => {
+  const molte = {};
+  for (let i = 0; i < 80; i++) {
+    molte[`schede/s${i}`] = { nome: `S${i}`, tipo: 'palestra', archiviata: i % 2 === 0, revisioneCorrente: `r${i}`, creataDa: 'u', creataIl: '2026-10-01T00:00:00.000Z' };
+    molte[`schede/s${i}/revisioni/r${i}`] = { ...CONTENUTO_VALIDO, validaDal: '2026-10-01', autore: 'u', salvataIl: '2026-10-01T00:00:00.000Z' };
+  }
+  const fake = creaFakeClaude({ seme: molte });
+  const db = await fake.use('db');
+  const store = creaStore({ db, autoreId: 'u-cliente', adesso });
+  const visti = [];
+  const errori = [];
+  const off = store.osserva((d) => visti.push(d), (e) => errori.push(e));
+  await new Promise((r) => setTimeout(r, 200));
+  assert.deepEqual(errori, []);
+  assert.ok(visti.length >= 1, 'la prima emissione deve arrivare');
+  const d = visti.at(-1);
+  assert.equal(Object.keys(d.revisioni).length, 80);
+  for (let i = 0; i < 80; i++) assert.equal(d.revisioni[`s${i}`][0].id, `r${i}`);
+  assert.ok(fake.iscrizioniAttive() <= 5, `iscrizioni attive: ${fake.iscrizioniAttive()}`);
+  // una nuova revisione scritta da un'altra persona arriva (scheda archiviata inclusa)
+  await db.collection('schede/s0/revisioni').doc('nuova').set({ ...CONTENUTO_VALIDO, validaDal: '2026-11-04', autore: 'u-altro', salvataIl: '2026-11-04T08:00:00.000Z' });
+  await db.doc('schede/s0').update({ revisioneCorrente: 'nuova' });
+  await new Promise((r) => setTimeout(r, 50));
+  assert.deepEqual(visti.at(-1).revisioni.s0.map((r) => r.id).sort(), ['nuova', 'r0']);
+  off();
+});
+
+test('osserva: una lettura di revisioni fallita non blocca la prima emissione e viene segnalata', async () => {
+  const fake = creaFakeClaude({ seme });
+  const db = await fake.use('db');
+  const rotto = { ...db, doc: db.doc, collection: (p) => {
+    const c = db.collection(p);
+    if (!p.endsWith('/revisioni')) return c;
+    const ko = () => Promise.reject({ code: 'resource_exhausted', message: 'x' });
+    return { ...c, get: ko, onSnapshot: (_n, e) => { setTimeout(() => e({ code: 'resource_exhausted', message: 'x' }), 0); return () => {}; } };
+  } };
+  const store = creaStore({ db: rotto, autoreId: 'u-cliente', adesso });
+  const visti = [];
+  const errori = [];
+  const off = store.osserva((d) => visti.push(d), (e) => errori.push(e));
+  await new Promise((r) => setTimeout(r, 50));
+  off();
+  assert.ok(visti.length >= 1, 'la prima emissione deve arrivare');
+  assert.deepEqual(visti[0].revisioni.tirata, []);
+  assert.equal(errori[0]?.code, 'resource_exhausted');
+  assert.ok(visti.length >= 1 && errori.length >= 1);
+});

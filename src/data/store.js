@@ -37,17 +37,8 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
     return Promise.resolve(autoreId);
   }
 
-  function leggiCollezione(nome) {
-    return new Promise((ok, ko) => {
-      let off = null;
-      let fatto = false;
-      off = db.collection(nome).onSnapshot((s) => {
-        if (fatto) return;
-        fatto = true;
-        queueMicrotask(() => off?.());
-        ok(s.docs);
-      }, ko);
-    });
+  async function leggiCollezione(nome) {
+    return (await db.collection(nome).get()).docs;
   }
 
   async function correnti() {
@@ -56,15 +47,30 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
     return { settimane: elenco(settimane), eccezioni: perData(eccezioni) };
   }
 
+  /**
+   * Sottoscrizioni: esattamente 5, una per collezione di primo livello, qualunque sia il numero di schede
+   * (il db ammette al massimo 64 sottoscrizioni attive per vista).
+   * Le revisioni (`schede/{id}/revisioni/{revId}`, §5.2) NON hanno un listener: si leggono con `get()`
+   * una tantum. Ogni salvataggio aggiunge la revisione e POI aggiorna `revisioneCorrente` sul documento
+   * della scheda, quindi lo snapshot di `schede` segnala ogni nuova revisione: quando `revisioneCorrente`
+   * di una scheda cambia rispetto all'ultima lettura, le sue revisioni si rileggono. Le revisioni sono
+   * immutabili, quindi nient'altro può cambiarle. Le letture sono al massimo LETTURE_PARALLELE alla volta.
+   * Mentre una lettura è in corso non si emette (Dati coerenti: la revisione corrente è sempre nell'elenco).
+   * Una lettura fallita non blocca: la scheda resta con le revisioni già note (o []), si emette e
+   * l'errore va a onErrore; si riprova al prossimo snapshot di `schede`.
+   */
   function osserva(onDati, onErrore) {
+    const LETTURE_PARALLELE = 4;
     const caricate = new Set();
     const parziale = { schede: {}, settimane: [], eccezioni: {}, alimentazione: [], diario: {} };
     const revisioni = {};
-    const subRev = new Map(); // schedaId -> { off, caricata }
+    const statoRev = new Map(); // schedaId -> { letta: revisioneCorrente dell'ultima lettura riuscita | undefined, richiesta: chiave in lettura | undefined }
+    const coda = [];
+    let inLettura = 0;
     let chiuso = false;
 
-    const pronto = () =>
-      caricate.size === COLLEZIONI.length && [...subRev.values()].every((s) => s.caricata);
+    const inAttesa = () => [...statoRev.values()].some((s) => s.richiesta !== undefined);
+    const pronto = () => caricate.size === COLLEZIONI.length && !inAttesa();
     const emetti = () => {
       if (chiuso || !pronto()) return;
       ultimi = {
@@ -79,23 +85,49 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
     };
     const errore = (e) => { if (!chiuso) onErrore?.(e); };
 
-    const sincronizzaRevisioni = () => {
-      for (const id of Object.keys(parziale.schede)) {
-        if (subRev.has(id)) continue;
-        const stato = { caricata: false, off: null };
-        subRev.set(id, stato);
-        stato.off = db.collection(`schede/${id}/revisioni`).onSnapshot((s) => {
+    const prossimaLettura = () => {
+      while (!chiuso && inLettura < LETTURE_PARALLELE && coda.length) {
+        const { id, chiave } = coda.shift();
+        const stato = statoRev.get(id);
+        if (!stato || stato.richiesta !== chiave) continue;
+        inLettura++;
+        const fine = () => { inLettura--; prossimaLettura(); };
+        db.collection(`schede/${id}/revisioni`).get().then((s) => {
+          fine();
+          if (chiuso || statoRev.get(id) !== stato || stato.richiesta !== chiave) return;
           revisioni[id] = elenco(s.docs);
-          stato.caricata = true;
+          stato.richiesta = undefined;
+          // lettura in ritardo rispetto allo snapshot (revisione corrente non ancora visibile): si riprova poco dopo
+          const manca = chiave !== null && !revisioni[id].some((r) => r.id === chiave);
+          if (stato.tentativiDi !== chiave) { stato.tentativiDi = chiave; stato.tentativi = 0; }
+          if (manca && ++stato.tentativi < 3) setTimeout(() => { if (!chiuso) sincronizzaRevisioni(); }, 1000);
+          else stato.letta = chiave;
           emetti();
-        }, errore);
+        }, (e) => {
+          fine();
+          if (chiuso || statoRev.get(id) !== stato || stato.richiesta !== chiave) return;
+          stato.richiesta = undefined; // `letta` invariata: si riprova al prossimo snapshot di schede
+          emetti();
+          errore(e);
+        });
       }
-      for (const [id, stato] of [...subRev]) {
+    };
+
+    const sincronizzaRevisioni = () => {
+      for (const [id, s] of Object.entries(parziale.schede)) {
+        const chiave = s.revisioneCorrente ?? null;
+        let stato = statoRev.get(id);
+        if (!stato) { stato = { letta: undefined, richiesta: undefined }; statoRev.set(id, stato); }
+        if (stato.letta === chiave || stato.richiesta === chiave) continue;
+        stato.richiesta = chiave;
+        coda.push({ id, chiave });
+      }
+      for (const id of [...statoRev.keys()]) {
         if (id in parziale.schede) continue;
-        stato.off?.();
-        subRev.delete(id);
+        statoRev.delete(id);
         delete revisioni[id];
       }
+      prossimaLettura();
     };
 
     const conversioni = {
@@ -116,8 +148,8 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
     return () => {
       chiuso = true;
       offs.forEach((o) => o());
-      subRev.forEach((s) => s.off?.());
-      subRev.clear();
+      coda.length = 0;
+      statoRev.clear();
     };
   }
 
