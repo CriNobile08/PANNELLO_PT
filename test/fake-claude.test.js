@@ -52,18 +52,34 @@ test('mcp registra le chiamate; default null', async () => {
 test('assets: upload con contatore, delete registrata, chiamateAsset', async () => {
   const fake = globalThis.creaFakeClaude({ assets: true });
   const assets = await fake.use('assets');
-  const r1 = await assets.upload(new Blob(['ciao']));
+  const r1 = await assets.upload(new Blob(['ciao'], { type: 'text/plain' }));
   assert.deepEqual(r1, { id: 'a1', url: '/_blob/a1', sizeBytes: 4, contentType: 'text/plain' });
-  assert.equal((await assets.upload(new Blob(['x']), { type: 'text/plain' })).id, 'a2');
+  // options.type ha la precedenza su blob.type
+  assert.equal((await assets.upload(new Blob(['x'], { type: 'application/gpx+xml' }), { type: 'text/plain' })).id, 'a2');
   assert.deepEqual(await assets.delete('a1'), { deleted: true });
-  assert.deepEqual(fake.chiamateAsset(), { upload: ['a1', 'a2'], delete: ['a1'] });
+  assert.deepEqual(fake.chiamateAsset(), { upload: ['a1', 'a2'], tipi: ['text/plain', 'text/plain'], delete: ['a1'] });
+});
+
+test('assets: tipo fuori dall\'insieme accettato o blob vuoto → rifiuto come il vero', async () => {
+  const fake = globalThis.creaFakeClaude({ assets: true });
+  const assets = await fake.use('assets');
+  await assert.rejects(assets.upload(new Blob(['<gpx/>'], { type: 'application/gpx+xml' })), { code: 'unsupported_type' });
+  await assert.rejects(assets.upload(new Blob(['x'], { type: 'application/xml' })), { code: 'unsupported_type' });
+  await assert.rejects(assets.upload(new Blob(['x'])), { code: 'invalid_request' });
+  await assert.rejects(assets.upload(new Blob(['x'], { type: 'text/plain' }), { type: 'text/plain;charset=utf-8' }), { code: 'invalid_request' });
+  await assert.rejects(assets.upload(new Blob([], { type: 'text/plain' })), { code: 'invalid_request' });
+  await assert.rejects(assets.upload('testo', { type: 'text/plain' }), { code: 'invalid_request' });
+  for (const type of ['image/png', 'application/pdf', 'font/woff2', 'text/csv', 'application/json', 'text/css', 'text/javascript']) {
+    await assets.upload(new Blob(['x']), { type });
+  }
+  assert.equal(fake.chiamateAsset().upload.length, 7);
 });
 
 test('assets: assente senza opzione; assetFallisce rifiuta upload', async () => {
   assert.equal(await globalThis.creaFakeClaude({}).use('assets'), null);
   const fake = globalThis.creaFakeClaude({ assets: true, assetFallisce: true });
-  await assert.rejects((await fake.use('assets')).upload(new Blob(['x'])), { code: 'store_unavailable' });
-  assert.deepEqual(fake.chiamateAsset(), { upload: [], delete: [] });
+  await assert.rejects((await fake.use('assets')).upload(new Blob(['x'], { type: 'text/plain' })), { code: 'upstream_error' });
+  assert.deepEqual(fake.chiamateAsset(), { upload: [], tipi: [], delete: [] });
 });
 
 test('scritturaFallisce: rifiuta le scritture sotto quella collezione, anche impostata dopo', async () => {

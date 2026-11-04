@@ -270,7 +270,7 @@ const chiamateAsset = (page) => page.evaluate(() => window.claude.chiamateAsset(
 const file = (name, testo) => ({ name, mimeType: 'application/gpx+xml', buffer: Buffer.from(testo) });
 async function caricaEsempio(page) {
   await sezione(page, 'Tracciato').getByRole('button', { name: 'Carica tracciato GPX' }).waitFor();
-  await inputGpx(page).setInputFiles(ESEMPIO);
+  await inputGpx(page).setInputFiles(file('esempio.gpx', TESTO_ESEMPIO));
   await sezione(page, 'Split per km').waitFor();
 }
 
@@ -294,7 +294,8 @@ test('carica GPX', async () => {
     });
     assert.ok(doc.caricatoIl);
     assert.equal(doc.split.length, 9);
-    assert.deepEqual(await chiamateAsset(page), { upload: ['a1'], delete: [] });
+    // il file arriva come application/gpx+xml: l'upload deve dichiarare text/plain (unico tipo testuale adatto)
+    assert.deepEqual(await chiamateAsset(page), { upload: ['a1'], tipi: ['text/plain'], delete: [] });
     await senzaValoriRotti(page);
   } finally { await chiudi(); }
 });
@@ -311,7 +312,7 @@ test('sovrapposizione bassa', async () => {
     await dialogo.getByRole('button', { name: 'Annulla' }).click();
     await dialogo.waitFor({ state: 'detached' });
     assert.equal((await dump(page))['tracciati/googleHealth_c1'], undefined);
-    assert.deepEqual(await chiamateAsset(page), { upload: [], delete: [] });
+    assert.deepEqual(await chiamateAsset(page), { upload: [], tipi: [], delete: [] });
     await inputGpx(page).setInputFiles(file('altro.gpx', altroGiorno));
     await dialogo.getByRole('button', { name: 'Collega' }).click();
     await sezione(page, 'Split per km').waitFor();
@@ -330,7 +331,7 @@ test('file non valido', async () => {
     // GPX ben formato ma senza orari
     await inputGpx(page).setInputFiles(file('senza-ora.gpx', TESTO_ESEMPIO.replace(/<time>[^<]*<\/time>/g, '')));
     await sezione(page, 'Tracciato').getByRole('alert').getByText('File GPX non valido: servono punti con data e ora', { exact: true }).waitFor();
-    assert.deepEqual(await chiamateAsset(page), { upload: [], delete: [] });
+    assert.deepEqual(await chiamateAsset(page), { upload: [], tipi: [], delete: [] });
     assert.equal((await dump(page))['tracciati/googleHealth_c1'], undefined);
   } finally { await chiudi(); }
 });
@@ -342,7 +343,7 @@ test('file troppo grande', async () => {
     await sezione(page, 'Tracciato').getByRole('button', { name: 'Carica tracciato GPX' }).waitFor();
     await inputGpx(page).setInputFiles({ name: 'grande.gpx', mimeType: 'application/gpx+xml', buffer: Buffer.alloc(16 * 1024 * 1024, 32) });
     await sezione(page, 'Tracciato').getByRole('alert').getByText('File troppo grande (massimo 15 MB)', { exact: true }).waitFor();
-    assert.deepEqual(await chiamateAsset(page), { upload: [], delete: [] });
+    assert.deepEqual(await chiamateAsset(page), { upload: [], tipi: [], delete: [] });
     assert.equal((await dump(page))['tracciati/googleHealth_c1'], undefined);
   } finally { await chiudi(); }
 });
@@ -352,7 +353,7 @@ test('upload dell\'asset fallito', async () => {
   try {
     await apriDaRecenti(page, 'Corsa');
     await sezione(page, 'Tracciato').getByRole('button', { name: 'Carica tracciato GPX' }).waitFor();
-    await inputGpx(page).setInputFiles(ESEMPIO);
+    await inputGpx(page).setInputFiles(file('esempio.gpx', TESTO_ESEMPIO));
     await sezione(page, 'Tracciato').getByRole('alert').getByText('Caricamento non riuscito. Riprova.', { exact: true }).waitFor();
     assert.equal((await dump(page))['tracciati/googleHealth_c1'], undefined);
     assert.equal(await sezione(page, 'Tracciato').getByRole('button', { name: 'Carica tracciato GPX' }).isEnabled(), true);
@@ -368,7 +369,7 @@ test('sostituzione', async () => {
     await inputGpx(page).setInputFiles(file('nuovo.gpx', TESTO_ESEMPIO));
     await sezione(page, 'Tracciato').getByText('nuovo.gpx', { exact: true }).waitFor();
     await page.waitForFunction(() => window.claude.chiamateAsset().delete.length === 1);
-    assert.deepEqual(await chiamateAsset(page), { upload: ['a1', 'a2'], delete: ['a1'] });
+    assert.deepEqual(await chiamateAsset(page), { upload: ['a1', 'a2'], tipi: ['text/plain', 'text/plain'], delete: ['a1'] });
     assert.partialDeepStrictEqual((await dump(page))['tracciati/googleHealth_c1'], { idAsset: 'a2', nomeFile: 'nuovo.gpx' });
     await senzaValoriRotti(page);
   } finally { await chiudi(); }
@@ -383,7 +384,7 @@ test('sostituzione fallita', async () => {
     await sezione(page, 'Tracciato').getByRole('button', { name: 'Sostituisci' }).waitFor();
     await inputGpx(page).setInputFiles(file('nuovo.gpx', TESTO_ESEMPIO));
     await sezione(page, 'Tracciato').getByRole('alert').getByText('Caricamento non riuscito. Riprova.', { exact: true }).waitFor();
-    assert.deepEqual(await chiamateAsset(page), { upload: ['a1', 'a2'], delete: ['a2'] });
+    assert.deepEqual(await chiamateAsset(page), { upload: ['a1', 'a2'], tipi: ['text/plain', 'text/plain'], delete: ['a2'] });
     assert.partialDeepStrictEqual((await dump(page))['tracciati/googleHealth_c1'], { idAsset: 'a1', nomeFile: 'esempio.gpx' });
     await sezione(page, 'Tracciato').getByText('esempio.gpx', { exact: true }).waitFor();
     assert.equal(await sezione(page, 'Tracciato').getByRole('button', { name: 'Sostituisci' }).isEnabled(), true);
@@ -405,7 +406,7 @@ test('rimozione', async () => {
     await sezione(page, 'Tracciato').getByText('Nessun tracciato').waitFor();
     await page.waitForFunction(() => window.claude.chiamateAsset().delete.length === 1);
     assert.equal((await dump(page))['tracciati/googleHealth_c1'], undefined);
-    assert.deepEqual(await chiamateAsset(page), { upload: ['a1'], delete: ['a1'] });
+    assert.deepEqual(await chiamateAsset(page), { upload: ['a1'], tipi: ['text/plain'], delete: ['a1'] });
     assert.equal(await sezione(page, 'Split per km').count(), 0);
     await sezione(page, 'Tracciato').getByRole('button', { name: 'Carica tracciato GPX' }).waitFor();
     await senzaValoriRotti(page);

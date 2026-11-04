@@ -121,15 +121,28 @@
       callTool: (server, tool, input) => { chiamate.push({ server, tool, input: clona(input) }); return Promise.resolve({}); },
     } : null;
 
-    // assets finti: id a1, a2, … (come il vero, l'id è il puntatore durevole e l'URL è /_blob/<id>)
-    const chiamateAsset = { upload: [], delete: [] };
+    // assets finti: id a1, a2, … (come il vero, l'id è il puntatore durevole e l'URL è /_blob/<id>).
+    // Il tipo è `opzioni.type || blob.type` e deve stare nell'insieme accettato dal contratto (assets.d.ts 0.2.96):
+    // fuori → unsupported_type; vuoto, con parametri (`;charset=`) o blob vuoto/non Blob → invalid_request.
+    const TIPI_ASSET = new Set([
+      'image/png', 'image/jpeg', 'image/gif', 'image/webp', 'image/svg+xml', 'video/mp4', 'video/webm', 'application/pdf',
+      'font/woff2', 'font/woff', 'font/ttf', 'font/otf',
+      'text/csv', 'text/markdown', 'application/json', 'text/plain', 'text/css', 'text/javascript',
+    ]);
+    const chiamateAsset = { upload: [], tipi: [], delete: [] };
     let contatoreAsset = 0;
     const assets = conAssets ? {
       upload(blob, opzioniUpload) {
-        if (assetFallisce) return Promise.reject({ code: 'store_unavailable', message: 'upload failed' });
+        if (assetFallisce) return Promise.reject({ code: 'upstream_error', message: 'upload failed' });
+        const tipo = opzioniUpload?.type || blob?.type || '';
+        if (typeof Blob === 'undefined' || !(blob instanceof Blob) || blob.size === 0 || tipo === '' || tipo.includes(';')) {
+          return Promise.reject({ code: 'invalid_request', message: 'invalid upload' });
+        }
+        if (!TIPI_ASSET.has(tipo)) return Promise.reject({ code: 'unsupported_type', message: 'unsupported type ' + tipo });
         const id = 'a' + ++contatoreAsset;
         chiamateAsset.upload.push(id);
-        return Promise.resolve({ id, url: '/_blob/' + id, sizeBytes: blob?.size ?? 0, contentType: opzioniUpload?.type || blob?.type || 'text/plain' });
+        chiamateAsset.tipi.push(tipo);
+        return Promise.resolve({ id, url: '/_blob/' + id, sizeBytes: blob.size, contentType: tipo });
       },
       delete(id) {
         chiamateAsset.delete.push(id);
