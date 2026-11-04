@@ -26,7 +26,7 @@ Codice usa e getta, non conservato.
 - `GET https://api.hevyapp.com/v1/user/info` → 200, campi `id, username, name, url, weight_unit, distance_unit, is_pro`.
 - `GET /v1/workouts?page&pageSize` → 200, chiavi `page, page_count, workouts`.
 - `GET /v1/workouts/events?page&pageSize&since` → 200. **Con risposta vuota le chiavi erano `page, page_count, workouts`** (la documentazione parla di `events`): forma reale degli eventi `updated`/`deleted` da verificare col primo allenamento.
-- `GET /v1/exercise_templates?page&pageSize` → `pageSize` massimo **100** (200 → 400). **451 esercizi** in 5 pagine, nessuno personalizzato. Campi: `id, title, type, primary_muscle_group, secondary_muscle_groups, equipment, is_custom, thumbnail_url`. In forma compatta (senza miniature) ≈ **50 KB**.
+- `GET /v1/exercise_templates?page&pageSize` → `pageSize` massimo **100** (200 → 400). **451 esercizi** in 5 pagine, nessuno personalizzato. Campi: `id, title, type, primary_muscle_group, secondary_muscle_groups, equipment, is_custom, thumbnail_url`. In forma compatta (senza miniature) ≈ **72 KB** (misurato con il formato di §5.4).
 - Struttura vista su una routine (in attesa di allenamenti veri): esercizio `index, title, notes, exercise_template_id, superset_id, sets, rest_seconds`; serie `index, type, weight_kg, reps, distance_meters, duration_seconds, custom_metric`. Pesi già in kg, distanze in metri.
 - 20 gruppi muscolari primari (`quadriceps` 54, `chest` 49, `abdominals` 46, `full_body` 46, `shoulders` 43, …). Nomi degli esercizi solo in inglese. Miniature su `pump-app.s3.eu-west-2.amazonaws.com` (bloccate dal CSP degli artefatti: non usate).
 
@@ -111,7 +111,7 @@ Lo script legge il catalogo solo se l'ora di Roma di `adesso` è **prima delle 9
 - Passo 2: le `operazioni` si scrivono in **batch da al massimo 50**, nell'ordine del file; `sync/stato` si scrive per ultimo, con i campi `ultimaEsecuzione`, `esito`, `fonti` del file (senza `operazioni`).
 - Passo 3 (comando fallito): `sync/stato` con `esito: "errore"` e, in `fonti`, il messaggio di ciascuna riga `ERRORE:`.
 - Passo 4: non stampare mai i valori di `GH_*` né di `HEVY_API_KEY`, né il contenuto dei dati.
-- Il documento `hevy/catalogo` (~50 KB) si scrive come le altre operazioni, passando `data` da file.
+- Il documento `hevy/catalogo` (~72 KB) si scrive come le altre operazioni, passando `data` da file.
 
 ## 5. Modello dei dati
 

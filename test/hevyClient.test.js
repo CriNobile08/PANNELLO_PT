@@ -107,3 +107,23 @@ test('chiave mai nei messaggi', async () => {
     return true;
   });
 });
+
+test('200 non JSON negli eventi: errore, non zero eventi', async () => {
+  const f = finto([new Response('<html>proxy</html>', { status: 200 })]);
+  await assert.rejects(client(f).elencaEventi('x'));
+});
+
+test('elenco eventi non array: errore', async () => {
+  const f = finto([json({ page: 1, page_count: 1, events: { a: 1 } })]);
+  await assert.rejects(client(f).elencaEventi('x'));
+});
+
+test('catalogo vuoto o chiave mancante: errore', async () => {
+  await assert.rejects(client(finto([json({ page: 1, page_count: 1, exercise_templates: [] })])).elencaTemplate());
+  await assert.rejects(client(finto([json({ page: 1, page_count: 1 })])).elencaTemplate());
+  await assert.rejects(client(finto([new Response('', { status: 200 })])).elencaTemplate());
+});
+
+test('nessun evento è un risultato valido', async () => {
+  assert.deepEqual(await client(finto([json({ page: 1, page_count: 0, events: [] })])).elencaEventi('x'), []);
+});

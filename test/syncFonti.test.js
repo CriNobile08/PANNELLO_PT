@@ -147,3 +147,16 @@ test('errore sugli eventi si propaga', async () => {
   const f = { fetch: async () => json({}, 401) };
   await assert.rejects(fonteHevy({ client: clientDa(f), adesso }), (e) => e instanceof ErroreSync && e.codice === 'autorizzazione');
 });
+
+test('catalogo vuoto non sostituisce quello buono', async () => {
+  const f = {
+    fetch: async (url) => {
+      const u = new URL(String(url));
+      if (u.pathname === '/v1/workouts/events') return json({ page: 1, page_count: 1, events: [] });
+      return json({ page: 1, page_count: 1, exercise_templates: [] });
+    },
+  };
+  const r = await fonteHevy({ client: clientDa(f), adesso: alba });
+  assert.equal(r.esito, 'parziale');
+  assert.ok(!r.operazioni.some((o) => o.collection === 'hevy'));
+});

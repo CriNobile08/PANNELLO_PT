@@ -37,7 +37,9 @@ export function creaClientHevy({ env, fetch, attendi = attesaPredefinita }) {
     if (!chiave) throw new ErroreSync('configurazione', 'Variabile mancante: HEVY_API_KEY');
     const url = `${BASE}${percorso}?${new URLSearchParams(parametri)}`;
     const r = await conTentativi(() => fetch(url, { headers: { 'api-key': chiave, accept: 'application/json' } }));
-    if (r.ok) return leggiJson(r);
+    if (r.ok) {
+      try { return await r.json(); } catch { throw new Error(`Hevy API: risposta non leggibile (${percorso})`); }
+    }
     if (r.status === 401 || r.status === 403) throw new ErroreSync('autorizzazione', `Hevy ha rifiutato la chiave (${r.status})`);
     const dati = await leggiJson(r);
     const dettaglio = typeof dati?.error === 'string' ? `: ${pulisci(dati.error)}` : '';
@@ -50,13 +52,19 @@ export function creaClientHevy({ env, fetch, attendi = attesaPredefinita }) {
     const elementi = [];
     for (let pagina = 1; ; pagina++) {
       const dati = await chiama(percorso, { ...parametri, page: String(pagina) });
-      elementi.push(...(estrai(dati) ?? []));
+      const elenco = estrai(dati);
+      if (!Array.isArray(elenco)) throw new Error(`Hevy API: elenco assente o non valido (${percorso})`);
+      elementi.push(...elenco);
       if (!(pagina < Number(dati.page_count))) return elementi;
     }
   }
 
   return {
-    elencaEventi: (since) => tutteLePagine('/workouts/events', { pageSize: '10', since }, (d) => d.events ?? d.workouts),
-    elencaTemplate: () => tutteLePagine('/exercise_templates', { pageSize: '100' }, (d) => d.exercise_templates),
+    elencaEventi: (since) => tutteLePagine('/workouts/events', { pageSize: '10', since }, (d) => d.events ?? d.workouts ?? (Number(d.page_count) === 0 ? [] : undefined)),
+    elencaTemplate: async () => {
+      const templates = await tutteLePagine('/exercise_templates', { pageSize: '100' }, (d) => d.exercise_templates);
+      if (templates.length === 0) throw new Error('Hevy API: catalogo vuoto');
+      return templates;
+    },
   };
 }

@@ -177,3 +177,13 @@ test('catalogo', () => {
   assert.deepEqual(c.esercizi[2].secondari, []);
   assert.ok(!JSON.stringify(c).includes('thumbnail'));
 });
+
+test('cancellazione senza deleted_at vince su una modifica precedente', () => {
+  const r = operazioniDaEventi([
+    evento.aggiornato(workout({ id: 'a', aggiornato: '2026-11-04T10:00:00Z' })),
+    { type: 'deleted', id: 'a' },
+  ], { adesso: new Date('2026-11-04T12:00:00Z') });
+  assert.equal(r.operazioni.length, 1);
+  assert.equal(r.operazioni[0].op, 'update');
+  assert.equal(r.operazioni[0].data.eliminata, true);
+});

@@ -75,13 +75,16 @@ export function operazioniDaEventi(eventi, { adesso = new Date() } = {}) {
       istante = Date.parse(ev.workout.updated_at);
     } else if (ev?.type === 'deleted' && ev.id) {
       id = String(ev.id);
+      // Senza un istante valido la cancellazione vale "adesso": non deve mai perdere contro una modifica.
       istante = Date.parse(ev.deleted_at);
+      if (!Number.isFinite(istante)) istante = adesso.getTime();
     } else {
       scartate++;
       continue;
     }
     const t = Number.isFinite(istante) ? istante : -Infinity;
     const prec = ultimi.get(id);
+    // A parità di istante vince l'ultimo ricevuto (spec §5.2).
     if (!prec || t >= prec.t) ultimi.set(id, { ev, t });
   }
 
