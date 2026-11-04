@@ -297,3 +297,15 @@ test('main: hevy in errore non legge la FC', async () => {
   assert.equal(file.fonti.hevy.esito, 'errore');
   assert.equal(chiamate.filter((c) => c.url.includes('dataTypes/heart-rate/')).length, 1);
 });
+
+test('main: Google Health non autorizzato -> FC Hevy saltata senza errore', async () => {
+  const { codice, file, chiamate } = await eseguiMain({ token: json({ error: 'invalid_grant' }, 400) });
+  assert.equal(codice, 0);
+  assert.equal(file.fonti.googleHealth.esito, 'errore');
+  assert.equal(file.fonti.googleHealth.codice, 'autorizzazione');
+  assert.equal(file.fonti.hevy.esito, 'ok');
+  assert.equal(file.fonti.hevy.conteggi.fcSessioni, 0);
+  assert.ok(!('fcSerie' in hevyW1(file).data));
+  assert.equal(file.esito, 'parziale');
+  assert.equal(chiamate.filter((c) => c.url.includes('heart-rate')).length, 0);
+});
