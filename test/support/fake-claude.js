@@ -9,7 +9,7 @@
   };
 
   globalThis.creaFakeClaude = function creaFakeClaude(opzioni) {
-    const { isOwner = true, puoScrivere = true, userId = 'u-cliente', profili = {}, seme = {} } = opzioni ?? {};
+    const { isOwner = true, puoScrivere = true, userId = 'u-cliente', profili = {}, seme = {}, senzaDb = false } = opzioni ?? {};
     const docs = new Map(Object.entries(seme).map(([p, d]) => [p, clona(d)]));
     const ascoltatori = new Set();
     let contatore = 0;
@@ -95,7 +95,7 @@
     };
 
     return {
-      use: (nome) => Promise.resolve(nome === 'db' ? db : nome === 'user' ? user : null),
+      use: (nome) => Promise.resolve(nome === 'db' ? (senzaDb ? null : db) : nome === 'user' ? user : null),
       dump: () => Object.fromEntries([...docs].map(([p, d]) => [p, clona(d)])),
     };
   };
