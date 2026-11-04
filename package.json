@@ -1,0 +1,19 @@
+{
+  "name": "pannello-pt",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "test:e2e": "node --test --test-concurrency=1 test/e2e/*.test.js",
+    "build": "node scripts/build.js"
+  },
+  "dependencies": {
+    "htm": "3.1.1",
+    "preact": "11.1.1"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}
