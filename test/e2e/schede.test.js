@@ -142,6 +142,7 @@ test('libreria: ricerca, archiviate, punto colorato e archiviazione', async () =
     // in uso nella settimana in vigore
     await page.getByText('Spinta A').click();
     await page.getByRole('button', { name: 'Archivia' }).click();
+    await page.getByRole('dialog', { name: 'Archiviare la scheda?' }).getByRole('button', { name: 'Archivia' }).click();
     await page.getByText('Settimana tipo n. 1 (dal lun 26 ott)').waitFor();
     assert.equal((await dump(page))['schede/s1'].archiviata, false);
     await page.getByRole('button', { name: 'Chiudi' }).click();
@@ -149,6 +150,7 @@ test('libreria: ricerca, archiviate, punto colorato e archiviazione', async () =
     // in uso in un'eccezione futura
     await page.getByText('Fondo lento').click();
     await page.getByRole('button', { name: 'Archivia' }).click();
+    await page.getByRole('dialog', { name: 'Archiviare la scheda?' }).getByRole('button', { name: 'Archivia' }).click();
     await page.getByText('Eccezione del mar 10 nov').waitFor();
     await page.getByRole('button', { name: 'Chiudi' }).click();
   } finally { await chiudi(); }
@@ -165,9 +167,25 @@ test('archiviazione riuscita e sola lettura', async () => {
     await vaiASchede(a.page);
     await a.page.getByText('Libera').click();
     await a.page.getByRole('button', { name: 'Archivia' }).click();
+    const conferma = a.page.getByRole('dialog', { name: 'Archiviare la scheda?' });
+    await conferma.getByText('Non comparirà più nella libreria e nelle assegnazioni.').waitFor();
+    assert.equal(await conferma.getByText('modifiche non salvate', { exact: false }).count(), 0);
+    // Annulla: niente archiviazione
+    await conferma.getByRole('button', { name: 'Annulla' }).click();
+    assert.equal((await dump(a.page))['schede/s1'].archiviata, false);
+    // con modifiche non salvate il dialogo lo dice
+    await a.page.getByLabel('Nota del trainer', { exact: true }).fill('non salvata');
+    await a.page.getByRole('button', { name: 'Archivia' }).click();
+    await conferma.getByText('Hai modifiche non salvate: andranno perse.').waitFor();
+    await conferma.getByRole('button', { name: 'Archivia' }).click();
     await a.page.getByRole('button', { name: '+ Nuova scheda' }).waitFor();
     assert.equal((await dump(a.page))['schede/s1'].archiviata, true);
     await a.page.getByText('Libera').waitFor({ state: 'detached' });
+    // una scheda già archiviata non offre "Archivia"
+    await a.page.getByLabel('Mostra archiviate', { exact: true }).check();
+    await a.page.getByText('Libera').click();
+    await a.page.getByLabel('Nome della scheda', { exact: true }).waitFor();
+    assert.equal(await a.page.getByRole('button', { name: 'Archivia' }).count(), 0);
 
     await vaiASchede(b.page);
     await b.page.getByText('Libera').click();

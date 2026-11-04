@@ -205,6 +205,7 @@ export function EditorScheda({ schedaId, onChiudi }) {
   const [conflitto, setConflitto] = useState(null); // { revisione }
   const [inUso, setInUso] = useState(null);         // elenco usi
   const [esci, setEsci] = useState(false);
+  const [confermaArchivia, setConfermaArchivia] = useState(false);
   const [vista, setVista] = useState(null);         // revisione aperta in sola lettura
 
   const cambia = (parte) => {
@@ -253,6 +254,7 @@ export function EditorScheda({ schedaId, onChiudi }) {
   }
 
   async function archivia() {
+    setConfermaArchivia(false);
     setMessaggio(null);
     try {
       const r = await store.archiviaScheda(schedaId);
@@ -312,7 +314,7 @@ export function EditorScheda({ schedaId, onChiudi }) {
       ${messaggio && html`<p class="errore-scrittura" role="alert">${messaggio}</p>`}
       <div class="azioni-editor">
         <button type="button" class="pulsante primario" disabled=${!puoScrivere || inCorso} onClick=${() => salva(false)}>Salva</button>
-        ${schedaId && html`<button type="button" class="pulsante" disabled=${!puoScrivere || inCorso} onClick=${archivia}>Archivia</button>`}
+        ${schedaId && !scheda.archiviata && html`<button type="button" class="pulsante" disabled=${!puoScrivere || inCorso} onClick=${() => setConfermaArchivia(true)}>Archivia</button>`}
       </div>
 
       ${schedaId && html`
@@ -339,6 +341,14 @@ export function EditorScheda({ schedaId, onChiudi }) {
           <ul>${inUso.map((u, i) => html`<li key=${i}>${u.tipo === 'settimana'
     ? `Settimana tipo n. ${u.versione.numero} (dal ${formatoData(u.versione.validaDal)})`
     : `Eccezione del ${formatoData(u.data)}`}</li>`)}</ul>
+        </${Dialogo}>`}
+      ${confermaArchivia && html`
+        <${Dialogo} titolo="Archiviare la scheda?" azioni=${[
+    { testo: 'Annulla', onClick: () => setConfermaArchivia(false) },
+    { testo: 'Archivia', primaria: true, disabled: !puoScrivere, onClick: archivia },
+  ]}>
+          <p>Non comparirà più nella libreria e nelle assegnazioni.</p>
+          ${modificata && html`<p class="avviso-modifiche">Hai modifiche non salvate: andranno perse.</p>`}
         </${Dialogo}>`}
       ${esci && html`
         <${Dialogo} titolo="Hai modifiche non salvate. Uscire senza salvare?" azioni=${[
