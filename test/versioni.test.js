@@ -22,3 +22,14 @@ test('versioni', () => {
   assert.equal(prossimoNumero([]), 1);
   assert.equal(prossimoNumero([{ numero: 3 }, { numero: 1 }]), 4);
 });
+
+test('revisionePerGiorno: nessuna valida, più revisioni nello stesso giorno → la salvata per prima', () => {
+  const prima = { id: 'zz', validaDal: '2026-11-04', salvataIl: '2026-11-04T08:00:00Z' };
+  const seconda = { id: 'aa', validaDal: '2026-11-04', salvataIl: '2026-11-04T09:00:00Z' };
+  const senzaSalvata = { id: 'mm', validaDal: '2026-11-04', creataIl: '2026-11-04T07:00:00Z' };
+  assert.equal(revisionePerGiorno([prima, seconda], '2026-11-02'), prima);
+  assert.equal(revisionePerGiorno([seconda, prima], '2026-11-02'), prima);
+  assert.equal(revisionePerGiorno([seconda, senzaSalvata, prima], '2026-11-02'), senzaSalvata);
+  const piuTardi = { id: 'b', validaDal: '2026-11-05', salvataIl: '2026-11-04T01:00:00Z' };
+  assert.equal(revisionePerGiorno([piuTardi, seconda, prima], '2026-11-02'), prima);
+});

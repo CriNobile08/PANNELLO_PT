@@ -26,6 +26,7 @@
       const prefisso = path + '/';
       const elenco = [...docs.keys()]
         .filter((p) => p.startsWith(prefisso) && segmenti(p).length === n)
+        .sort((x, y) => { const a = segmenti(x).pop(); const b = segmenti(y).pop(); return a < b ? -1 : a > b ? 1 : 0; })
         .map((p) => ({ ...snapshotDoc(p), ref: docRef(p) }));
       return { docs: elenco, size: elenco.length, empty: elenco.length === 0 };
     }
@@ -35,7 +36,19 @@
         a.next(a.tipo === 'doc' ? snapshotDoc(a.path) : snapshotCol(a.path));
       }, 0);
     }
-    function iscrivi(tipo, path, next) {
+    // Come il db vero: al massimo 64 sottoscrizioni attive per vista; la 65ª fallisce sul callback d'errore.
+    const MAX_ISCRIZIONI = 64;
+    function iscrivi(tipo, path, next, errore) {
+      if (ascoltatori.size >= MAX_ISCRIZIONI) {
+        let attivo = true;
+        setTimeout(() => {
+          if (!attivo) return;
+          const e = { code: 'resource_exhausted', message: 'too many active subscriptions' };
+          if (errore) errore(e);
+          else console.error(e);
+        }, 0);
+        return () => { attivo = false; };
+      }
       const a = { tipo, path, next, attivo: true };
       ascoltatori.add(a);
       consegna(a);
@@ -67,7 +80,7 @@
           scritto();
           return Promise.resolve();
         },
-        onSnapshot: (next) => iscrivi('doc', path, next),
+        onSnapshot: (next, errore) => iscrivi('doc', path, next, errore),
         collection: (p) => colRef(path + '/' + p),
       };
     }
@@ -79,7 +92,8 @@
           const ref = docRef(path + '/id' + ++contatore);
           return ref.set(dati).then(() => ref);
         },
-        onSnapshot: (next) => iscrivi('col', path, next),
+        get: () => Promise.resolve(snapshotCol(path)),
+        onSnapshot: (next, errore) => iscrivi('col', path, next, errore),
       };
     }
 
@@ -100,6 +114,7 @@
         if (nome === 'db' && ritardoDb > 0) return new Promise((ok) => setTimeout(() => ok(valore), ritardoDb));
         return Promise.resolve(valore);
       },
+      iscrizioniAttive: () => ascoltatori.size,
       dump: () => Object.fromEntries([...docs].map(([p, d]) => [p, clona(d)])),
     };
   };
