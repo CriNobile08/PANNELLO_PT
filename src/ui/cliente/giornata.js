@@ -1,4 +1,5 @@
-import { html, useState, useContext } from '../html.js';
+import { html, useState, useEffect, useRef, useContext } from '../html.js';
+import { DIARIO_VUOTO } from '../../data/store.js';
 import { Contesto } from '../contesto.js';
 import { Campo, Vuoto } from '../componenti.js';
 import { revisionePerGiorno } from '../../logic/versioni.js';
@@ -14,39 +15,82 @@ export const testoNumero = (n) => String(n).replace('.', ',');
 /** 150 → "2′30" */
 export const testoRecupero = (sec) => `${Math.floor(sec / 60)}′${String(sec % 60).padStart(2, '0')}`;
 
-/** Voce di diario + scheda risolta per una data. */
-export function contestoGiorno(dati, data) {
+/** Scheda, revisione e stato dei blocchi per una data; `voce` = voce di diario effettiva (con overlay). */
+export function contestoGiorno(dati, data, voce = dati.diario[data] ?? null) {
   const giorno = risolviGiorno(data, dati);
   const scheda = giorno.schedaId ? dati.schede[giorno.schedaId] ?? null : null;
   const revisione = scheda ? revisionePerGiorno(dati.revisioni[giorno.schedaId] ?? [], data) : null;
-  const voce = dati.diario[data] ?? null;
   return { giorno, scheda, revisione, voce, stato: statoBlocchi(revisione, voce) };
 }
 
+const uguali = (a, b) => JSON.stringify(a) === JSON.stringify(b);
+
 /**
- * Scrittura sul diario con gestione del rifiuto. Ritorna { scrivi, messaggio, inCorso }.
- * `tracciaCorso`: solo per i moduli con pulsante Salva; le spunte non cambiano stato durante la scrittura
- * (un re-render prima dello snapshot riporterebbe la checkbox al valore precedente).
+ * Diario di una data con scritture funzionali e overlay ottimistico.
+ * `modifica(op)`: `op` è un oggetto o una funzione `(attuale) => modifiche`; la funzione gira nello store,
+ * dentro la sezione serializzata (nessuna spunta si perde), e subito dopo sull'ultimo valore ottimistico.
+ * Il valore in attesa sparisce quando lo snapshot lo riflette, dopo 3 s a scritture finite, o in caso di errore.
+ * Ritorna { voce, modifica, messaggio, inCorso }; `modifica` risolve a true/false.
  */
-export function useScritturaDiario(data, tracciaCorso = false) {
-  const { store, segnalaRifiuto } = useContext(Contesto);
+export function useDiario(data) {
+  const { dati, store, segnalaRifiuto } = useContext(Contesto);
+  const salvata = dati.diario[data] ?? null;
+  const [pendenti, setPendenti] = useState({});
   const [messaggio, setMessaggio] = useState(null);
   const [inCorso, setInCorso] = useState(false);
-  async function scrivi(modifiche) {
+  const inVolo = useRef(0);
+  const ottimistica = useRef(null);
+
+  const campi = pendenti[data] ?? {};
+  const voce = { ...DIARIO_VUOTO, ...salvata, ...campi };
+  ottimistica.current = voce;
+
+  useEffect(() => {
+    if (!pendenti[data]) return;
+    const resto = Object.fromEntries(Object.entries(pendenti[data]).filter(([k, v]) =>
+      !uguali(v, (salvata ?? DIARIO_VUOTO)[k] ?? DIARIO_VUOTO[k])));
+    if (Object.keys(resto).length !== Object.keys(pendenti[data]).length) setPendenti({ ...pendenti, [data]: resto });
+  }, [salvata, pendenti, data]);
+
+  async function modifica(op) {
+    const f = typeof op === 'function' ? op : () => op;
     setMessaggio(null);
-    if (tracciaCorso) setInCorso(true);
+    const previsione = f(ottimistica.current);
+    ottimistica.current = { ...ottimistica.current, ...previsione };
+    setPendenti((p) => ({ ...p, [data]: { ...p[data], ...previsione } }));
+    inVolo.current += 1;
+    setInCorso(true);
     try {
-      await store.aggiornaDiario(data, modifiche);
+      await store.aggiornaDiario(data, f);
       return true;
     } catch (e) {
       setMessaggio(segnalaRifiuto(e));
+      setPendenti((p) => {
+        const c = { ...p[data] };
+        for (const k of Object.keys(previsione)) delete c[k];
+        return { ...p, [data]: c };
+      });
       return false;
     } finally {
-      if (tracciaCorso) setInCorso(false);
+      inVolo.current -= 1;
+      if (inVolo.current === 0) {
+        setInCorso(false);
+        // rete di sicurezza: se lo snapshot non riflette mai il valore (modifica altrui), l'overlay sparisce
+        setTimeout(() => { if (inVolo.current === 0) setPendenti((p) => ({ ...p, [data]: {} })); }, 3000);
+      }
     }
   }
-  return { scrivi, messaggio, inCorso };
+  return { voce, modifica, messaggio, inCorso };
 }
+
+/** Funzione per `modifica`: aggiunge o toglie l'indice `i` dall'elenco `campo`, sul valore corrente. */
+export const spunta = (campo, i, attivo) => (att) => {
+  const set = new Set(att[campo]);
+  if (attivo) set.add(i); else set.delete(i);
+  return { [campo]: [...set].sort((a, b) => a - b) };
+};
+export const impostaBlocco = (campo, n) => () => ({ [campo]: Array.from({ length: n }, (_, i) => i) });
+const salvataVoce = (dati, data) => dati.diario[data] ?? null;
 
 const fattiValidi = (fatti, n) => (Array.isArray(fatti) ? fatti.filter((i) => Number.isInteger(i) && i >= 0 && i < n) : []);
 
@@ -74,9 +118,7 @@ function BloccoSpunte({ titolo, esercizi, fatti, onCambia, disabilitato }) {
           <li key=${i}>
             <label class="spunta">
               <input type="checkbox" checked=${validi.includes(i)} disabled=${disabilitato}
-                onChange=${(ev) => onCambia(ev.target.checked
-    ? [...new Set([...validi, i])].sort((a, b) => a - b)
-    : validi.filter((x) => x !== i))} />
+                onChange=${(ev) => onCambia(i, ev.target.checked)} />
               <span class="spunta-testo">
                 <span>${e.nome}</span>
                 ${dettaglioEsercizio(e) && html`<span class="secondario">${dettaglioEsercizio(e)}</span>`}
@@ -116,9 +158,8 @@ function BloccoPrincipale({ revisione, fatto, onCambia, disabilitato }) {
     </section>`;
 }
 
-function Modulo({ data, voce }) {
+function Modulo({ data, voce, modifica, messaggio, inCorso }) {
   const { puoScrivere, setSporco } = useContext(Contesto);
-  const { scrivi, messaggio, inCorso } = useScritturaDiario(data, true);
   const salvataS = voce?.sensazione ?? null;
   const salvataN = voce?.nota ?? '';
   const [sensazione, setSensazione] = useState(salvataS);
@@ -126,9 +167,9 @@ function Modulo({ data, voce }) {
   const [base, setBase] = useState({ s: salvataS, n: salvataN });
   const sporco = sensazione !== base.s || nota !== base.n;
 
-  const cambia = (s, n) => { setSensazione(s); setNota(n); setSporco(s !== base.s || n !== base.n); };
+  const cambia = (s, n) => { if (!puoScrivere) return; setSensazione(s); setNota(n); setSporco(s !== base.s || n !== base.n); };
   async function salva() {
-    if (await scrivi({ sensazione, nota })) {
+    if (await modifica({ sensazione, nota })) {
       setBase({ s: sensazione, n: nota });
       setSporco(false);
     }
@@ -138,11 +179,11 @@ function Modulo({ data, voce }) {
       <h2 class="titolo-blocco">Come ti sei sentito?</h2>
       <div class="sensazioni" role="group" aria-label="Sensazione">
         ${[1, 2, 3, 4, 5].map((n) => html`
-          <button type="button" key=${n} class="pulsante sensazione" aria-pressed=${sensazione === n ? 'true' : 'false'}
+          <button type="button" key=${n} class="pulsante sensazione" aria-pressed=${sensazione === n ? 'true' : 'false'} disabled=${!puoScrivere}
             onClick=${() => cambia(sensazione === n ? null : n, nota)}>${n}</button>`)}
       </div>
       <${Campo} etichetta="Note per il trainer">
-        <textarea rows="3" value=${nota} onInput=${(e) => cambia(sensazione, e.target.value)}></textarea>
+        <textarea rows="3" value=${nota} disabled=${!puoScrivere} onInput=${(e) => cambia(sensazione, e.target.value)}></textarea>
       </${Campo}>
       ${messaggio && html`<p class="errore-scrittura" role="alert">${messaggio}</p>`}
       <button type="button" class="pulsante primario" disabled=${!puoScrivere || inCorso || !sporco} onClick=${salva}>Salva</button>
@@ -152,8 +193,8 @@ function Modulo({ data, voce }) {
 export function SezioneGiornata({ data: dataProp }) {
   const { dati, oggi, vai, puoScrivere } = useContext(Contesto);
   const data = dataProp ?? oggi;
-  const { giorno, scheda, revisione, voce, stato } = contestoGiorno(dati, data);
-  const { scrivi, messaggio } = useScritturaDiario(data);
+  const { voce, modifica, messaggio, inCorso } = useDiario(data);
+  const { giorno, scheda, revisione, stato } = contestoGiorno(dati, data, voce);
   const disabilitato = !puoScrivere;
 
   const intestazione = html`
@@ -191,12 +232,12 @@ export function SezioneGiornata({ data: dataProp }) {
           <p>${revisione.nota}</p>
         </section>`}
       ${messaggio && html`<p class="errore-scrittura" role="alert">${messaggio}</p>`}
-      <${BloccoSpunte} titolo="Riscaldamento" esercizi=${revisione.riscaldamento ?? []} fatti=${voce?.riscaldamentoFatti}
-        disabilitato=${disabilitato} onCambia=${(fatti) => scrivi({ riscaldamentoFatti: fatti })} />
-      <${BloccoPrincipale} revisione=${revisione} fatto=${voce?.principaleFatto === true}
-        disabilitato=${disabilitato} onCambia=${() => scrivi({ principaleFatto: voce?.principaleFatto !== true })} />
-      <${BloccoSpunte} titolo="Stretching" esercizi=${revisione.stretching ?? []} fatti=${voce?.stretchingFatti}
-        disabilitato=${disabilitato} onCambia=${(fatti) => scrivi({ stretchingFatti: fatti })} />
-      <${Modulo} key=${data} data=${data} voce=${voce} />
+      <${BloccoSpunte} titolo="Riscaldamento" esercizi=${revisione.riscaldamento ?? []} fatti=${voce.riscaldamentoFatti}
+        disabilitato=${disabilitato} onCambia=${(i, v) => modifica(spunta('riscaldamentoFatti', i, v))} />
+      <${BloccoPrincipale} revisione=${revisione} fatto=${voce.principaleFatto === true}
+        disabilitato=${disabilitato} onCambia=${() => modifica((att) => ({ principaleFatto: att.principaleFatto !== true }))} />
+      <${BloccoSpunte} titolo="Stretching" esercizi=${revisione.stretching ?? []} fatti=${voce.stretchingFatti}
+        disabilitato=${disabilitato} onCambia=${(i, v) => modifica(spunta('stretchingFatti', i, v))} />
+      <${Modulo} key=${data} data=${data} voce=${salvataVoce(dati, data)} modifica=${modifica} messaggio=${null} inCorso=${inCorso} />
     </section>`;
 }

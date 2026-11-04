@@ -103,5 +103,35 @@ test('oggi: stati vuoti e sola lettura', async () => {
   try {
     await ro.page.getByText('Spinta A').waitFor();
     assert.equal(await ro.page.getByLabel('Riscaldamento').isDisabled(), true);
+    assert.equal(await ro.page.getByRole('button', { name: 'Aggiungi nota' }).isDisabled(), true);
+    await ro.page.getByRole('link', { name: /Spinta A/ }).click();
+    assert.equal(await ro.page.getByRole('button', { name: '4' }).isDisabled(), true);
+    assert.equal(await ro.page.getByLabel('Note per il trainer').isDisabled(), true);
+    await ro.page.getByRole('button', { name: 'Torna a Oggi' }).click();
+    await ro.page.getByText('Oggi · mer 4 nov').waitFor();
   } finally { await ro.chiudi(); }
+});
+
+test('giornata: due tocchi nello stesso istante non perdono spunte', async () => {
+  const { page, chiudi } = await cliente({ seme: SEME });
+  try {
+    await page.getByRole('link', { name: /Spinta A/ }).click();
+    await page.getByLabel('Corda').waitFor();
+    await page.evaluate(() => {
+      const c = [...document.querySelectorAll('.blocco-giornata input[type=checkbox]')];
+      c[0].click(); c[1].click();
+    });
+    await page.getByLabel('Corda').and(page.locator(':checked')).waitFor();
+    await page.getByLabel('Cerchi braccia').and(page.locator(':checked')).waitFor();
+    assert.deepEqual((await dump(page))['diario/2026-11-04'].riscaldamentoFatti, [0, 1]);
+    await page.getByRole('button', { name: 'Segna come fatta' }).evaluate((b) => { b.click(); b.click(); });
+    await page.waitForTimeout(300);
+    assert.equal((await dump(page))['diario/2026-11-04'].principaleFatto, false);
+    assert.equal(await page.getByRole('button', { name: 'Segna come fatta' }).getAttribute('aria-pressed'), 'false');
+    // blocco su Oggi dopo spunte parziali
+    await page.getByRole('button', { name: 'Torna a Oggi' }).click();
+    await page.getByLabel('Riscaldamento').check();
+    await page.getByText('1/3').waitFor();
+    assert.deepEqual((await dump(page))['diario/2026-11-04'].riscaldamentoFatti, [0, 1, 2]);
+  } finally { await chiudi(); }
 });

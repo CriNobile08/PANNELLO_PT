@@ -3,7 +3,7 @@ import { Contesto } from '../contesto.js';
 import { Anello, Dialogo, Campo, SelettoreData, Vuoto } from '../componenti.js';
 import { versioneValida } from '../../logic/versioni.js';
 import { formatoData } from '../../logic/date.js';
-import { TIPI, testoNumero, contestoGiorno, useScritturaDiario } from './giornata.js';
+import { TIPI, testoNumero, contestoGiorno, useDiario, impostaBlocco } from './giornata.js';
 
 const DATI_VUOTI = ['FC a riposo', 'HRV', 'Passi', 'Fasi del sonno'];
 
@@ -16,14 +16,19 @@ function riepilogoPrincipale(revisione) {
   return `${plurale(es.length, 'esercizio', 'esercizi')} · ${plurale(serie, 'serie', 'serie')}`;
 }
 
-function DialogoNota({ data, notaIniziale, onChiudi }) {
+function DialogoNota({ notaIniziale, modifica, messaggio, onChiudi }) {
   const { puoScrivere } = useContext(Contesto);
-  const { scrivi, messaggio, inCorso } = useScritturaDiario(data, true);
+  const [inCorso, setInCorso] = useState(false);
   const [nota, setNota] = useState(notaIniziale);
   return html`
     <${Dialogo} titolo="Nota per il trainer" azioni=${[
     { testo: 'Annulla', onClick: onChiudi },
-    { testo: 'Salva nota', primaria: true, disabled: !puoScrivere || inCorso, onClick: async () => { if (await scrivi({ nota })) onChiudi(); } },
+    { testo: 'Salva nota', primaria: true, disabled: !puoScrivere || inCorso, onClick: async () => {
+      setInCorso(true);
+      const ok = await modifica({ nota });
+      setInCorso(false);
+      if (ok) onChiudi();
+    } },
   ]}>
       <${Campo} etichetta="Nota">
         <textarea rows="4" value=${nota} onInput=${(e) => setNota(e.target.value)}></textarea>
@@ -41,10 +46,9 @@ function BloccoCheckbox({ etichetta, completo, vuoto, disabilitato, onCambia }) 
     </label>`;
 }
 
-function CardAllenamento({ data, ctx }) {
+function CardAllenamento({ data, ctx, modifica, messaggio }) {
   const { vai, puoScrivere } = useContext(Contesto);
   const [nota, setNota] = useState(false);
-  const { scrivi, messaggio } = useScritturaDiario(data);
   const { giorno, scheda, revisione, voce, stato } = ctx;
   const disabilitato = !puoScrivere;
 
@@ -56,7 +60,6 @@ function CardAllenamento({ data, ctx }) {
 
   const nRisc = (revisione.riscaldamento ?? []).length;
   const nStr = (revisione.stretching ?? []).length;
-  const indici = (n) => Array.from({ length: n }, (_, i) => i);
   return html`
     <div class="card card-allenamento">
       <div class="allenamento-testata">
@@ -65,20 +68,20 @@ function CardAllenamento({ data, ctx }) {
           <span class="titolo-scheda">${scheda.nome}</span>
           <span class="secondario">${TIPI[scheda.tipo] ?? scheda.tipo}</span>
         </a>
-        <button type="button" class="pulsante-icona" aria-label="Aggiungi nota" onClick=${() => setNota(true)}>+</button>
+        <button type="button" class="pulsante-icona" aria-label="Aggiungi nota" disabled=${!puoScrivere} onClick=${() => setNota(true)}>+</button>
       </div>
       <div class="blocchi">
         <${BloccoCheckbox} etichetta="Riscaldamento" completo=${stato.riscaldamento} vuoto=${nRisc === 0} disabilitato=${disabilitato}
-          onCambia=${(v) => scrivi({ riscaldamentoFatti: v ? indici(nRisc) : [] })} />
+          onCambia=${(v) => modifica(v ? impostaBlocco('riscaldamentoFatti', nRisc) : () => ({ riscaldamentoFatti: [] }))} />
         <div class="riga-blocco">
           <span class=${stato.principale ? 'segno fatto' : 'segno'} aria-hidden="true">${stato.principale ? '✓' : ''}</span>
           <span><span>Parte principale</span> <span class="secondario">${riepilogoPrincipale(revisione)}</span></span>
         </div>
         <${BloccoCheckbox} etichetta="Stretching" completo=${stato.stretching} vuoto=${nStr === 0} disabilitato=${disabilitato}
-          onCambia=${(v) => scrivi({ stretchingFatti: v ? indici(nStr) : [] })} />
+          onCambia=${(v) => modifica(v ? impostaBlocco('stretchingFatti', nStr) : () => ({ stretchingFatti: [] }))} />
       </div>
       ${messaggio && html`<p class="errore-scrittura" role="alert">${messaggio}</p>`}
-      ${nota && html`<${DialogoNota} key=${data} data=${data} notaIniziale=${voce?.nota ?? ''} onChiudi=${() => setNota(false)} />`}
+      ${nota && html`<${DialogoNota} key=${data} modifica=${modifica} messaggio=${messaggio} notaIniziale=${voce?.nota ?? ''} onChiudi=${() => setNota(false)} />`}
     </div>`;
 }
 
@@ -117,7 +120,8 @@ function CardAlimentazione({ data }) {
 export function SezioneOggi({ data: iniziale }) {
   const { dati, oggi } = useContext(Contesto);
   const [data, setData] = useState(iniziale ?? oggi);
-  const ctx = contestoGiorno(dati, data);
+  const { voce, modifica, messaggio } = useDiario(data);
+  const ctx = contestoGiorno(dati, data, voce);
   const { giorno, stato } = ctx;
   const riposo = giorno.versione && !giorno.schedaId;
   const haScheda = giorno.versione && giorno.schedaId && ctx.revisione;
@@ -133,7 +137,7 @@ export function SezioneOggi({ data: iniziale }) {
           testo=${riposo ? 'Riposo' : haScheda ? `${stato.completati}/3` : 'Nessun dato'}
           sottotesto=${haScheda ? 'blocchi' : undefined} />
       </div>
-      <${CardAllenamento} data=${data} ctx=${ctx} />
+      <${CardAllenamento} data=${data} ctx=${ctx} modifica=${modifica} messaggio=${messaggio} />
       <div class="dati-griglia">
         ${DATI_VUOTI.map((t) => html`
           <div class="card-interna dato" key=${t}>

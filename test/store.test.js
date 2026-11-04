@@ -144,6 +144,17 @@ test('scritture concorrenti sullo stesso documento sono serializzate', async () 
   assert.equal(fake.dump()['eccezioni/2026-11-11'].schedaId, null);
 });
 
+test('diario: modifiche funzionali serializzate (due spunte → [0,1])', async () => {
+  const { fake, store } = await setup();
+  const d = '2026-11-13';
+  const spunta = (i) => (att) => ({ riscaldamentoFatti: [...new Set([...att.riscaldamentoFatti, i])].sort() });
+  await Promise.all([store.aggiornaDiario(d, spunta(0)), store.aggiornaDiario(d, spunta(1))]);
+  assert.deepEqual(fake.dump()[`diario/${d}`].riscaldamentoFatti, [0, 1]);
+  const inverti = (att) => ({ principaleFatto: !att.principaleFatto });
+  await Promise.all([store.aggiornaDiario(d, inverti), store.aggiornaDiario(d, inverti)]);
+  assert.equal(fake.dump()[`diario/${d}`].principaleFatto, false);
+});
+
 test('una scrittura fallita non blocca la coda', async () => {
   const { db } = await setup();
   const ko = creaStore({ db, autoreId: 'u', adesso });

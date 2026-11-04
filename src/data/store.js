@@ -3,6 +3,7 @@ import { prossimoNumero } from '../logic/versioni.js';
 import { risolviGiorno, eccezioniSpostamento, usiScheda } from '../logic/risoluzione.js';
 import { validaScheda, validaPiano } from '../logic/validazione.js';
 
+export const DIARIO_VUOTO = { riscaldamentoFatti: [], stretchingFatti: [], principaleFatto: false, sensazione: null, nota: '' };
 const COLLEZIONI = ['schede', 'settimane', 'eccezioni', 'alimentazione', 'diario'];
 const CHIAVI_SISTEMA = ['id', 'validaDal', 'autore', 'salvataIl'];
 
@@ -201,20 +202,20 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
     return rif.id;
   }
 
+  /**
+   * `modifiche`: oggetto da unire, oppure funzione `(attuale) => modifiche` applicata ai dati correnti
+   * (con i valori predefiniti del §5.6 se il documento non esiste) dentro la sezione serializzata.
+   */
   async function aggiornaDiario(data, modifiche) {
     await autore();
     const path = `diario/${data}`;
     await serializza(path, async () => {
       const rif = db.doc(path);
       const snap = await rif.get();
-      const dati = { ...modifiche, aggiornatoIl: ora() };
+      const attuale = snap.exists ? { ...DIARIO_VUOTO, ...snap.data() } : { ...DIARIO_VUOTO };
+      const dati = { ...(typeof modifiche === 'function' ? modifiche(attuale) : modifiche), aggiornatoIl: ora() };
       if (snap.exists) await rif.update(dati);
-      else {
-        await rif.set({
-          riscaldamentoFatti: [], stretchingFatti: [], principaleFatto: false, sensazione: null, nota: '',
-          ...dati,
-        });
-      }
+      else await rif.set({ ...DIARIO_VUOTO, ...dati });
     });
   }
 
