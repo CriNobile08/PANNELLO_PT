@@ -51,7 +51,7 @@ Ogni sottoprogetto ha la sua specifica, il suo piano e la sua implementazione.
 
 ## 4. Architettura
 
-- **Un solo artefatto claude.ai**, pubblicato dal cliente, che ne è quindi il **proprietario**. Il trainer viene invitato con un livello che gli permetta di scrivere (almeno collaboratore). Il trainer deve avere un account Claude (confermato).
+- **Un solo artefatto claude.ai**, pubblicato dal cliente, che ne è quindi il **proprietario**. Il trainer viene invitato **via email come Editor**, e l'artefatto **non** va condiviso anche tramite link (vedi §4.2). Il trainer deve avere un account Claude (confermato).
 - I dati stanno nel **database dell'artefatto** (capability `db`), con aggiornamento in tempo reale tramite `onSnapshot`. La capability `user` (scope `profile`) serve a riconoscere chi guarda la pagina e a mostrare i nomi degli autori delle modifiche.
 - Capability dichiarate: `{ db: { rules: [...] }, user: { scopes: ["profile"] } }`. Nient'altro.
 - **Pagina unica responsive.** Sotto i 900 px usa il layout telefono con barra di navigazione in basso; sopra usa il layout PC con menu laterale. Entrambe le viste funzionano con entrambi i layout.
@@ -68,7 +68,7 @@ Il ruolo **non** viene dedotto in automatico dai permessi dell'artefatto. In pro
 Regole:
 - **Vista iniziale:** se `user.isOwner()` restituisce vero → Cliente; in tutti gli altri casi → Trainer. Dopo il primo cambio, la vista scelta viene ricordata per dispositivo, nella memoria del browser (se non è disponibile, si riparte dalla vista iniziale).
 - Le modifiche registrano sempre come `autore` la persona reale (`user.id()`), non la vista scelta. Così "modificato da" resta affidabile.
-- Chi non può scrivere nel database (per esempio un invitato in sola lettura) vede le stesse schermate, ma ogni salvataggio viene rifiutato con il messaggio di §8.
+- **Permesso di scrittura controllato all'avvio** con `user.can("data.write")`. Se restituisce `false`, compare un avviso fisso "Puoi solo leggere: chiedi al proprietario di invitarti come Editor" e i pulsanti di salvataggio sono disattivati. Se restituisce `null` (la piattaforma non lo dice), i controlli restano attivi; al primo salvataggio rifiutato con `invalid_argument` la pagina passa in sola lettura con lo stesso avviso.
 
 ### 4.2 Permessi
 
@@ -90,7 +90,11 @@ rules: [
 
 **Conseguenze accettate:**
 - I vincoli della tabella sono applicati **solo dall'interfaccia**. Chiunque abbia accesso in scrittura può, passando di vista, modificare anche il diario o il piano alimentare. È coerente con il selettore libero e va bene tra persone che si fidano.
-- **Condivisione:** il trainer va invitato con un livello che permetta di **scrivere**, cioè almeno collaboratore. Come editor potrebbe anche ripubblicare il codice della pagina; è accettato perché è una persona fidata.
+- **Condivisione.** Il trainer è esterno all'organizzazione del cliente, e per gli esterni valgono regole precise (documentazione del database degli artefatti):
+  - invitati via email come *Collaboratore*, *Commentatore* o *Lettore* → **solo lettura**;
+  - invitati via email come **Editor** → **possono scrivere**, ma solo finché l'artefatto **non** è condiviso anche tramite link.
+  
+  Quindi: invito **via email come Editor**, nessun link pubblico. È molto probabilmente il motivo per cui nelle prove precedenti gli invitati non riuscivano a usare la parte trainer. Come Editor il trainer potrebbe anche ripubblicare il codice della pagina; è accettato perché è una persona fidata.
 
 ## 5. Modello dei dati
 
@@ -247,7 +251,7 @@ Riferimento visivo: le bozze nell'artefatto indicato in testa. I valori nelle bo
   - validazione dei campi;
   - regola di archiviazione;
   - conteggio dei blocchi completati.
-- **Verifica dei permessi dopo la pubblicazione:** lettura e scrittura con `ArtifactData` a livelli diversi. Un collaboratore deve poter scrivere ovunque; un lettore non deve poter scrivere da nessuna parte.
+- **Verifica dei permessi dopo la pubblicazione:** lettura e scrittura con `ArtifactData` a livelli diversi. Un livello `interact` o superiore deve poter scrivere ovunque; un livello `view` non deve poter scrivere da nessuna parte.
 - **Verifica visiva:** screenshot a 390 px e a 1440 px dell'HTML generato, prima di consegnare il link.
 - **Prova finale con il trainer** (checklist):
   1. Il trainer crea due schede e una settimana tipo.
@@ -277,4 +281,4 @@ scripts/build.js  → dist/pannello.html (un unico file con JS e CSS inline)
 ## 11. Punti aperti (non bloccanti per il sottoprogetto 1)
 
 - **Riempimento dell'anello "Cuore a riposo":** da definire nella specifica del sottoprogetto 2, quando sapremo quali dati sono disponibili.
-- **Scrittura da parte del trainer invitato:** da confermare con un artefatto di prova (sottoprogetto 0) prima della consegna. Va verificato che un invitato possa aprire il pannello e salvare con la regola `write: "interact"`. Se non funziona, il ripiego è che il trainer usi il pannello insieme al cliente, dal dispositivo del cliente. Le credenziali dell'account del cliente non si condividono.
+- **Scrittura da parte del trainer invitato:** da confermare con un artefatto di prova (sottoprogetto 0) prima della consegna. Va verificato che il trainer, invitato via email come Editor e senza link pubblico, possa aprire il pannello e salvare. Se non funziona, il ripiego è che il trainer usi il pannello insieme al cliente, dal dispositivo del cliente. Le credenziali dell'account del cliente non si condividono.
