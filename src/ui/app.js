@@ -5,6 +5,7 @@ import { oggiRoma } from '../logic/date.js';
 import { SezioneSchede } from './trainer/schede.js';
 import { SezioneSettimana } from './trainer/settimana.js';
 import { SezionePiano } from './trainer/alimentazione.js';
+import { SezioneDatiCliente } from './trainer/dati.js';
 import { SezioneOggi } from './cliente/oggi.js';
 import { SezioneAllenamentoCliente } from './cliente/allenamento.js';
 import { SezioneAlimentazioneCliente } from './cliente/alimentazione.js';
@@ -34,6 +35,7 @@ export const SEZIONI = {
   settimana: SezioneSettimana,
   schede: SezioneSchede,
   piano: SezionePiano,
+  'dati-cliente': SezioneDatiCliente,
 };
 
 /** Voci di navigazione per vista. `disattivata` → aria-disabled e "In arrivo". */
@@ -48,7 +50,7 @@ export const NAVIGAZIONE = {
     { sezione: 'settimana', etichetta: 'Settimana tipo', icona: '▦' },
     { sezione: 'schede', etichetta: 'Schede di allenamento', icona: '▤' },
     { sezione: 'piano', etichetta: 'Piano alimentare', icona: '◍' },
-    { sezione: 'dati-cliente', etichetta: 'Dati del cliente', icona: '∿', disattivata: true },
+    { sezione: 'dati-cliente', etichetta: 'Dati del cliente', icona: '∿' },
     { sezione: 'report', etichetta: 'Report settimanali', icona: '▥', disattivata: true },
   ],
 };

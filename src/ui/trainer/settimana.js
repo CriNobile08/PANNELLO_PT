@@ -5,6 +5,9 @@ import { ElencoSchede } from './schede.js';
 import { risolviSettimana } from '../../logic/risoluzione.js';
 import { versioneValida, versioniFuture, revisionePerGiorno } from '../../logic/versioni.js';
 import { statoBlocchi } from '../../logic/completamento.js';
+import { recupero } from '../../logic/indici.js';
+import { testoDurata } from '../cliente/sessioni.js';
+import { testoIndice } from './dati.js';
 import { GIORNI, lunediDi, aggiungiGiorni, giorniDellaSettimana, formatoData, formatoDataIso, giornoSettimana } from '../../logic/date.js';
 
 const NOMI_GIORNI = ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'];
@@ -242,6 +245,8 @@ function ComeSta() {
   const data = Object.keys(dati.diario).sort().reverse()
     .find((d) => d <= oggi && ((dati.diario[d].nota ?? '').trim() || dati.diario[d].sensazione != null));
   const voce = data ? dati.diario[data] : null;
+  const minutiSonno = dati.salute?.[oggi]?.sonno?.minutiAddormentato;
+  const rec = recupero(dati.salute, oggi);
   const parti = voce && [
     (voce.nota ?? '').trim() ? `“${voce.nota.trim()}”` : null,
     voce.sensazione != null ? `Sensazione ${voce.sensazione}/5` : null,
@@ -250,6 +255,8 @@ function ComeSta() {
     <section class="card come-sta" role="region" aria-label="Come sta">
       <h2 class="titolo-blocco">Come sta</h2>
       <p class="secondario">${voce ? `Ultima nota · ${formatoData(data)}: ${parti.join(' · ')}` : 'Nessun dato'}</p>
+      <p class="secondario">${`Sonno ultima notte: ${typeof minutiSonno === 'number' ? testoDurata(minutiSonno) : 'Nessun dato'}`}</p>
+      <p class="secondario">${`Recupero oggi: ${rec.stato === 'nessun-dato' ? 'Nessun dato' : testoIndice(rec)}`}</p>
     </section>`;
 }
 

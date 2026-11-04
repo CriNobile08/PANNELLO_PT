@@ -8,8 +8,8 @@ import { statoBlocchi } from '../../logic/completamento.js';
 import { formatoDataLunga } from '../../logic/date.js';
 import { unisciSessioni } from '../../logic/sessioni.js';
 import { DettaglioSessione } from './sessioni.js';
+import { TIPI } from './tipi.js';
 
-export const TIPI = { palestra: 'Palestra', corsa: 'Corsa', trekking: 'Trekking', camminata: 'Camminata', bici: 'Bici', altro: 'Altro' };
 
 /** Numero all'italiana: virgola decimale. */
 export const testoNumero = (n) => String(n).replace('.', ',');

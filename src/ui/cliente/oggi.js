@@ -7,12 +7,12 @@ import { percentualeSonno, minutiPisolini, recupero, OBIETTIVO_SONNO_PREDEFINITO
 import { unisciSessioni } from '../../logic/sessioni.js';
 import { RigaSessione, testoDurata } from './sessioni.js';
 import { Pasti } from './pasti.js';
-import { TIPI, contestoGiorno, useDiario, impostaBlocco } from './giornata.js';
+import { contestoGiorno, useDiario, impostaBlocco } from './giornata.js';
+import { TIPI } from './tipi.js';
+import { numero, migliaia } from '../formato.js';
 
 const FRECCE = { su: '↑', giu: '↓', uguale: '=' };
 const MESSA_IN_ATTESA_MS = 120000;
-const numero = (v) => typeof v === 'number' && Number.isFinite(v);
-const migliaia = (n) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 const testoObiettivo = (min) => `su ${testoDurata(min).replace(' 00', '')}`;
 
 function datiCard(doc) {

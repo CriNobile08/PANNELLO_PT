@@ -28,7 +28,7 @@ const SEME = {
 test('settimana: intestazione, card, spostamento, ripristino e nuova versione', async () => {
   const { page, chiudi } = await trainer({ seme: SEME });
   try {
-    await page.getByText('OGGI').waitFor();
+    await page.getByText('OGGI', { exact: true }).waitFor();
     await page.getByText('In vigore dal lun 26 ott · versione 2', { exact: false }).waitFor();
     await page.getByText('creata da Marta il', { exact: false }).waitFor();
     await page.getByText('Questa settimana · lun 2 nov – dom 8 nov').waitFor();
@@ -112,7 +112,7 @@ test('settimana vuota e sola lettura', async () => {
   } finally { await chiudi(); }
   const { page, chiudi: c2 } = await trainer({ seme: SEME, puoScrivere: false });
   try {
-    await page.getByText('OGGI').waitFor();
+    await page.getByText('OGGI', { exact: true }).waitFor();
     assert.equal(await page.getByRole('button', { name: 'Modifica solo questa settimana' }).isDisabled(), true);
     assert.equal(await page.getByRole('button', { name: 'Nuova versione da una data…' }).isDisabled(), true);
   } finally { await c2(); }
@@ -134,7 +134,7 @@ test('timestamp mancanti (creataIl) non rompono la pagina: si mostra "…"', asy
 test('solo questa settimana: non sovrascrive un giorno cambiato da un altro mentre l\'editor è aperto; sposta bloccato con modifiche in sospeso', async () => {
   const { page, chiudi } = await trainer({ seme: SEME });
   try {
-    await page.getByText('OGGI').waitFor();
+    await page.getByText('OGGI', { exact: true }).waitFor();
     await page.getByRole('button', { name: 'Modifica solo questa settimana' }).click();
     const griglia = page.locator('.editor-settimana .griglia-campi').first();
     await griglia.getByLabel('sab 7 nov').waitFor();

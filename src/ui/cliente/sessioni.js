@@ -1,6 +1,6 @@
 import { html } from '../html.js';
 import { oraRoma } from '../../logic/date.js';
-import { TIPI } from './giornata.js';
+import { TIPI } from './tipi.js';
 
 const FONTI = { googleHealth: 'Google Health', strava: 'Strava', hevy: 'Hevy', komoot: 'Komoot' };
 const ZONE = [['leggera', 'Leggera'], ['moderata', 'Moderata'], ['intensa', 'Intensa'], ['picco', 'Picco']];

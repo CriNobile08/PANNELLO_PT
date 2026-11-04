@@ -408,3 +408,18 @@ button[aria-pressed="true"].pulsante.primario { background: var(--allenamento); 
 .avviso-rilevamento p { margin: 0; }
 .azioni-avviso { display: flex; gap: 8px; }
 .azioni-avviso .pulsante { flex: 1; min-height: var(--tocco, 44px); }
+
+/* trainer: dati del cliente */
+.dati-cliente { max-width: 1100px; }
+.giorni-dati { display: flex; flex-direction: column; gap: 12px; }
+.tabella-dati-contenitore { overflow-x: auto; }
+.tabella-dati { width: 100%; border-collapse: collapse; }
+.tabella-dati th, .tabella-dati td { padding: 12px 8px; text-align: left; min-height: 44px; border-bottom: 1px solid var(--bordo, rgba(255, 255, 255, 0.1)); white-space: nowrap; }
+.tabella-dati thead th { color: var(--testo-2); font-weight: 500; }
+.tabella-dati tbody th { font-weight: 600; }
+.tabella-dati tbody tr:last-child th, .tabella-dati tbody tr:last-child td { border-bottom: 0; }
+.visivamente-nascosto { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.obiettivo-sonno { display: flex; flex-direction: column; gap: 12px; }
+.obiettivo-campi { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; }
+.obiettivo-campi .campo { width: 96px; }
+.obiettivo-campi .pulsante { min-width: 44px; }

@@ -23,9 +23,8 @@ test('invitato: parte in vista trainer con le voci "In arrivo"', async () => {
     await p2.getByRole('button', { name: 'Trainer', pressed: true }).waitFor();
     await p2.getByText('In arrivo').first().waitFor();
     for (const v of ['Settimana tipo', 'Schede di allenamento', 'Piano alimentare']) await p2.getByRole('link', { name: v }).waitFor();
-    for (const v of ['Dati del cliente', 'Report settimanali']) {
-      assert.equal(await p2.getByRole('link', { name: new RegExp(v) }).getAttribute('aria-disabled'), 'true');
-    }
+    assert.equal(await p2.getByRole('link', { name: /Report settimanali/ }).getAttribute('aria-disabled'), 'true');
+    assert.equal(await p2.getByRole('link', { name: /Dati del cliente/ }).getAttribute('aria-disabled'), null);
   } finally { await chiudi(); }
 });
 
