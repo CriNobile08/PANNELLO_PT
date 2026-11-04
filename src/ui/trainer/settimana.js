@@ -32,12 +32,18 @@ const vuoti = () => Object.fromEntries(GIORNI.map((g) => [g, '']));
 export function EditorSoloQuestaSettimana({ lunedi, onChiudi }) {
   const { dati, store, puoScrivere, segnalaRifiuto, setSporco } = useContext(Contesto);
   const giorni = risolviSettimana(lunedi, dati);
-  const [valori, setValori] = useState(() => giorni.map((g) => g.schedaId ?? ''));
+  // valori di partenza fissati all'apertura: si scrivono solo i giorni che l'utente ha cambiato, così una
+  // modifica fatta da un altro nel frattempo su un altro giorno non viene sovrascritta.
+  const [iniziali] = useState(() => giorni.map((g) => g.schedaId ?? ''));
+  const [valori, setValori] = useState(iniziali);
   const [da, setDa] = useState('');
   const [a, setA] = useState('');
   const [messaggio, setMessaggio] = useState(null);
   const [inCorso, setInCorso] = useState(false);
-  const cambiati = giorni.map((g, i) => ({ data: g.data, id: valori[i] || null, prima: g.schedaId ?? null })).filter((c) => c.id !== c.prima);
+  const cambiati = giorni
+    .map((g, i) => ({ data: g.data, id: valori[i] || null, cambiato: valori[i] !== iniziali[i] }))
+    .filter((c) => c.cambiato);
+  const inSospeso = cambiati.length > 0;
 
   const imposta = (i, v) => { setValori(valori.map((x, j) => (j === i ? v : x))); setSporco(true); };
   async function esegui(scrivi) {
@@ -78,11 +84,12 @@ export function EditorSoloQuestaSettimana({ lunedi, onChiudi }) {
           ${opzioniGiorno(da, setDa, 'Sposta da')}
           ${opzioniGiorno(a, setA, 'Sposta a')}
         </div>
-        <button type="button" class="pulsante" disabled=${!puoScrivere || inCorso || !da || !a || da === a} onClick=${sposta}>Sposta giorno</button>
+        ${inSospeso && html`<p class="secondario">Salva o annulla le modifiche ai giorni prima di spostare</p>`}
+        <button type="button" class="pulsante" disabled=${!puoScrivere || inCorso || inSospeso || !da || !a || da === a} onClick=${sposta}>Sposta giorno</button>
       </div>
       ${messaggio && html`<p class="errore-scrittura" role="alert">${messaggio}</p>`}
       <div class="azioni-editor">
-        <button type="button" class="pulsante primario" disabled=${!puoScrivere || inCorso || cambiati.length === 0} onClick=${salva}>Salva</button>
+        <button type="button" class="pulsante primario" disabled=${!puoScrivere || inCorso || !inSospeso} onClick=${salva}>Salva</button>
         <button type="button" class="pulsante" onClick=${annulla}>Annulla</button>
       </div>
     </div>`;

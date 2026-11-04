@@ -130,3 +130,30 @@ test('timestamp mancanti (creataIl) non rompono la pagina: si mostra "…"', asy
     await page.getByRole('article', { name: 'gio 5 nov' }).getByText('da Marta · …').waitFor();
   } finally { await chiudi(); }
 });
+
+test('solo questa settimana: non sovrascrive un giorno cambiato da un altro mentre l\'editor è aperto; sposta bloccato con modifiche in sospeso', async () => {
+  const { page, chiudi } = await trainer({ seme: SEME });
+  try {
+    await page.getByText('OGGI').waitFor();
+    await page.getByRole('button', { name: 'Modifica solo questa settimana' }).click();
+    const griglia = page.locator('.editor-settimana .griglia-campi').first();
+    await griglia.getByLabel('sab 7 nov').waitFor();
+    // Marta assegna sabato mentre l'editor è aperto
+    await page.evaluate(async () => {
+      const db = await window.claude.use('db');
+      await db.doc('eccezioni/2026-11-07').set({ schedaId: 'tirata', origine: null, autore: 'u-altro', creataIl: '2026-11-04T08:00:00Z' });
+    });
+    await griglia.getByLabel('gio 5 nov').selectOption('gambe');
+    // con modifiche in sospeso "Sposta giorno" è disattivato e spiegato
+    await page.getByLabel('Sposta da').selectOption('2026-11-06');
+    await page.getByLabel('Sposta a').selectOption('2026-11-08');
+    assert.equal(await page.getByRole('button', { name: 'Sposta giorno' }).isDisabled(), true);
+    await page.getByText('Salva o annulla le modifiche ai giorni prima di spostare').waitFor();
+    await page.getByRole('button', { name: 'Salva' }).click();
+    await page.getByRole('article', { name: 'gio 5 nov' }).getByText('Gambe').first().waitFor();
+    const d = await dump(page);
+    assert.equal(d['eccezioni/2026-11-05'].schedaId, 'gambe');
+    assert.equal(d['eccezioni/2026-11-07'].schedaId, 'tirata');
+    assert.equal(d['eccezioni/2026-11-07'].autore, 'u-altro');
+  } finally { await chiudi(); }
+});
