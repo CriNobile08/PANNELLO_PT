@@ -28,7 +28,7 @@ function disegna() {
   else {
     render(html`<${App}
       dati=${stato.dati} store=${stato.store} utenteId=${stato.utenteId} isOwner=${stato.isOwner}
-      puoScrivere=${stato.puoScrivere} avviaAttivita=${stato.avviaAttivita} segnalaRifiuto=${stato.segnalaRifiuto} nomi=${stato.nomi} />`, radice);
+      puoScrivere=${stato.puoScrivere} avviaAttivita=${stato.avviaAttivita} asset=${stato.asset} segnalaRifiuto=${stato.segnalaRifiuto} nomi=${stato.nomi} />`, radice);
   }
 }
 
@@ -94,10 +94,11 @@ async function avvia() {
   const claude = window.claude;
   if (!claude?.use) return fallisci();
 
-  const [db, user, mcp] = await Promise.all([
+  const [db, user, mcp, assets] = await Promise.all([
     prova(() => claude.use('db'), null),
     prova(() => claude.use('user'), null),
     prova(() => claude.use('mcp'), null),
+    prova(() => claude.use('assets'), null),
   ]);
   if (!attuale()) return;
   if (!db) return fallisci();
@@ -124,6 +125,14 @@ async function avvia() {
     avviaAttivita: isOwner === true && mcp
       ? (triggerId) => mcp.callTool('Claude Code Remote', 'fire_trigger', { trigger_id: triggerId }, { cache: false })
       : null, nomi: creaNomi(user, mio),
+    // GPX originale come asset (spec §5.3): si conserva solo l'id. Il tipo `application/gpx+xml` non è
+    // accettato dallo store degli asset, il GPX (testo UTF-8) si carica come `text/plain`.
+    asset: assets
+      ? {
+        carica: async (file) => ({ id: (await assets.upload(file, { type: 'text/plain' })).id }),
+        elimina: async (id) => { await assets.delete(id); },
+      }
+      : null,
   };
 
   chiudiIscrizione = store.osserva(

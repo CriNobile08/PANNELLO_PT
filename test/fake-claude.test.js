@@ -48,3 +48,32 @@ test('mcp registra le chiamate; default null', async () => {
   assert.deepEqual(await mcp.callTool('S', 't', { a: 1 }, { cache: false }), {});
   assert.deepEqual(fake.chiamateMcp(), [{ server: 'S', tool: 't', input: { a: 1 } }]);
 });
+
+test('assets: upload con contatore, delete registrata, chiamateAsset', async () => {
+  const fake = globalThis.creaFakeClaude({ assets: true });
+  const assets = await fake.use('assets');
+  const r1 = await assets.upload(new Blob(['ciao']));
+  assert.deepEqual(r1, { id: 'a1', url: '/_blob/a1', sizeBytes: 4, contentType: 'text/plain' });
+  assert.equal((await assets.upload(new Blob(['x']), { type: 'text/plain' })).id, 'a2');
+  assert.deepEqual(await assets.delete('a1'), { deleted: true });
+  assert.deepEqual(fake.chiamateAsset(), { upload: ['a1', 'a2'], delete: ['a1'] });
+});
+
+test('assets: assente senza opzione; assetFallisce rifiuta upload', async () => {
+  assert.equal(await globalThis.creaFakeClaude({}).use('assets'), null);
+  const fake = globalThis.creaFakeClaude({ assets: true, assetFallisce: true });
+  await assert.rejects((await fake.use('assets')).upload(new Blob(['x'])), { code: 'store_unavailable' });
+  assert.deepEqual(fake.chiamateAsset(), { upload: [], delete: [] });
+});
+
+test('scritturaFallisce: rifiuta le scritture sotto quella collezione, anche impostata dopo', async () => {
+  const fake = globalThis.creaFakeClaude({ scritturaFallisce: 'tracciati' });
+  const db = await fake.use('db');
+  await assert.rejects(db.doc('tracciati/x').set({ a: 1 }), { code: 'unavailable' });
+  await db.doc('altro/x').set({ a: 1 });
+  fake.scritturaFallisce(null);
+  await db.doc('tracciati/x').set({ a: 1 });
+  fake.scritturaFallisce('tracciati');
+  await assert.rejects(db.doc('tracciati/x').delete(), { code: 'unavailable' });
+  assert.deepEqual(fake.dump()['tracciati/x'], { a: 1 });
+});

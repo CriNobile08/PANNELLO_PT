@@ -9,13 +9,18 @@
   };
 
   globalThis.creaFakeClaude = function creaFakeClaude(opzioni) {
-    const { isOwner = true, puoScrivere = true, userId = 'u-cliente', profili = {}, seme = {}, senzaDb = false, ritardoDb = 0, mcp: conMcp = false } = opzioni ?? {};
+    const { isOwner = true, puoScrivere = true, userId = 'u-cliente', profili = {}, seme = {}, senzaDb = false, ritardoDb = 0, mcp: conMcp = false,
+      assets: conAssets = false, assetFallisce = false } = opzioni ?? {};
+    // scritturaFallisce: nome di una collezione di primo livello le cui scritture vengono rifiutate (modificabile con scritturaFallisce()).
+    let collezioneRifiutata = opzioni?.scritturaFallisce ?? null;
     const docs = new Map(Object.entries(seme).map(([p, d]) => [p, clona(d)]));
     const ascoltatori = new Set();
     let contatore = 0;
 
     const segmenti = (p) => p.split('/').filter(Boolean);
     const rifiuto = () => Promise.reject({ code: 'invalid_argument', message: 'write below minimum level' });
+    const guasto = (path) => collezioneRifiutata !== null && segmenti(path)[0] === collezioneRifiutata;
+    const rifiutoGuasto = () => Promise.reject({ code: 'unavailable', message: 'write failed' });
 
     function snapshotDoc(path) {
       const dati = docs.get(path);
@@ -63,12 +68,14 @@
         get: () => Promise.resolve(snapshotDoc(path)),
         set(dati) {
           if (!puoScrivere) return rifiuto();
+          if (guasto(path)) return rifiutoGuasto();
           docs.set(path, clona(dati));
           scritto();
           return Promise.resolve();
         },
         update(dati) {
           if (!puoScrivere) return rifiuto();
+          if (guasto(path)) return rifiutoGuasto();
           if (!docs.has(path)) return Promise.reject({ code: 'invalid_argument', message: 'document does not exist' });
           docs.set(path, unisci(docs.get(path), dati));
           scritto();
@@ -76,6 +83,7 @@
         },
         delete() {
           if (!puoScrivere) return rifiuto();
+          if (guasto(path)) return rifiutoGuasto();
           docs.delete(path);
           scritto();
           return Promise.resolve();
@@ -113,13 +121,31 @@
       callTool: (server, tool, input) => { chiamate.push({ server, tool, input: clona(input) }); return Promise.resolve({}); },
     } : null;
 
+    // assets finti: id a1, a2, … (come il vero, l'id è il puntatore durevole e l'URL è /_blob/<id>)
+    const chiamateAsset = { upload: [], delete: [] };
+    let contatoreAsset = 0;
+    const assets = conAssets ? {
+      upload(blob, opzioniUpload) {
+        if (assetFallisce) return Promise.reject({ code: 'store_unavailable', message: 'upload failed' });
+        const id = 'a' + ++contatoreAsset;
+        chiamateAsset.upload.push(id);
+        return Promise.resolve({ id, url: '/_blob/' + id, sizeBytes: blob?.size ?? 0, contentType: opzioniUpload?.type || blob?.type || 'text/plain' });
+      },
+      delete(id) {
+        chiamateAsset.delete.push(id);
+        return Promise.resolve({ deleted: true });
+      },
+    } : null;
+
     return {
       use: (nome) => {
-        const valore = nome === 'db' ? (senzaDb ? null : db) : nome === 'user' ? user : nome === 'mcp' ? mcp : null;
+        const valore = nome === 'db' ? (senzaDb ? null : db) : nome === 'user' ? user : nome === 'mcp' ? mcp : nome === 'assets' ? assets : null;
         if (nome === 'db' && ritardoDb > 0) return new Promise((ok) => setTimeout(() => ok(valore), ritardoDb));
         return Promise.resolve(valore);
       },
       chiamateMcp: () => clona(chiamate),
+      chiamateAsset: () => clona(chiamateAsset),
+      scritturaFallisce: (nome) => { collezioneRifiutata = nome ?? null; },
       iscrizioniAttive: () => ascoltatori.size,
       dump: () => Object.fromEntries([...docs].map(([p, d]) => [p, clona(d)])),
     };

@@ -294,3 +294,28 @@ test('diario nuovo ha i campi nuovi', async () => {
   await store.aggiornaDiario('2026-11-04', { nota: 'x' });
   assert.partialDeepStrictEqual(fake.dump()['diario/2026-11-04'], { sessioniCollegate: [], rilevamentoIgnorato: false, nota: 'x' });
 });
+
+test('salvaTracciato scrive il documento con autore e caricatoIl; rimuoviTracciato lo cancella', async () => {
+  const { fake, store } = await setup();
+  const doc = { fonte: 'gpx', nomeFile: 'corsa.gpx', distanzaM: 8430, idAsset: 'a1', autore: 'falso', caricatoIl: 'falso' };
+  await store.salvaTracciato({ idParte: 'googleHealth_c1', doc });
+  assert.deepEqual(fake.dump()['tracciati/googleHealth_c1'], {
+    fonte: 'gpx', nomeFile: 'corsa.gpx', distanzaM: 8430, idAsset: 'a1',
+    idParte: 'googleHealth_c1', caricatoIl: '2026-11-04T09:00:00.000Z', autore: 'u-cliente',
+  });
+  await store.rimuoviTracciato('googleHealth_c1');
+  assert.equal(fake.dump()['tracciati/googleHealth_c1'], undefined);
+});
+
+test('salvaTracciato e rimuoviTracciato: senza utente o idParte non valido', async () => {
+  const fake = creaFakeClaude({ seme: { 'tracciati/x': { idAsset: 'a1' } } });
+  const store = creaStore({ db: await fake.use('db'), autoreId: null, adesso });
+  await assert.rejects(store.salvaTracciato({ idParte: 'x', doc: {} }), { codice: 'senza_utente' });
+  await assert.rejects(store.rimuoviTracciato('x'), { codice: 'senza_utente' });
+  assert.deepEqual(fake.dump()['tracciati/x'], { idAsset: 'a1' });
+  const { store: s2 } = await setup();
+  for (const id of ['', null, 'a/b']) {
+    await assert.rejects(s2.salvaTracciato({ idParte: id, doc: {} }), { codice: 'non_valido' });
+    await assert.rejects(s2.rimuoviTracciato(id), { codice: 'non_valido' });
+  }
+});

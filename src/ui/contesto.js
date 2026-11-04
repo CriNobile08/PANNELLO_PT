@@ -8,7 +8,9 @@ import { createContext } from 'preact';
  *   aggiornaOra: (() => Promise<void>) | null,  // non null solo se isOwner, il capability mcp c'è e
  *                               // dati.impostazioni.sync.idAttivita è una stringa non vuota; avvia l'attività
  *                               // (fire_trigger). Un rifiuto di callTool (McpError con `code`) si propaga.
- *   store,                      // creaStore(...): salvaScheda, salvaSettimana, aggiornaDiario, salvaObiettivi, …
+ *   asset: { carica(file) → Promise<{ id }>, elimina(id) → Promise<void> } | null,  // null se
+ *                               // claude.use('assets') è null (chi non è Editor): niente caricamento GPX
+ *   store,                      // creaStore(...): salvaScheda, salvaSettimana, aggiornaDiario, salvaObiettivi, salvaTracciato, rimuoviTracciato, …
  *   oggi: 'YYYY-MM-DD',         // oggiRoma(), ricalcolato a ogni render
  *   utenteId: string|null,      // await user.id()
  *   vista: 'cliente'|'trainer', setVista(vista),   // passa dalla guardia modifiche

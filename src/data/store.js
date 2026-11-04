@@ -276,5 +276,22 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
       db.doc('impostazioni/obiettivi').set({ sonnoMinuti, aggiornatoIl: ora(), autore: utente }));
   }
 
-  return { osserva, salvaScheda, archiviaScheda, salvaSettimana, impostaEccezione, spostaGiorno, annullaEccezione, salvaPiano, aggiornaDiario, salvaObiettivi };
+  const idParteValido = (id) => typeof id === 'string' && id !== '' && !id.includes('/');
+
+  /** Scrive `tracciati/{idParte}` (spec §5.2): `doc` più idParte, caricatoIl e autore. */
+  async function salvaTracciato({ idParte, doc }) {
+    const utente = await autore();
+    if (!idParteValido(idParte)) throw { codice: 'non_valido' };
+    const path = `tracciati/${idParte}`;
+    await serializza(path, () => db.doc(path).set({ ...doc, idParte, caricatoIl: ora(), autore: utente }));
+  }
+
+  async function rimuoviTracciato(idParte) {
+    await autore();
+    if (!idParteValido(idParte)) throw { codice: 'non_valido' };
+    const path = `tracciati/${idParte}`;
+    await serializza(path, () => db.doc(path).delete());
+  }
+
+  return { osserva, salvaTracciato, rimuoviTracciato, salvaScheda, archiviaScheda, salvaSettimana, impostaEccezione, spostaGiorno, annullaEccezione, salvaPiano, aggiornaDiario, salvaObiettivi };
 }
