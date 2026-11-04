@@ -5,17 +5,14 @@ import { Vuoto } from '../componenti.js';
 import { unisciSessioni, sessioniValide } from '../../logic/sessioni.js';
 import { statisticheFc, fcPerKm } from '../../logic/fc.js';
 import { formatoDataIso, oraRoma } from '../../logic/date.js';
-import { numero, migliaia, minSec } from '../formato.js';
-import { testoDurata } from './sessioni.js';
+import { numero, migliaia, minSec, conUnita } from '../formato.js';
+import { testoDurata, FONTI, ZONE } from './sessioni.js';
 import { TIPI } from './tipi.js';
 import { GraficoFc, MappaTracciato } from './grafici.js';
 
 const ASSENTE = '—';
-const FONTI = { googleHealth: 'Google Health', strava: 'Strava', hevy: 'Hevy', komoot: 'Komoot' };
-const ZONE = [['leggera', 'Leggera'], ['moderata', 'Moderata'], ['intensa', 'Intensa'], ['picco', 'Picco']];
 const CON_TRACCIATO = ['corsa', 'trekking'];
 
-const conUnita = (v, unita) => (numero(v) ? `${Math.round(v)} ${unita}` : ASSENTE);
 const virgola = (v) => String(v).replace('.', ',');
 /** 7012 → "7,01 km" */
 const testoKm = (m) => (numero(m) ? `${(m / 1000).toFixed(2).replace('.', ',')} km` : ASSENTE);

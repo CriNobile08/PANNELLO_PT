@@ -1,9 +1,10 @@
 import { html } from '../html.js';
 import { oraRoma } from '../../logic/date.js';
 import { TIPI } from './tipi.js';
+import { conUnita } from '../formato.js';
 
-const FONTI = { googleHealth: 'Google Health', strava: 'Strava', hevy: 'Hevy', komoot: 'Komoot' };
-const ZONE = [['leggera', 'Leggera'], ['moderata', 'Moderata'], ['intensa', 'Intensa'], ['picco', 'Picco']];
+export const FONTI = { googleHealth: 'Google Health', strava: 'Strava', hevy: 'Hevy', komoot: 'Komoot' };
+export const ZONE = [['leggera', 'Leggera'], ['moderata', 'Moderata'], ['intensa', 'Intensa'], ['picco', 'Picco']];
 
 const numero = (v) => typeof v === 'number' && Number.isFinite(v);
 
@@ -14,7 +15,6 @@ export function testoDurata(min) {
   return m >= 60 ? `${Math.floor(m / 60)} h ${String(m % 60).padStart(2, '0')}` : `${m} min`;
 }
 
-const conUnita = (v, unita) => (numero(v) ? `${Math.round(v)} ${unita}` : '—');
 const km = (m) => (numero(m) ? `${(m / 1000).toFixed(1).replace('.', ',')} km` : '—');
 const nomeTipo = (s) => TIPI[s.tipo] ?? s.nome ?? TIPI.altro;
 const nomiFonti = (s) => (s.fonti ?? []).map((f) => FONTI[f] ?? f).join(', ');

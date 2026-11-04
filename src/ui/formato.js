@@ -10,3 +10,6 @@ export const minSec = (sec) => {
   const s = Math.round(sec);
   return `${Math.floor(s / 60)}′${String(s % 60).padStart(2, '0')}″`;
 };
+
+/** 118, 'bpm' → "118 bpm" (arrotondato); non numerico → "—". */
+export const conUnita = (v, unita) => (numero(v) ? `${Math.round(v)} ${unita}` : '—');

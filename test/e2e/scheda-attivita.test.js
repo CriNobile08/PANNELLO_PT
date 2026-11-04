@@ -197,9 +197,11 @@ test('doppioni', async () => {
     assert.equal(await recenti(page).getByRole('button').count(), 3);
     await apriDaRecenti(page, 'Palestra');
     await page.locator('.testata-attivita').getByText('unite 2 registrazioni').waitFor();
+    await senzaValoriRotti(page);
     await page.getByRole('button', { name: '‹ Indietro' }).click();
     await apriDaRecenti(page, 'Corsa');
     assert.equal(await page.getByText(/unite \d+ registrazioni/).count(), 0);
+    await senzaValoriRotti(page);
   } finally { await chiudi(); }
 });
 
@@ -233,6 +235,7 @@ test('dalla colonna Fatto della giornata', async () => {
     await page.getByRole('heading', { name: 'mercoledì 4 novembre' }).waitFor();
     await page.locator('.colonna-fatto').getByRole('button', { name: 'Apri scheda' }).click();
     await page.locator('.testata-attivita').getByText('mer 4 nov · 07:30').waitFor();
+    await senzaValoriRotti(page);
     await page.getByRole('button', { name: '‹ Indietro' }).click();
     await page.getByRole('heading', { name: 'mercoledì 4 novembre' }).waitFor();
   } finally { await chiudi(); }
