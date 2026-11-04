@@ -104,3 +104,42 @@ test('sola lettura e creataIl mancante', async () => {
     assert.equal(await page.getByRole('button', { name: 'Salva come nuova versione da…' }).isDisabled(), true);
   } finally { await chiudi(); }
 });
+
+test('errori in pasti chiusi e opzioni nascoste sono segnalati; rimuovi pasto e opzione', async () => {
+  const { page, chiudi } = await trainer({ seme: { 'alimentazione/a1': PIANO() } });
+  try {
+    await vaiAlPiano(page);
+    // errore in Pranzo (chiuso) e in Colazione opzione 2 (scheda non attiva)
+    await page.getByRole('tab', { name: 'Opzione 2' }).click();
+    await page.getByLabel('Grammi', { exact: true }).fill('0');
+    await page.getByRole('tab', { name: 'Opzione 1' }).click();
+    await page.getByRole('button', { name: 'Pranzo' }).click();
+    await page.getByLabel('Grammi', { exact: true }).fill('');
+    await conferma(page, '2026-11-04');
+    await page.getByText('Correggi i campi evidenziati').waitFor();
+    assert.equal(versioni(await dump(page)).length, 1);
+    // si apre il primo errore (Colazione, Opzione 2); Pranzo è chiuso e marcato
+    await page.getByRole('tab', { name: /Opzione 2.*Da correggere/ }).waitFor();
+    await page.getByRole('button', { name: /Pranzo/ }).getByText('Da correggere').waitFor();
+    // aprendo Pranzo, Colazione si chiude e resta marcata
+    await page.getByRole('button', { name: /Pranzo/ }).click();
+    await page.getByRole('button', { name: /Colazione/ }).getByText('Da correggere').waitFor();
+  } finally { await chiudi(); }
+});
+
+test('rimuovi pasto e rimuovi opzione', async () => {
+  const { page, chiudi } = await trainer({ seme: { 'alimentazione/a1': PIANO() } });
+  try {
+    await vaiAlPiano(page);
+    await page.getByRole('button', { name: '+ Aggiungi pasto' }).click();
+    await page.getByRole('button', { name: '+ Opzione' }).click();
+    await page.getByRole('button', { name: 'Rimuovi opzione 2' }).click();
+    assert.equal(await page.getByRole('tab').count(), 1);
+    assert.equal(await page.getByRole('button', { name: 'Rimuovi opzione 1' }).isDisabled(), true);
+    await page.getByRole('button', { name: 'Rimuovi pasto 3' }).click();
+    await conferma(page, '2026-11-04');
+    await page.getByText('Modifiche non salvate').waitFor({ state: 'detached' });
+    const nuova = versioni(await dump(page)).find((v) => v.numero === 2);
+    assert.equal(nuova.pasti.length, 2);
+  } finally { await chiudi(); }
+});

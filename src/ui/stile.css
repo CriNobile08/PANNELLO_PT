@@ -353,3 +353,4 @@ h1, h2, h3 { margin: 0; font-weight: 600; }
 .con-suffisso .campo { flex: 1; min-width: 0; }
 .con-suffisso .suffisso { padding-top: 30px; }
 .avviso-modifiche { color: var(--avviso); }
+.da-correggere { color: var(--errore); font-size: 13px; font-weight: 600; }

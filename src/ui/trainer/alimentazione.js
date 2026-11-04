@@ -84,7 +84,9 @@ function riassunto(pasto) {
   return [...primi, `${n} ${n === 1 ? 'opzione' : 'opzioni'}`].join(' · ');
 }
 
-function PastoAperto({ pasto, i, errori, opzioneAttiva, onOpzione, onCambia }) {
+const haErrori = (errori, prefisso) => Object.keys(errori).some((k) => k === prefisso || k.startsWith(`${prefisso}.`));
+
+function PastoAperto({ pasto, i, errori, opzioneAttiva, onOpzione, onCambia, onRimuovi }) {
   const attiva = Math.min(opzioneAttiva, pasto.opzioni.length - 1);
   const opzione = pasto.opzioni[attiva];
   const percorso = `pasti.${i}.opzioni.${attiva}`;
@@ -98,13 +100,18 @@ function PastoAperto({ pasto, i, errori, opzioneAttiva, onOpzione, onCambia }) {
       <div class="schede-opzione" role="tablist" aria-label="Opzioni">
         ${pasto.opzioni.map((o, j) => html`
           <button key=${j} type="button" role="tab" class=${`pulsante scheda-opzione${j === attiva ? ' attiva' : ''}`} aria-selected=${j === attiva}
-            onClick=${() => onOpzione(j)}>${`Opzione ${j + 1}`}</button>`)}
+            onClick=${() => onOpzione(j)}>${`Opzione ${j + 1}`}${haErrori(errori, `pasti.${i}.opzioni.${j}`) ? html` <span class="da-correggere">Da correggere</span>` : ''}</button>`)}
         <button type="button" class="pulsante" onClick=${() => {
     onCambia({ ...pasto, opzioni: [...pasto.opzioni, nuovaOpzione(pasto.opzioni.length + 1)] });
     onOpzione(pasto.opzioni.length);
   }}>+ Opzione</button>
       </div>
       <div class="opzione" role="tabpanel">
+        <button type="button" class="pulsante" aria-label=${`Rimuovi opzione ${attiva + 1}`} disabled=${pasto.opzioni.length <= 1}
+          onClick=${() => {
+    onCambia({ ...pasto, opzioni: pasto.opzioni.filter((_, x) => x !== attiva).map((o, x) => ({ ...o, nome: `Opzione ${x + 1}` })) });
+    onOpzione(Math.max(0, attiva - 1));
+  }}>Rimuovi opzione</button>
         ${opzione.alimenti.map((a, k) => html`
           <div key=${`${attiva}-${k}`} class="riga-alimento card-interna" role="group" aria-label=${`Alimento ${k + 1}`}>
             <${Campo} etichetta="Alimento" errore=${errori[`${percorso}.alimenti.${k}.nome`]}>
@@ -123,6 +130,7 @@ function PastoAperto({ pasto, i, errori, opzioneAttiva, onOpzione, onCambia }) {
           <textarea value=${opzione.nota} onInput=${(e) => cambiaOpzione({ ...opzione, nota: e.target.value })}></textarea>
         </${Campo}>
       </div>
+      <button type="button" class="pulsante" aria-label=${`Rimuovi pasto ${pasto.nome.trim() || i + 1}`} onClick=${onRimuovi}>Rimuovi pasto</button>
     </div>`;
 }
 
@@ -176,6 +184,10 @@ function Editor() {
       setAperto(Number(p));
       if (o !== undefined) setOpzioni((x) => ({ ...x, [Number(p)]: Number(o) }));
       setDialogo(false);
+      setTimeout(() => {
+        const el = document.querySelector('.editor-piano [aria-invalid="true"]');
+        if (el) { el.scrollIntoView?.({ block: 'center' }); el.focus(); }
+      }, 50);
       return;
     }
     setInCorso(true);
@@ -195,6 +207,11 @@ function Editor() {
   }
 
   const cambiaPasto = (i, nuovo) => cambia({ pasti: sostituisci(bozza.pasti, i, nuovo) });
+  const rimuoviPasto = (i) => {
+    cambia({ pasti: bozza.pasti.filter((_, k) => k !== i) });
+    setAperto(bozza.pasti.length > 1 ? Math.max(0, i - 1) : 0);
+    setOpzioni({});
+  };
   const aggiungiPasto = () => {
     cambia({ pasti: [...bozza.pasti, nuovoPasto()] });
     setAperto(bozza.pasti.length);
@@ -208,14 +225,16 @@ function Editor() {
           <textarea value=${bozza.indicazioni} onInput=${(e) => cambia({ indicazioni: e.target.value })}></textarea>
         </${Campo}>
       </div>
+      ${Object.keys(errori).length > 0 && html`<p class="errore-scrittura" role="alert">Correggi i campi evidenziati</p>`}
       ${bozza.pasti.map((p, i) => html`
         <section key=${i} class="card pasto" role="region" aria-label=${p.nome.trim() || `Pasto ${i + 1}`}>
           ${i === aperto
     ? html`<${PastoAperto} pasto=${p} i=${i} errori=${errori} opzioneAttiva=${opzioni[i] ?? 0}
-              onOpzione=${(j) => setOpzioni((x) => ({ ...x, [i]: j }))} onCambia=${(n) => cambiaPasto(i, n)} />`
+              onOpzione=${(j) => setOpzioni((x) => ({ ...x, [i]: j }))} onCambia=${(n) => cambiaPasto(i, n)} onRimuovi=${() => rimuoviPasto(i)} />`
     : html`<button type="button" class="riga-scheda card-interna pasto-chiuso" onClick=${() => setAperto(i)}>
               <span class="riga-nome">${p.nome.trim() || `Pasto ${i + 1}`}</span>
               <span class="riga-dettaglio secondario">${riassunto(p)}</span>
+              ${haErrori(errori, `pasti.${i}`) && html`<span class="da-correggere">Da correggere</span>`}
             </button>`}
         </section>`)}
       <button type="button" class="pulsante" onClick=${aggiungiPasto}>+ Aggiungi pasto</button>
