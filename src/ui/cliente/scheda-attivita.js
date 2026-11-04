@@ -1,7 +1,8 @@
-/** Scheda attività di una sessione unita, in sola lettura (spec §8). */
-import { html, useContext } from '../html.js';
+/** Scheda attività di una sessione unita (spec §8): lettura, più caricamento del GPX per chi può scrivere. */
+import { html, useContext, useState, useRef } from '../html.js';
 import { Contesto } from '../contesto.js';
-import { Vuoto } from '../componenti.js';
+import { Vuoto, Dialogo } from '../componenti.js';
+import { leggiGpx, analizzaGpx, sovrapposizione } from '../../logic/gpx.js';
 import { unisciSessioni, sessioniValide } from '../../logic/sessioni.js';
 import { statisticheFc, fcPerKm } from '../../logic/fc.js';
 import { formatoDataIso, oraRoma } from '../../logic/date.js';
@@ -28,6 +29,23 @@ export function trovaTracciato(sessione, tracciati) {
     if (t) return t;
   }
   return null;
+}
+
+/** Id della parte con un tracciato (la chiave in `tracciati`), o null. */
+function chiaveTracciato(sessione, tracciati) {
+  return (sessione?.parti ?? []).find((p) => tracciati?.[p.id])?.id ?? null;
+}
+
+/**
+ * Parte a cui collegare un nuovo tracciato: la parte Google Health più lunga, altrimenti la prima per `inizio`.
+ * @returns {string|null} id della parte
+ */
+export function parteDaCollegare(sessione) {
+  const parti = sessione?.parti ?? [];
+  const gh = piuLunga(parti.filter((p) => p.fonte === 'googleHealth'));
+  if (gh) return gh.id;
+  const prima = [...parti].sort((a, b) => (Date.parse(a.inizio) || 0) - (Date.parse(b.inizio) || 0))[0];
+  return prima?.id ?? null;
 }
 
 /** fcSerie della parte Google Health più lunga che ne ha una. */
@@ -109,12 +127,125 @@ function SezioneGraficoFc({ fcSerie, statistiche }) {
     </${Sezione}>`;
 }
 
-function Tracciato({ tracciato }) {
+const MAX_BYTE_GPX = 15 * 1024 * 1024;
+const SOVRAPPOSIZIONE_MINIMA = 0.5;
+const TESTO = {
+  troppoGrande: 'File troppo grande (massimo 15 MB)',
+  nonValido: 'File GPX non valido: servono punti con data e ora',
+  nonRiuscito: 'Caricamento non riuscito. Riprova.',
+  sovrapposizione: 'Il tracciato non coincide con questa sessione (orari diversi). Collegarlo comunque?',
+};
+const avvisa = (testo) => (e) => console.warn(testo, e);
+
+/**
+ * Sezione Tracciato. Con `puoScrivere` e `asset`: caricamento, sostituzione e rimozione del GPX (spec §8, §9).
+ * Ordine: lettura (≤ 15 MB) → leggiGpx → analizzaGpx → sovrapposizione (dialogo se < 0,5) → asset.carica →
+ * store.salvaTracciato → (sostituzione) asset.elimina(vecchio). Se la scrittura fallisce si elimina l'asset nuovo.
+ */
+function Tracciato({ sessione, tracciato }) {
+  const { dati, store, asset, puoScrivere, segnalaRifiuto } = useContext(Contesto);
+  const [occupato, setOccupato] = useState(false);
+  const [messaggio, setMessaggio] = useState(null);
+  const [dialogo, setDialogo] = useState(null); // null | { tipo: 'sovrapposizione', collega } | { tipo: 'rimuovi' }
+  const input = useRef(null);
+  const modificabile = puoScrivere && !!asset;
+  const chiave = chiaveTracciato(sessione, dati.tracciati);
+
+  async function salva(file, analisi) {
+    const idParte = chiave ?? parteDaCollegare(sessione);
+    const vecchio = chiave ? dati.tracciati[chiave]?.idAsset ?? null : null;
+    let idAsset;
+    try {
+      ({ id: idAsset } = await asset.carica(file));
+    } catch (e) {
+      console.warn('Caricamento del GPX non riuscito', e);
+      setMessaggio(TESTO.nonRiuscito);
+      setOccupato(false);
+      return;
+    }
+    try {
+      await store.salvaTracciato({ idParte, doc: { ...analisi, idParte, fonte: 'gpx', nomeFile: String(file.name ?? 'GPX'), idAsset } });
+    } catch (e) {
+      segnalaRifiuto?.(e);
+      asset.elimina(idAsset).catch(avvisa('Eliminazione dell\'asset non riuscita'));
+      setMessaggio(TESTO.nonRiuscito);
+      setOccupato(false);
+      return;
+    }
+    if (vecchio && vecchio !== idAsset) asset.elimina(vecchio).catch(avvisa('Eliminazione del vecchio asset non riuscita'));
+    setOccupato(false);
+  }
+
+  async function scelto(e) {
+    const file = e.currentTarget.files?.[0];
+    e.currentTarget.value = ''; // lo stesso file si può scegliere di nuovo
+    if (!file || occupato) return;
+    setMessaggio(null);
+    if (file.size > MAX_BYTE_GPX) {
+      setMessaggio(TESTO.troppoGrande);
+      return;
+    }
+    setOccupato(true);
+    let analisi;
+    try {
+      analisi = analizzaGpx(leggiGpx(await file.text(), DOMParser));
+    } catch {
+      setMessaggio(TESTO.nonValido);
+      setOccupato(false);
+      return;
+    }
+    if (sovrapposizione(analisi, sessione) < SOVRAPPOSIZIONE_MINIMA) {
+      setDialogo({ tipo: 'sovrapposizione', collega: () => salva(file, analisi) });
+      return;
+    }
+    await salva(file, analisi);
+  }
+
+  async function rimuovi() {
+    setDialogo(null);
+    setMessaggio(null);
+    setOccupato(true);
+    const idAsset = dati.tracciati[chiave]?.idAsset ?? null;
+    try {
+      await store.rimuoviTracciato(chiave);
+    } catch (e) {
+      setMessaggio(segnalaRifiuto?.(e) ?? 'Salvataggio non riuscito. Riprova.');
+      setOccupato(false);
+      return;
+    }
+    if (idAsset) asset.elimina(idAsset).catch(avvisa('Eliminazione dell\'asset non riuscita'));
+    setOccupato(false);
+  }
+
+  const scegli = () => input.current?.click();
+  const controlli = modificabile && html`
+    <input type="file" accept=".gpx,application/gpx+xml" class="visivamente-nascosto" tabindex="-1" aria-hidden="true"
+      ref=${input} disabled=${occupato} onChange=${scelto} />
+    <div class="azioni-riga">
+      ${tracciato
+    ? html`
+          <button type="button" class="pulsante" disabled=${occupato} onClick=${scegli}>Sostituisci</button>
+          <button type="button" class="pulsante" disabled=${occupato} onClick=${() => setDialogo({ tipo: 'rimuovi' })}>Rimuovi</button>`
+    : html`<button type="button" class="pulsante primario" disabled=${occupato} onClick=${scegli}>Carica tracciato GPX</button>`}
+    </div>
+    ${messaggio && html`<p class="errore-scrittura" role="alert">${messaggio}</p>`}`;
+
   return html`
     <${Sezione} titolo="Tracciato">
       ${tracciato
     ? html`<p class="secondario nome-file">${tracciato.nomeFile ?? 'GPX'}</p><${MappaTracciato} tracciato=${tracciato} />`
     : html`<p class="secondario">Nessun tracciato</p>`}
+      ${controlli}
+      ${dialogo?.tipo === 'sovrapposizione' && html`
+        <${Dialogo} titolo=${TESTO.sovrapposizione} azioni=${[
+  { testo: 'Annulla', onClick: () => { setDialogo(null); setOccupato(false); } },
+  { testo: 'Collega', primaria: true, onClick: () => { const { collega } = dialogo; setDialogo(null); collega(); } },
+]} />`}
+      ${dialogo?.tipo === 'rimuovi' && html`
+        <${Dialogo} titolo="Rimuovere il tracciato?" azioni=${[
+  { testo: 'Annulla', onClick: () => setDialogo(null) },
+  { testo: 'Rimuovi', primaria: true, onClick: rimuovi },
+]} />`}
     </${Sezione}>`;
 }
 
@@ -235,12 +366,13 @@ export function SezioneSessione({ id, da, data }) {
   const tipo = TIPI[sessione.tipo] ?? TIPI.altro;
   const fonti = [...sessione.fonti.map((f) => FONTI[f] ?? f), ...(tracciato ? ['GPX'] : [])].join(' · ');
 
-  const riepilogo = html`<${Riepilogo} sessione=${sessione} statistiche=${statistiche} tracciato=${tracciato} hevy=${hevy} />`;
-  const grafico = html`<${SezioneGraficoFc} fcSerie=${fcSerie} statistiche=${statistiche} />`;
-  const zone = html`<${ZoneFc} zoneMin=${sessione.zoneMin} />`;
+  const riepilogo = html`<${Riepilogo} key="riepilogo" sessione=${sessione} statistiche=${statistiche} tracciato=${tracciato} hevy=${hevy} />`;
+  const grafico = html`<${SezioneGraficoFc} key="grafico" fcSerie=${fcSerie} statistiche=${statistiche} />`;
+  const zone = html`<${ZoneFc} key="zone" zoneMin=${sessione.zoneMin} />`;
   const sezioni = CON_TRACCIATO.includes(sessione.tipo)
-    ? [riepilogo, html`<${Tracciato} tracciato=${tracciato} />`, tracciato && html`<${SplitKm} tracciato=${tracciato} fcSerie=${fcSerie} />`, grafico, zone]
-    : [riepilogo, hevy && html`<${EserciziHevy} hevy=${hevy} />`, grafico, zone];
+    ? [riepilogo, html`<${Tracciato} key="tracciato" sessione=${sessione} tracciato=${tracciato} />`,
+      tracciato && html`<${SplitKm} key="split" tracciato=${tracciato} fcSerie=${fcSerie} />`, grafico, zone]
+    : [riepilogo, hevy && html`<${EserciziHevy} key="hevy" hevy=${hevy} />`, grafico, zone];
 
   return html`
     <section class="sezione scheda-attivita">

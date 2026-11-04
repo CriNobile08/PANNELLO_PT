@@ -1,5 +1,7 @@
 import { test, after } from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import { apriPannello, chiudiBrowser } from '../support/apri.js';
 
 after(chiudiBrowser);
@@ -253,5 +255,186 @@ test('da Dati del cliente', async () => {
     await senzaValoriRotti(page);
     await page.getByRole('button', { name: '‹ Indietro' }).click();
     await page.getByRole('heading', { name: 'Dati del cliente' }).waitFor();
+  } finally { await chiudi(); }
+});
+
+// ---- caricamento del GPX (Task 6) ----
+const ESEMPIO = fileURLToPath(new URL('../fixtures/esempio.gpx', import.meta.url));
+const TESTO_ESEMPIO = readFileSync(ESEMPIO, 'utf8');
+const SOVRAPPOSIZIONE = 'Il tracciato non coincide con questa sessione (orari diversi). Collegarlo comunque?';
+const SENZA_TRACCIATO = (() => { const s = { ...SEME }; delete s['tracciati/googleHealth_c1']; return s; })();
+const conAsset = (o = {}) => cliente({ seme: SENZA_TRACCIATO, assets: true, ...o });
+const inputGpx = (page) => sezione(page, 'Tracciato').locator('input[type=file]');
+const dump = (page) => page.evaluate(() => window.claude.dump());
+const chiamateAsset = (page) => page.evaluate(() => window.claude.chiamateAsset());
+const file = (name, testo) => ({ name, mimeType: 'application/gpx+xml', buffer: Buffer.from(testo) });
+async function caricaEsempio(page) {
+  await sezione(page, 'Tracciato').getByRole('button', { name: 'Carica tracciato GPX' }).waitFor();
+  await inputGpx(page).setInputFiles(ESEMPIO);
+  await sezione(page, 'Split per km').waitFor();
+}
+
+test('carica GPX', async () => {
+  const { page, chiudi } = await conAsset();
+  try {
+    await apriDaRecenti(page, 'Corsa');
+    await caricaEsempio(page);
+    assert.equal(await sezione(page, 'Split per km').locator('tbody tr').count(), 9);
+    const tracciato = sezione(page, 'Tracciato');
+    await tracciato.getByText('esempio.gpx', { exact: true }).waitFor();
+    assert.equal(await tracciato.locator('svg').count(), 2);
+    await tracciato.getByRole('button', { name: 'Sostituisci' }).waitFor();
+    await tracciato.getByRole('button', { name: 'Rimuovi' }).waitFor();
+    assert.equal(await tracciato.getByRole('button', { name: 'Carica tracciato GPX' }).count(), 0);
+    assert.equal(await valore(page, 'Riepilogo', 'Distanza').innerText(), '8,43 km');
+    const doc = (await dump(page))['tracciati/googleHealth_c1'];
+    assert.partialDeepStrictEqual(doc, {
+      idParte: 'googleHealth_c1', fonte: 'gpx', nomeFile: 'esempio.gpx', idAsset: 'a1', autore: 'u-cliente',
+      inizio: '2026-11-03T17:00:00.000Z', fine: '2026-11-03T17:45:00.000Z', distanzaM: 8430,
+    });
+    assert.ok(doc.caricatoIl);
+    assert.equal(doc.split.length, 9);
+    assert.deepEqual(await chiamateAsset(page), { upload: ['a1'], delete: [] });
+    await senzaValoriRotti(page);
+  } finally { await chiudi(); }
+});
+
+test('sovrapposizione bassa', async () => {
+  const altroGiorno = TESTO_ESEMPIO.replaceAll('2026-11-03T', '2026-10-20T');
+  const { page, chiudi } = await conAsset();
+  try {
+    await apriDaRecenti(page, 'Corsa');
+    await sezione(page, 'Tracciato').getByRole('button', { name: 'Carica tracciato GPX' }).waitFor();
+    await inputGpx(page).setInputFiles(file('altro.gpx', altroGiorno));
+    const dialogo = page.getByRole('dialog', { name: SOVRAPPOSIZIONE });
+    await dialogo.waitFor();
+    await dialogo.getByRole('button', { name: 'Annulla' }).click();
+    await dialogo.waitFor({ state: 'detached' });
+    assert.equal((await dump(page))['tracciati/googleHealth_c1'], undefined);
+    assert.deepEqual(await chiamateAsset(page), { upload: [], delete: [] });
+    await inputGpx(page).setInputFiles(file('altro.gpx', altroGiorno));
+    await dialogo.getByRole('button', { name: 'Collega' }).click();
+    await sezione(page, 'Split per km').waitFor();
+    assert.partialDeepStrictEqual((await dump(page))['tracciati/googleHealth_c1'], { idAsset: 'a1', nomeFile: 'altro.gpx' });
+    await senzaValoriRotti(page);
+  } finally { await chiudi(); }
+});
+
+test('file non valido', async () => {
+  const { page, chiudi } = await conAsset();
+  try {
+    await apriDaRecenti(page, 'Corsa');
+    await sezione(page, 'Tracciato').getByRole('button', { name: 'Carica tracciato GPX' }).waitFor();
+    await inputGpx(page).setInputFiles(file('rotto.gpx', 'non è un GPX <gpx>'));
+    await sezione(page, 'Tracciato').getByRole('alert').getByText('File GPX non valido: servono punti con data e ora', { exact: true }).waitFor();
+    // GPX ben formato ma senza orari
+    await inputGpx(page).setInputFiles(file('senza-ora.gpx', TESTO_ESEMPIO.replace(/<time>[^<]*<\/time>/g, '')));
+    await sezione(page, 'Tracciato').getByRole('alert').getByText('File GPX non valido: servono punti con data e ora', { exact: true }).waitFor();
+    assert.deepEqual(await chiamateAsset(page), { upload: [], delete: [] });
+    assert.equal((await dump(page))['tracciati/googleHealth_c1'], undefined);
+  } finally { await chiudi(); }
+});
+
+test('file troppo grande', async () => {
+  const { page, chiudi } = await conAsset();
+  try {
+    await apriDaRecenti(page, 'Corsa');
+    await sezione(page, 'Tracciato').getByRole('button', { name: 'Carica tracciato GPX' }).waitFor();
+    await inputGpx(page).setInputFiles({ name: 'grande.gpx', mimeType: 'application/gpx+xml', buffer: Buffer.alloc(16 * 1024 * 1024, 32) });
+    await sezione(page, 'Tracciato').getByRole('alert').getByText('File troppo grande (massimo 15 MB)', { exact: true }).waitFor();
+    assert.deepEqual(await chiamateAsset(page), { upload: [], delete: [] });
+    assert.equal((await dump(page))['tracciati/googleHealth_c1'], undefined);
+  } finally { await chiudi(); }
+});
+
+test('upload dell\'asset fallito', async () => {
+  const { page, chiudi } = await conAsset({ assetFallisce: true });
+  try {
+    await apriDaRecenti(page, 'Corsa');
+    await sezione(page, 'Tracciato').getByRole('button', { name: 'Carica tracciato GPX' }).waitFor();
+    await inputGpx(page).setInputFiles(ESEMPIO);
+    await sezione(page, 'Tracciato').getByRole('alert').getByText('Caricamento non riuscito. Riprova.', { exact: true }).waitFor();
+    assert.equal((await dump(page))['tracciati/googleHealth_c1'], undefined);
+    assert.equal(await sezione(page, 'Tracciato').getByRole('button', { name: 'Carica tracciato GPX' }).isEnabled(), true);
+  } finally { await chiudi(); }
+});
+
+test('sostituzione', async () => {
+  const { page, chiudi } = await conAsset();
+  try {
+    await apriDaRecenti(page, 'Corsa');
+    await caricaEsempio(page);
+    await sezione(page, 'Tracciato').getByRole('button', { name: 'Sostituisci' }).waitFor();
+    await inputGpx(page).setInputFiles(file('nuovo.gpx', TESTO_ESEMPIO));
+    await sezione(page, 'Tracciato').getByText('nuovo.gpx', { exact: true }).waitFor();
+    await page.waitForFunction(() => window.claude.chiamateAsset().delete.length === 1);
+    assert.deepEqual(await chiamateAsset(page), { upload: ['a1', 'a2'], delete: ['a1'] });
+    assert.partialDeepStrictEqual((await dump(page))['tracciati/googleHealth_c1'], { idAsset: 'a2', nomeFile: 'nuovo.gpx' });
+    await senzaValoriRotti(page);
+  } finally { await chiudi(); }
+});
+
+test('sostituzione fallita', async () => {
+  const { page, chiudi } = await conAsset();
+  try {
+    await apriDaRecenti(page, 'Corsa');
+    await caricaEsempio(page);
+    await page.evaluate(() => window.claude.scritturaFallisce('tracciati'));
+    await sezione(page, 'Tracciato').getByRole('button', { name: 'Sostituisci' }).waitFor();
+    await inputGpx(page).setInputFiles(file('nuovo.gpx', TESTO_ESEMPIO));
+    await sezione(page, 'Tracciato').getByRole('alert').getByText('Caricamento non riuscito. Riprova.', { exact: true }).waitFor();
+    assert.deepEqual(await chiamateAsset(page), { upload: ['a1', 'a2'], delete: ['a2'] });
+    assert.partialDeepStrictEqual((await dump(page))['tracciati/googleHealth_c1'], { idAsset: 'a1', nomeFile: 'esempio.gpx' });
+    await sezione(page, 'Tracciato').getByText('esempio.gpx', { exact: true }).waitFor();
+    assert.equal(await sezione(page, 'Tracciato').getByRole('button', { name: 'Sostituisci' }).isEnabled(), true);
+  } finally { await chiudi(); }
+});
+
+test('rimozione', async () => {
+  const { page, chiudi } = await conAsset();
+  try {
+    await apriDaRecenti(page, 'Corsa');
+    await caricaEsempio(page);
+    await sezione(page, 'Tracciato').getByRole('button', { name: 'Rimuovi' }).click();
+    const dialogo = page.getByRole('dialog', { name: 'Rimuovere il tracciato?' });
+    await dialogo.getByRole('button', { name: 'Annulla' }).click();
+    await dialogo.waitFor({ state: 'detached' });
+    assert.ok((await dump(page))['tracciati/googleHealth_c1']);
+    await sezione(page, 'Tracciato').getByRole('button', { name: 'Rimuovi' }).click();
+    await dialogo.getByRole('button', { name: 'Rimuovi' }).click();
+    await sezione(page, 'Tracciato').getByText('Nessun tracciato').waitFor();
+    await page.waitForFunction(() => window.claude.chiamateAsset().delete.length === 1);
+    assert.equal((await dump(page))['tracciati/googleHealth_c1'], undefined);
+    assert.deepEqual(await chiamateAsset(page), { upload: ['a1'], delete: ['a1'] });
+    assert.equal(await sezione(page, 'Split per km').count(), 0);
+    await sezione(page, 'Tracciato').getByRole('button', { name: 'Carica tracciato GPX' }).waitFor();
+    await senzaValoriRotti(page);
+  } finally { await chiudi(); }
+});
+
+test('sola lettura: nessun pulsante di caricamento', async () => {
+  for (const [opzioni, seme] of [
+    [{ puoScrivere: false, assets: true }, SENZA_TRACCIATO],
+    [{ puoScrivere: false, assets: true }, SEME],
+    [{}, SENZA_TRACCIATO],
+    [{}, SEME],
+  ]) {
+    const { page, chiudi } = await cliente({ seme, ...opzioni });
+    try {
+      await apriDaRecenti(page, 'Corsa');
+      const tracciato = sezione(page, 'Tracciato');
+      await tracciato.waitFor();
+      assert.equal(await tracciato.getByRole('button').count(), 0);
+      assert.equal(await tracciato.locator('input[type=file]').count(), 0);
+    } finally { await chiudi(); }
+  }
+});
+
+test('palestra: nessun pulsante di caricamento', async () => {
+  const { page, chiudi } = await conAsset();
+  try {
+    await apriDaRecenti(page, 'Palestra');
+    assert.equal(await page.getByRole('button', { name: 'Carica tracciato GPX' }).count(), 0);
+    assert.equal(await page.locator('input[type=file]').count(), 0);
   } finally { await chiudi(); }
 });
