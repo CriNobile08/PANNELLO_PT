@@ -53,11 +53,9 @@ function scegli(parti, campo) {
 const SOGLIA_STESSA_FONTE = 0.8;
 const SOGLIA_FONTI_DIVERSE = 0.5;
 
-/** Gruppi (liste di indici) di registrazioni della stessa fonte quasi coincidenti. */
-function gruppiStessaFonte(sessioni) {
-  const n = sessioni.length;
-  const durate = sessioni.map(durataMs);
-  const padre = sessioni.map((_, i) => i);
+/** Union-find su `n` elementi: `radice(x)`, `unisci(i, j)` (j sotto la radice di i), `gruppi(elementi)`. */
+function creaUnionFind(n) {
+  const padre = Array.from({ length: n }, (_, i) => i);
   const radice = (x) => {
     while (padre[x] !== x) {
       padre[x] = padre[padre[x]];
@@ -65,20 +63,34 @@ function gruppiStessaFonte(sessioni) {
     }
     return x;
   };
+  const unisci = (i, j) => {
+    padre[radice(j)] = radice(i);
+  };
+  const gruppi = (elementi) => {
+    const mappa = new Map();
+    elementi.forEach((e, i) => {
+      const r = radice(i);
+      if (!mappa.has(r)) mappa.set(r, []);
+      mappa.get(r).push(e);
+    });
+    return [...mappa.values()];
+  };
+  return { radice, unisci, gruppi };
+}
+
+/** Gruppi (liste di indici) di registrazioni della stessa fonte quasi coincidenti. */
+function gruppiStessaFonte(sessioni) {
+  const n = sessioni.length;
+  const durate = sessioni.map(durataMs);
+  const uf = creaUnionFind(n);
   for (let i = 0; i < n; i++) {
     for (let j = i + 1; j < n; j++) {
       if (sessioni[i].fonte !== sessioni[j].fonte || !durate[i] || !durate[j]) continue;
       const sov = sovrapposizioneMs(sessioni[i], sessioni[j]);
-      if (sov > 0 && sov >= SOGLIA_STESSA_FONTE * Math.min(durate[i], durate[j])) padre[radice(j)] = radice(i);
+      if (sov > 0 && sov >= SOGLIA_STESSA_FONTE * Math.min(durate[i], durate[j])) uf.unisci(i, j);
     }
   }
-  const gruppi = new Map();
-  sessioni.forEach((_, i) => {
-    const r = radice(i);
-    if (!gruppi.has(r)) gruppi.set(r, []);
-    gruppi.get(r).push(i);
-  });
-  return [...gruppi.values()];
+  return uf.gruppi(sessioni.map((_, i) => i));
 }
 
 /**
@@ -131,33 +143,19 @@ export function unisciSessioni(sessioniOriginali) {
   coppie.sort((x, y) => y.sov - x.sov || x.i - y.i || x.j - y.j);
 
   // union-find, con le fonti presenti in ciascun gruppo
-  const padre = sessioni.map((_, i) => i);
+  const uf = creaUnionFind(n);
   const fonti = sessioni.map((s) => new Set([s.fonte]));
-  const radice = (x) => {
-    while (padre[x] !== x) {
-      padre[x] = padre[padre[x]];
-      x = padre[x];
-    }
-    return x;
-  };
   for (const { i, j } of coppie) {
-    const ri = radice(i);
-    const rj = radice(j);
+    const ri = uf.radice(i);
+    const rj = uf.radice(j);
     if (ri === rj) continue;
     if ([...fonti[ri]].some((f) => fonti[rj].has(f))) continue;
-    padre[rj] = ri;
+    uf.unisci(ri, rj);
     for (const f of fonti[rj]) fonti[ri].add(f);
   }
 
-  const gruppi = new Map();
-  sessioni.forEach((s, i) => {
-    const r = radice(i);
-    if (!gruppi.has(r)) gruppi.set(r, []);
-    gruppi.get(r).push(s);
-  });
-
   const unite = [];
-  for (const gruppo of gruppi.values()) {
+  for (const gruppo of uf.gruppi(sessioni)) {
     const parti = gruppo.flatMap((r) => r._parti).sort((a, b) => (ms(a.inizio) ?? 0) - (ms(b.inizio) ?? 0));
     const inizio = parti[0].inizio;
     const fine = parti.reduce((m, p) => (ms(p.fine) > ms(m) ? p.fine : m), parti[0].fine);
