@@ -233,3 +233,15 @@ test('sovrapposizione', () => {
   assert.equal(sovrapposizione({ inizio: iso(10), fine: iso(20) }, { inizio: iso(0), fine: iso(60) }), 1);
   assert.equal(sovrapposizione({ inizio: iso(0), fine: iso(0) }, { inizio: iso(0), fine: iso(60) }), 0);
 });
+
+test('GPX grande (150.000 punti) senza superare lo stack', () => {
+  const n = 150000;
+  const segmenti = [Array.from({ length: n }, (_, i) => ({
+    lat: 45 + 0.01 * Math.sin(i / 500), lon: 9 + i * 0.00002, ele: 200 + 20 * Math.sin(i / 3000), t: T0 + i * 1000,
+  }))];
+  const r = analizzaGpx(segmenti);
+  assert.ok(r.percorso.length <= 300, `${r.percorso.length}`);
+  assert.ok(r.quote.length <= 300);
+  for (const q of r.percorso) assert.ok(dentroCornice(q));
+  nessunNaN(r);
+});

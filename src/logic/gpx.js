@@ -144,22 +144,31 @@ function campiona(elenco) {
   return Array.from({ length: MAX_PUNTI }, (_, i) => elenco[Math.round((i * (elenco.length - 1)) / (MAX_PUNTI - 1))]);
 }
 
+/** Minimo e massimo con un ciclo: lo spread in Math.min/max supera lo stack con molti punti. */
+function estremi(valori) {
+  let min = Infinity;
+  let max = -Infinity;
+  for (const v of valori) {
+    if (v < min) min = v;
+    if (v > max) max = v;
+  }
+  return [min, max];
+}
+
 /**
  * Proiezione equirettangolare centrata sul percorso, scalata nella cornice
  * 1000×1000 con margine 40 e proporzioni mantenute; il nord è in alto.
  * @returns {(p: {lat: number, lon: number}) => [number, number]}
  */
 function proiezione(punti) {
-  const lats = punti.map((p) => p.lat);
-  const lat0 = ((Math.min(...lats) + Math.max(...lats)) / 2) * RAD;
+  const [minLat, maxLat] = estremi(punti.map((p) => p.lat));
+  const lat0 = ((minLat + maxLat) / 2) * RAD;
   const piano = (p) => [p.lon * Math.cos(lat0), -p.lat];
   const xy = punti.map(piano);
-  const xs = xy.map(([x]) => x);
-  const ys = xy.map(([, y]) => y);
-  const minX = Math.min(...xs);
-  const minY = Math.min(...ys);
-  const larghezza = Math.max(...xs) - minX;
-  const altezza = Math.max(...ys) - minY;
+  const [minX, maxX] = estremi(xy.map(([x]) => x));
+  const [minY, maxY] = estremi(xy.map(([, y]) => y));
+  const larghezza = maxX - minX;
+  const altezza = maxY - minY;
   const lato = CORNICE - 2 * MARGINE;
   const estensione = Math.max(larghezza, altezza);
   const scala = estensione > 0 ? lato / estensione : 0;
