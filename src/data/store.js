@@ -68,6 +68,8 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
     const coda = [];
     let inLettura = 0;
     let chiuso = false;
+    let emesso = false;
+    const rinviati = [];
 
     const inAttesa = () => [...statoRev.values()].some((s) => s.richiesta !== undefined);
     const pronto = () => caricate.size === COLLEZIONI.length && !inAttesa();
@@ -82,8 +84,14 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
         diario: parziale.diario,
       };
       onDati(ultimi);
+      emesso = true;
+      // errori di lettura delle revisioni trattenuti prima della prima emissione: ora che i dati ci sono, si segnalano
+      for (const e of rinviati.splice(0)) errore(e);
     };
     const errore = (e) => { if (!chiuso) onErrore?.(e); };
+    // Una lettura di revisioni fallita non è un caricamento fallito: prima della prima emissione l'errore
+    // si trattiene (chi ascolta tratta un errore prima dei dati come "Impossibile caricare i dati").
+    const erroreRevisioni = (e) => { if (emesso) errore(e); else rinviati.push(e); };
 
     const prossimaLettura = () => {
       while (!chiuso && inLettura < LETTURE_PARALLELE && coda.length) {
@@ -108,7 +116,7 @@ export function creaStore({ db, autoreId, adesso = () => new Date() }) {
           if (chiuso || statoRev.get(id) !== stato || stato.richiesta !== chiave) return;
           stato.richiesta = undefined; // `letta` invariata: si riprova al prossimo snapshot di schede
           emetti();
-          errore(e);
+          erroreRevisioni(e);
         });
       }
     };

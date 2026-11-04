@@ -221,3 +221,27 @@ test('osserva: una lettura di revisioni fallita non blocca la prima emissione e 
   assert.equal(errori[0]?.code, 'resource_exhausted');
   assert.ok(visti.length >= 1 && errori.length >= 1);
 });
+
+test('osserva: con più schede, una lettura di revisioni fallita all\'avvio arriva DOPO i dati', async () => {
+  const semeMolte = {};
+  for (let i = 0; i < 6; i++) {
+    semeMolte[`schede/s${i}`] = { nome: `S${i}`, tipo: 'palestra', archiviata: false, revisioneCorrente: `r${i}`, creataDa: 'u', creataIl: '2026-11-01T08:00:00.000Z' };
+    semeMolte[`schede/s${i}/revisioni/r${i}`] = { ...CONTENUTO_VALIDO, validaDal: '2026-11-01', autore: 'u', salvataIl: '2026-11-01T08:00:00.000Z' };
+  }
+  const fake = creaFakeClaude({ seme: semeMolte });
+  const db = await fake.use('db');
+  const rotto = { ...db, doc: db.doc, collection: (p) => {
+    const c = db.collection(p);
+    if (p !== 'schede/s0/revisioni') return c;
+    return { ...c, get: () => Promise.reject({ code: 'unavailable', message: 'x' }) };
+  } };
+  const store = creaStore({ db: rotto, autoreId: 'u-cliente', adesso });
+  const ordine = [];
+  const off = store.osserva((d) => ordine.push({ tipo: 'dati', d }), (e) => ordine.push({ tipo: 'errore', e }));
+  await new Promise((r) => setTimeout(r, 50));
+  off();
+  assert.equal(ordine[0]?.tipo, 'dati', `ordine: ${ordine.map((x) => x.tipo).join(',')}`);
+  assert.deepEqual(ordine[0].d.revisioni.s0, []);
+  assert.equal(ordine[0].d.revisioni.s5.length, 1);
+  assert.ok(ordine.some((x) => x.tipo === 'errore' && x.e.code === 'unavailable'), 'l\'errore va comunque segnalato');
+});
